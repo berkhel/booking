@@ -1,0 +1,72 @@
+plugins {
+    id 'buildlogic.java-common-conventions'
+    id 'jvm-test-suite' 
+    id 'jacoco'
+    id 'jacoco-report-aggregation'
+}
+
+configurations {
+    mockitoAgent // see https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+}
+
+
+dependencies{
+    // Use JUnit Jupiter and Mockito for testing.
+    testImplementation libs.junit.jupiter
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    mockitoAgent(libs.mockito) {
+        transitive = false
+    }
+    testImplementation libs.mockito.junit.jupiter
+
+}
+
+
+testing{
+    suites{
+        configureEach {
+            useJUnitJupiter()
+            sources {
+                java {
+                    // override default /src/test/java
+                    // each subproject must provide this property
+                    srcDirs = [] 
+                }
+            }
+            targets {
+                all {
+                    testTask.configure {
+                        testLogging { 
+                            events = ["passed", "failed", "skipped"]
+                            exceptionFormat = "full" 
+                            showCauses = true 
+                            showExceptions = true 
+                            showStackTraces = true 
+                            showStandardStreams = true 
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+jacocoTestCoverageVerification {
+    dependsOn test
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+
+testCodeCoverageReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        html.outputLocation = rootProject.layout.buildDirectory.dir("reports/jacoco/testCodeCoverageReport")
+    }
+}

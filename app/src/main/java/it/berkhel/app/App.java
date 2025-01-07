@@ -3,11 +3,9 @@
  */
 package it.berkhel.app;
 
-import static it.berkhel.app.MessageUtils.getMessage;
-
 
 public class App {
     public static void main(String[] args) {
-        System.out.println(getMessage());
+        System.out.println(new Message().getMessage());
     }
 }

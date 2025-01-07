@@ -2,10 +2,28 @@ plugins {
     id 'buildlogic.java-application-conventions'
 }
 
-dependencies {
-    implementation project(':utilities')
-}
 
 application {
     mainClass = 'it.berkhel.app.App'
+}
+
+
+testing {
+    suites {
+        test {
+            targets {
+                all {
+                    testTask.configure {
+                        jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+                    }
+                }
+            }
+            sources {
+                java {
+                    srcDirs += ["src/test/java"]
+                    include 'it/berkhel/app/**'
+                }
+            }
+        }
+    }
 }

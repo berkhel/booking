@@ -1,7 +1,7 @@
 package it.berkhel.app;
 
-class MessageUtils {
-    public static String getMessage() {
+class Message {
+    public String getMessage() {
         return "Hello      World!";
     }
 }
