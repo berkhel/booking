@@ -1,10 +1,16 @@
 plugins {
     id 'buildlogic.java-application-conventions'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 
 application {
     mainClass = 'it.berkhel.booking.App'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 
@@ -28,6 +34,8 @@ testing {
         }
         functionalTest(JvmTestSuite) {
             dependencies {
+                implementation project(':app')
+                implementation 'org.springframework.boot:spring-boot-starter-test'
                 implementation 'io.rest-assured:rest-assured:5.5.0'
                 implementation 'org.hamcrest:hamcrest:3.0'
             }
