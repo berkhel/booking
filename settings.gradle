@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = 'booking'
-include('app', 'list', 'utilities')
+include('app', 'utilities')
