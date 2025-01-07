@@ -18,7 +18,7 @@ import java.util.Map;
 class MessageTest {
 
     @Test void testGetMessage(@Mock ForStorage storage) {
-        App app = App.init(storage);
+        ForBooking app = App.init(storage);
         app.bookReservation();
         verify(storage).storeBooking();
     }
