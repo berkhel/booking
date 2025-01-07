@@ -4,7 +4,7 @@
 package it.berkhel.app;
 
 
-public class App {
+public class App implements ForBooking {
 
     public static App init(ForStorage storage){
         return new App(storage);
@@ -16,6 +16,7 @@ public class App {
         this.storage = storage;
     }
 
+    @Override
     public void bookReservation(){
         storage.storeBooking();
     }
