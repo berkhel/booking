@@ -5,6 +5,21 @@ package it.berkhel.app;
 
 
 public class App {
+
+    public static App init(ForStorage storage){
+        return new App(storage);
+    }
+    
+    private ForStorage storage;
+
+    private App(ForStorage storage) {
+        this.storage = storage;
+    }
+
+    public void bookReservation(){
+        storage.storeBooking();
+    }
+
     public static void main(String[] args) {
         System.out.println(new Message().getMessage());
     }
