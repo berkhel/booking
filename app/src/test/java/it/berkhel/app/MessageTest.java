@@ -16,8 +16,8 @@ import java.util.Map;
 @ExtendWith(MockitoExtension.class)
 class MessageTest {
 
-    @Test void testGetMessage(@Mock Message message) {
-        when(message.getMessage()).thenReturn("Ciao Mondo!");
-        assertEquals("Ciao Mondo!", message.getMessage());
+    @Test void testGetMessage(@Mock ForStorage storage) {
+        App app = App.init(storage);
+        verify(storage).storeBooking();
     }
 }
