@@ -17,9 +17,9 @@ import java.util.Map;
 @ExtendWith(MockitoExtension.class)
 class MessageTest {
 
-    @Test void testGetMessage(@Mock ForStorage storage) {
+    @Test void test_dumb_booking(@Mock ForStorage storage) {
         ForBooking app = App.init(storage);
-        app.bookReservation();
+        app.book();
         verify(storage).storeBooking();
     }
 }

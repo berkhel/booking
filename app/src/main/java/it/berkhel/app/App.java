@@ -17,7 +17,7 @@ public class App implements ForBooking {
     }
 
     @Override
-    public void bookReservation(){
+    public void book(){
         storage.storeBooking();
     }
 
