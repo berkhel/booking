@@ -31,7 +31,9 @@ public class FunctionalTest {
         when().
             get("/booking").
         then().
-            statusCode(200);
+            statusCode(200).
+        and().
+            body(equalTo("Hello World!"));
 
     }
     
