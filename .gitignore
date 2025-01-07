@@ -10,3 +10,5 @@ build
 # Ignore any kind of binary
 bin
 
+# Ignore Structurizr build folder
+.structurizr
