@@ -1,4 +1,4 @@
-package it.berkhel.app;
+package it.berkhel.app.unit;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import it.berkhel.app.App;
+import it.berkhel.app.ForBooking;
+import it.berkhel.app.ForStorage;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -15,7 +19,7 @@ import java.util.Map;
 
 
 @ExtendWith(MockitoExtension.class)
-class MessageTest {
+class UnitTest {
 
     @Test void test_dumb_booking(@Mock ForStorage storage) {
         ForBooking app = App.init(storage);

@@ -26,13 +26,6 @@ testing{
     suites{
         configureEach {
             useJUnitJupiter()
-            sources {
-                java {
-                    // override default /src/test/java
-                    // each subproject must provide this property
-                    srcDirs = [] 
-                }
-            }
             targets {
                 all {
                     testTask.configure {
