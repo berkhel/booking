@@ -1,0 +1,53 @@
+= Requirement
+Ciao Michele,
+come promesso, ecco il testo della prova tecnica, progettata su due principi:
+
+* lasciare libertà di espressione
+* essere il più aderente possibile al lavoro che farai
+
+Di seguito troverai le tempistiche, il brief e l'out richiesto.
+Ti preghiamo di trattare questo progetto come se lo stessi consegnando ad un cliente.
+
+== Tempistiche
+Il progetto ha una durata di una settimana e, al termine, concorderemo una data per la presentazione del tuo lavoro. L'appuntamento che stabiliremo avrà due fasi: una prima parte dedicata alla presentazione del tuo progetto e una seconda in cui avremo la possibilità di discuterne insieme.
+
+Quando ci invierai la prova, ci prenderemo qualche giorno per analizzarla e ti contatteremo per stabilire il giorno e l'ora in cui potremo incontrarci, così che potrai presentarci il progetto di persona e potremo discuterne.
+
+== Brief
+La prova consiste nel creare un'applicazione web che espone delle API (quindi solo back-end).
+
+Hai a disposizione due possibilità:
+
+=== Traccia 1: Dominio personale
+Decidi due o tre end point da sviluppare (es. uno in lettura e uno in scrittura), il progetto deve essere piccolo ma con sufficiente logica di dominio da poter intavolare una discussione, quindi NON un semplice CRUD.
+Questa traccia è volutamente generica per lasciarti libertà di espressione.
+
+=== Traccia 2: Prenotazione biglietti
+Crea un servizio di prenotazione posti per eventi.
+I vincoli sono:
+
+* Non si possono prenotare più di 3 biglietti per evento a transazione
+* Si possono prenotare più eventi a transazione
+* Ogni evento ha un numero limitato di posti
+* (Opzionale) Dovrebbe essere possibile ricevere una notifica (email, sms, ecc.) dell’avvenuta transazione (anche simulata)
+
+Non ci interessa il CRUD degli utenti e degli eventi che puoi inserire manualmente a database o nella fonte dati che sceglierai.
+
+
+Qualsiasi traccia sceglierai puoi usare il framework e le tecnologie che vuoi.
+
+Lo sviluppo deve essere supportato da un sistema di controllo di versione: preferibilmente git (anche altri DVCS sono ok), in quanto vorremmo che sia possibile analizzare l'intero repository, così da vedere ed eventualmente discutere con te l'evoluzione del codice. Il repository può essere pubblico, ma ti chiediamo di non indicare che il progetto riguarda questa prova.
+
+Ci interessa vedere, per quanto possibile, tutto quello che farai: dalle board etc., al ragionamento, fino al codice sul repository.
+
+== Outcome
+
+Regolati sullo scope in modo da avere qualcosa di presentabile in una settimana di sviluppo, tenendo conto del tempo che potrai dedicare al progetto. Per noi non è importante la quantità e l'estensione della code base, ma la qualità e la capacità di prendere le decisioni giuste in funzione di un obiettivo.
+
+Alcuni punti che potrebbero esserti utili:
+
+* È importante che l'applicazione sia eseguibile e testabile manualmente, così da poterla provare insieme.
+
+* Durante il colloquio ti chiederemo di apportare delle modifiche o di aggiungere del codice in "pair programming".
+
+* Quando avrai finito il progetto, al termine di questi sette giorni, indicaci un repo remoto come risposta a questa mail.
