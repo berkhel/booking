@@ -1,4 +1,4 @@
-package it.berkhel.app.unit;
+package it.berkhel.booking.unit;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,9 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import it.berkhel.app.App;
-import it.berkhel.app.ForBooking;
-import it.berkhel.app.ForStorage;
+import it.berkhel.booking.App;
+import it.berkhel.booking.ForBooking;
+import it.berkhel.booking.ForStorage;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;

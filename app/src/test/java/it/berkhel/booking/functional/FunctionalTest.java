@@ -1,4 +1,4 @@
-package it.berkhel.app.functional;
+package it.berkhel.booking.functional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

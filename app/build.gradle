@@ -4,7 +4,7 @@ plugins {
 
 
 application {
-    mainClass = 'it.berkhel.app.App'
+    mainClass = 'it.berkhel.booking.App'
 }
 
 
@@ -22,7 +22,7 @@ testing {
         test {
             sources {
                 java {
-                    include 'it/berkhel/app/unit/**'
+                    include 'it/berkhel/booking/unit/**'
                 }
             }
         }
@@ -34,7 +34,7 @@ testing {
             sources { 
                 java { 
                     srcDirs += ['src/test/java']
-                    include 'it/berkhel/app/functional/**'
+                    include 'it/berkhel/booking/functional/**'
                 }
             }
         }

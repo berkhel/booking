@@ -1,4 +1,4 @@
-package it.berkhel.app;
+package it.berkhel.booking;
 
 public interface ForStorage {
 
