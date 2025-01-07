@@ -15,7 +15,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.when;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(classes = { MainConfig.class },webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -29,7 +28,6 @@ public class FunctionalTest {
     @Test
     void testRestApi() {
 
-        given().log().all().
         when().
             get("/booking").
         then().

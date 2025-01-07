@@ -1,6 +1,5 @@
 package it.berkhel.booking;
 
-import org.springframework.boot.SpringApplication;
 import it.berkhel.booking.MainConfig;
 
 public class App implements ForBooking {
@@ -21,7 +20,4 @@ public class App implements ForBooking {
     }
 
 
-	public static void main(String[] args) {
-		SpringApplication.run(MainConfig.class, args);
-	}
 }

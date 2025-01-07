@@ -6,7 +6,7 @@ plugins {
 
 
 application {
-    mainClass = 'it.berkhel.booking.App'
+    mainClass = 'it.berkhel.booking.SpringBootMain'
 }
 
 dependencies {
