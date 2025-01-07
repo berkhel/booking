@@ -13,10 +13,18 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class FunctionalTest {
 
+    @BeforeAll 
+    static void setupRestClient(){
+        RestAssured.baseURI = "http://localhost:8080";
+    }
+
     @Test
     void testRestApi() {
 
-        assertTrue(true);
+        when().
+            get("/booking").
+        then().
+            statusCode(200);
 
     }
     
