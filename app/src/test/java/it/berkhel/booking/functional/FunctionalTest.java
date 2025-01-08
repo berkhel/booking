@@ -20,7 +20,6 @@ import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import io.restassured.parsing.Parser;
 
 import io.restassured.RestAssured;
 
@@ -33,7 +32,7 @@ public class FunctionalTest {
 
     @Container
     @ServiceConnection
-    private static MySQLContainer mySqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:5.7.34"));
+    private static MySQLContainer<?> mySqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:5.7.34"));
 
 
     private static MySqlDatabase mySqlDatabase;

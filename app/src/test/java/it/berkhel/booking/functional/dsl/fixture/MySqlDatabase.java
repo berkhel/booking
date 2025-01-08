@@ -1,12 +1,8 @@
 package it.berkhel.booking.functional.dsl.fixture;
 
-import org.hamcrest.Matcher;
-
 import io.restassured.matcher.ResponseAwareMatcher;
 import io.restassured.response.Response;
-import jakarta.annotation.PostConstruct;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 import java.sql.Connection;
@@ -51,7 +47,7 @@ public class MySqlDatabase {
         try (Connection con = connection("booking");
                 PreparedStatement stmt = con.prepareStatement(preparedQuery)) {
                 for(var i = 0; i < queryParameters.size(); i++){
-                    stmt.setString(i+1, "Pippo" /*queryParameters.get(i)*/);
+                    stmt.setString(i+1, queryParameters.get(i));
                 }
             try (ResultSet resultSet = stmt.executeQuery()) {
                 if(resultSet.next()){
