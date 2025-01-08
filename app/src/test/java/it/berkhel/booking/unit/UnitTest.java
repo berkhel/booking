@@ -36,12 +36,16 @@ class UnitTest {
     }
 
 
-    @Test void store_and_retrieve_from_in_memory_storage() {
+    @Test void store_and_retrieve_reservations_from_in_memory_storage() {
         ForStorage storage = new InMemoryStorage();
-        Reservation aReservation = new Reservation();
-        String reservationId = aReservation.getId();
-        storage.save(aReservation);
-        assertEquals(aReservation, storage.retrieveById(reservationId));
+        Reservation firstReservation = new Reservation();
+        Reservation secondReservation = new Reservation();
+        String firstReservationId = firstReservation.getId();
+        String secondReservationId = firstReservation.getId();
+        storage.save(firstReservation);
+        storage.save(secondReservation);
+        assertEquals(firstReservation, storage.retrieveById(firstReservationId));
+        assertEquals(secondReservation, storage.retrieveById(secondReservationId));
     }
 
 }
