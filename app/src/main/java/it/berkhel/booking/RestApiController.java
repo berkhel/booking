@@ -12,9 +12,9 @@ public class RestApiController {
         this.bookingManager = bookingManager;
     }
 
-    @GetMapping("/booking")
+    @GetMapping(value = "/booking", produces = "application/json")
     public String hello() {
-       return bookingManager.book(null);
+       return "{ \"id\": \""+bookingManager.book(null)+"\" }";
     }
     
 }
