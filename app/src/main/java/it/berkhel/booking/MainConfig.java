@@ -1,6 +1,5 @@
 package it.berkhel.booking;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,7 +14,7 @@ public class MainConfig {
     ForStorage storage(){
         return new ForStorage() {
             @Override
-            public void storeBooking(Reservation reservation) {
+            public void save(Reservation reservation) {
                //do nothing 
             }
         };

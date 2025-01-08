@@ -1,6 +1,7 @@
 package it.berkhel.booking.unit;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -26,7 +27,7 @@ class UnitTest {
         Reservation aReservation = new Reservation();
         ForBooking app = App.init(storage);
         app.book(aReservation);
-        verify(storage).storeBooking(aReservation);
+        verify(storage).save(aReservation);
     }
 
     @Test void booking_and_return_a_confirmation(@Mock ForStorage storage) {
@@ -38,8 +39,9 @@ class UnitTest {
     @Test void store_and_retrieve_from_in_memory_storage() {
         ForStorage storage = new InMemoryStorage();
         Reservation aReservation = new Reservation();
-        storage.storeBooking(aReservation);
-        fail();
+        String reservationId = aReservation.getId();
+        storage.save(aReservation);
+        assertEquals(aReservation, storage.retrieveById(reservationId));
     }
 
 }
