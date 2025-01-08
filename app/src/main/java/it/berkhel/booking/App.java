@@ -1,6 +1,5 @@
 package it.berkhel.booking;
 
-import it.berkhel.booking.MainConfig;
 
 public class App implements ForBooking {
 
@@ -15,8 +14,9 @@ public class App implements ForBooking {
     }
 
     @Override
-    public void book(){
+    public String book(){
         storage.storeBooking();
+        return "OK";
     }
 
 
