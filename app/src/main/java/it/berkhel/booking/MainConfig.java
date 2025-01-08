@@ -17,6 +17,11 @@ public class MainConfig {
             public void save(Reservation reservation) {
                //do nothing 
             }
+
+            @Override
+            public Reservation retrieveById(String reservationId) {
+                return null;
+            }
         };
     }
 
