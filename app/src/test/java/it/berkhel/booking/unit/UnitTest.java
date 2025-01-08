@@ -41,7 +41,7 @@ class UnitTest {
         Reservation firstReservation = new Reservation();
         Reservation secondReservation = new Reservation();
         String firstReservationId = firstReservation.getId();
-        String secondReservationId = firstReservation.getId();
+        String secondReservationId = secondReservation.getId();
         storage.save(firstReservation);
         storage.save(secondReservation);
         assertEquals(firstReservation, storage.retrieveById(firstReservationId));
