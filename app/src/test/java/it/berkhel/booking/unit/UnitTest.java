@@ -2,6 +2,7 @@ package it.berkhel.booking.unit;
 
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import it.berkhel.booking.App;
 import it.berkhel.booking.ForBooking;
 import it.berkhel.booking.ForStorage;
+import it.berkhel.booking.InMemoryStorage;
 
 import static org.mockito.Mockito.verify;
 
@@ -19,15 +21,23 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void test_dumb_booking(@Mock ForStorage storage) {
+    @Test void book_a_reservation(@Mock ForStorage storage) {
+        Reservation aReservation = new Reservation();
         ForBooking app = App.init(storage);
-        app.book();
-        verify(storage).storeBooking();
+        app.book(aReservation);
+        verify(storage).storeBooking(aReservation);
     }
 
-    @Test void test_booking_return_a_confirmation(@Mock ForStorage storage) {
+    @Test void booking_and_return_a_confirmation(@Mock ForStorage storage) {
         ForBooking app = App.init(storage);
         assertNotNull(app.book());
+    }
+
+
+    @Test void store_and_retrieve_from_in_memory_storage() {
+        ForStorage storage = new InMemoryStorage();
+        storage.storeBooking();
+        fail();
     }
 
 }
