@@ -11,13 +11,18 @@ configurations {
 
 
 dependencies{
-    // Use JUnit Jupiter and Mockito for testing.
+    // Use JUnit Jupiter for testing
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Use Mockito for mocking
     mockitoAgent(libs.mockito) {
         transitive = false
     }
     testImplementation libs.mockito.junit.jupiter
+
+    // Use Hamcrest for assertions
+    testImplementation 'org.hamcrest:hamcrest:3.0'
 
 }
 

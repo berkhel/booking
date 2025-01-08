@@ -1,10 +1,11 @@
 package it.berkhel.booking.unit;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasLength;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,15 +27,19 @@ class UnitTest {
 
     @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
         ForBooking app = App.init(theStorage);
+
         app.book(aReservation);
+
         verify(theStorage).save(aReservation);
     }
 
     @Test void booking_always_return_a_response(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
         ForBooking app = App.init(theStorage);
+
         String response = app.book(aReservation);
-        assertNotNull(response);
-        assertTrue(response.length() > 0);
+
+        assertThat(response, is(notNullValue()));
+        assertThat(response, hasLength(greaterThan(0)) );
     }
 
 
@@ -44,10 +49,14 @@ class UnitTest {
         Reservation secondReservation = new Reservation();
         String firstReservationId = firstReservation.getId();
         String secondReservationId = secondReservation.getId();
+
         storage.save(firstReservation);
         storage.save(secondReservation);
-        assertEquals(firstReservation, storage.retrieveById(firstReservationId));
-        assertEquals(secondReservation, storage.retrieveById(secondReservationId));
+
+        assertThat(firstReservation, is(equalTo(
+                storage.retrieveById(firstReservationId))));
+        assertThat(secondReservation, is(equalTo(
+                storage.retrieveById(secondReservationId))));
     }
 
 }
