@@ -1,15 +1,8 @@
 package it.berkhel.booking.functional;
 
 import it.berkhel.booking.ForBooking;
-import it.berkhel.booking.ForStorage;
 import it.berkhel.booking.MainConfig;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.UUID;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

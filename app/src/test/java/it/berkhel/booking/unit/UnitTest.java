@@ -1,7 +1,6 @@
 package it.berkhel.booking.unit;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
@@ -14,10 +13,7 @@ import it.berkhel.booking.App;
 import it.berkhel.booking.ForBooking;
 import it.berkhel.booking.ForStorage;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-
-import java.util.Map;
 
 
 @ExtendWith(MockitoExtension.class)
