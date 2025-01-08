@@ -9,15 +9,17 @@ public class App implements ForBooking {
     }
     
     private ForStorage storage;
+    private String id;
 
     private App(ForStorage storage) {
+        this.id = UUID.randomUUID().toString();
         this.storage = storage;
     }
 
     @Override
     public String book(){
         storage.storeBooking();
-        return UUID.randomUUID().toString();
+        return this.id;
     }
 
 

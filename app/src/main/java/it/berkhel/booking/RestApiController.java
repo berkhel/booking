@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RestApiController {
 
+    private final ForBooking bookingManager;
+
+    public RestApiController(ForBooking bookingManager){
+        this.bookingManager = bookingManager;
+    }
 
     @GetMapping("/booking")
     public String hello() {
-       return "OK";
+       return bookingManager.book();
     }
     
 }
