@@ -3,6 +3,7 @@ package it.berkhel.booking.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
@@ -23,16 +24,17 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void book_a_reservation(@Mock ForStorage storage) {
-        Reservation aReservation = new Reservation();
-        ForBooking app = App.init(storage);
+    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
+        ForBooking app = App.init(theStorage);
         app.book(aReservation);
-        verify(storage).save(aReservation);
+        verify(theStorage).save(aReservation);
     }
 
-    @Test void booking_and_return_a_confirmation(@Mock ForStorage storage) {
-        ForBooking app = App.init(storage);
-        assertNotNull(app.book(null));
+    @Test void booking_always_return_a_response(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
+        ForBooking app = App.init(theStorage);
+        String response = app.book(aReservation);
+        assertNotNull(response);
+        assertTrue(response.length() > 0);
     }
 
 
