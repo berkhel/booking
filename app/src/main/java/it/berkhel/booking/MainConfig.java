@@ -15,7 +15,7 @@ public class MainConfig {
     ForStorage storage(){
         return new ForStorage() {
             @Override
-            public void storeBooking() {
+            public void storeBooking(Reservation reservation) {
                //do nothing 
             }
         };

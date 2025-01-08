@@ -34,7 +34,7 @@ public class FunctionalTest {
         then().
             statusCode(200).
         and().
-            body(equalTo(bookingManager.book()));
+            body(equalTo(bookingManager.book(null)));
 
     }
 

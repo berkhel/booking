@@ -17,8 +17,8 @@ public class App implements ForBooking {
     }
 
     @Override
-    public String book(){
-        storage.storeBooking();
+    public String book(Reservation aReservation){
+        storage.storeBooking(aReservation);
         return this.id;
     }
 

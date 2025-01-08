@@ -14,7 +14,7 @@ public class RestApiController {
 
     @GetMapping("/booking")
     public String hello() {
-       return bookingManager.book();
+       return bookingManager.book(null);
     }
     
 }

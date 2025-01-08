@@ -14,6 +14,7 @@ import it.berkhel.booking.App;
 import it.berkhel.booking.ForBooking;
 import it.berkhel.booking.ForStorage;
 import it.berkhel.booking.InMemoryStorage;
+import it.berkhel.booking.Reservation;
 
 import static org.mockito.Mockito.verify;
 
@@ -30,13 +31,14 @@ class UnitTest {
 
     @Test void booking_and_return_a_confirmation(@Mock ForStorage storage) {
         ForBooking app = App.init(storage);
-        assertNotNull(app.book());
+        assertNotNull(app.book(null));
     }
 
 
     @Test void store_and_retrieve_from_in_memory_storage() {
         ForStorage storage = new InMemoryStorage();
-        storage.storeBooking();
+        Reservation aReservation = new Reservation();
+        storage.storeBooking(aReservation);
         fail();
     }
 
