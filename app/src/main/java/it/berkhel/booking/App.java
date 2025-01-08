@@ -1,5 +1,6 @@
 package it.berkhel.booking;
 
+import java.util.UUID;
 
 public class App implements ForBooking {
 
@@ -16,7 +17,7 @@ public class App implements ForBooking {
     @Override
     public String book(){
         storage.storeBooking();
-        return "OK";
+        return UUID.randomUUID().toString();
     }
 
 

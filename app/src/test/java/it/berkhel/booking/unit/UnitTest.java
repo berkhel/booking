@@ -33,4 +33,5 @@ class UnitTest {
         ForBooking app = App.init(storage);
         assertNotNull(app.book());
     }
+
 }

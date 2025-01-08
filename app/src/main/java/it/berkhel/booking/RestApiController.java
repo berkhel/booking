@@ -9,7 +9,7 @@ public class RestApiController {
 
     @GetMapping("/booking")
     public String hello() {
-       return "Hello World!";
+       return "OK";
     }
     
 }
