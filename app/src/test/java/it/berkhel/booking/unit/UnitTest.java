@@ -2,6 +2,8 @@ package it.berkhel.booking.unit;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -25,5 +27,10 @@ class UnitTest {
         ForBooking app = App.init(storage);
         app.book();
         verify(storage).storeBooking();
+    }
+
+    @Test void test_booking_return_a_confirmation(@Mock ForStorage storage) {
+        ForBooking app = App.init(storage);
+        assertNotNull(app.book());
     }
 }
