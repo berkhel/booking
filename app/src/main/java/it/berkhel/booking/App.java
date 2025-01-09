@@ -2,6 +2,7 @@ package it.berkhel.booking;
 
 import it.berkhel.booking.actionport.ForBooking;
 import it.berkhel.booking.drivenport.ForStorage;
+import it.berkhel.booking.entity.Reservation;
 
 public class App implements ForBooking {
 

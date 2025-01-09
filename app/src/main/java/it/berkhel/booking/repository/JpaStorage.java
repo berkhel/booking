@@ -1,9 +1,10 @@
-package it.berkhel.booking;
+package it.berkhel.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import it.berkhel.booking.drivenport.ForStorage;
+import it.berkhel.booking.entity.Reservation;
 
 @Repository
 public class JpaStorage implements ForStorage {

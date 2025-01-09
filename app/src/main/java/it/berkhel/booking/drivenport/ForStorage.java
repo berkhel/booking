@@ -1,6 +1,6 @@
 package it.berkhel.booking.drivenport;
 
-import it.berkhel.booking.Reservation;
+import it.berkhel.booking.entity.Reservation;
 
 public interface ForStorage {
 

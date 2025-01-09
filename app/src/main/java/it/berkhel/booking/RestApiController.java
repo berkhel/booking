@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.berkhel.booking.actionport.ForBooking;
+import it.berkhel.booking.entity.Reservation;
 
 @RestController
 public class RestApiController {

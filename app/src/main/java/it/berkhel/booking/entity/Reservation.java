@@ -1,4 +1,4 @@
-package it.berkhel.booking;
+package it.berkhel.booking.entity;
 
 
 import java.util.UUID;
