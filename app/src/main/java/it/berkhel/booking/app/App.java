@@ -20,7 +20,10 @@ public class App implements ForBooking {
     }
 
     @Override
-    public Purchase purchase(List<Ticket> tickets){
+    public Purchase purchase(List<Ticket> tickets) throws Exception{
+        if(tickets.size() > 3){
+            throw new Exception("Cannot purchase more than 3 tickets");
+        }
         Purchase reservation = new Purchase();
         storage.save(reservation);
         return reservation;

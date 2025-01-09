@@ -18,7 +18,7 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/booking", produces = "application/json")
-    public Purchase book() {
+    public Purchase book() throws Exception {
        return bookingManager.purchase(null);
     }
 
