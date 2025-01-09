@@ -8,13 +8,15 @@ public class RestApiController {
 
     private final ForBooking bookingManager;
 
+
     public RestApiController(ForBooking bookingManager){
         this.bookingManager = bookingManager;
     }
 
     @GetMapping(value = "/booking", produces = "application/json")
-    public String hello() {
-       return "{ \"id\": \""+bookingManager.book(new Reservation())+"\" }";
+    public Reservation hello() {
+       return bookingManager.book();
     }
+
     
 }

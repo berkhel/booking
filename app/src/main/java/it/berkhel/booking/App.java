@@ -1,5 +1,6 @@
 package it.berkhel.booking;
 
+import org.aspectj.apache.bcel.generic.RET;
 
 public class App implements ForBooking {
 
@@ -14,9 +15,10 @@ public class App implements ForBooking {
     }
 
     @Override
-    public String book(Reservation aReservation){
-        storage.save(aReservation);
-        return aReservation.getId();
+    public Reservation book(){
+        Reservation reservation = new Reservation();
+        storage.save(reservation);
+        return reservation;
     }
 
 

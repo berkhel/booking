@@ -3,6 +3,8 @@ package it.berkhel.booking;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -10,6 +12,7 @@ import jakarta.persistence.Id;
 public class Reservation {
 
     @Id
+    @JsonProperty
     private String id;
 
     public Reservation(){
