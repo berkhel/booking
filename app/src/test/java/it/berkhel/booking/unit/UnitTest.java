@@ -17,6 +17,7 @@ import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Reservation;
+import it.berkhel.booking.unit.fixture.InMemoryStorage;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

@@ -1,4 +1,4 @@
-package it.berkhel.booking.unit;
+package it.berkhel.booking.unit.fixture;
 
 import java.util.HashMap;
 import java.util.Map;
