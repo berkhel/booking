@@ -1,4 +1,4 @@
-package it.berkhel.booking.repository;
+package it.berkhel.booking.drivenadapter;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

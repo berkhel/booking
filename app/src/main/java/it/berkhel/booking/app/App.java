@@ -1,4 +1,4 @@
-package it.berkhel.booking;
+package it.berkhel.booking.app;
 
 import it.berkhel.booking.actionport.ForBooking;
 import it.berkhel.booking.drivenport.ForStorage;

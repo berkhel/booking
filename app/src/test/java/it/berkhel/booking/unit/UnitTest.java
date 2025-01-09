@@ -13,8 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import it.berkhel.booking.App;
 import it.berkhel.booking.actionport.ForBooking;
+import it.berkhel.booking.app.App;
 import it.berkhel.booking.drivenport.ForStorage;
 import it.berkhel.booking.entity.Reservation;
 
