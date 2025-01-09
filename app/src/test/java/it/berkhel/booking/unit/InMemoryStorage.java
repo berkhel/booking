@@ -1,7 +1,10 @@
-package it.berkhel.booking;
+package it.berkhel.booking.unit;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import it.berkhel.booking.ForStorage;
+import it.berkhel.booking.Reservation;
 
 public class InMemoryStorage implements ForStorage {
 

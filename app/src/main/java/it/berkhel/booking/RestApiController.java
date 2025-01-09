@@ -14,7 +14,7 @@ public class RestApiController {
 
     @GetMapping(value = "/booking", produces = "application/json")
     public String hello() {
-       return "{ \"id\": \""+bookingManager.book(null)+"\" }";
+       return "{ \"id\": \""+bookingManager.book(new Reservation())+"\" }";
     }
     
 }

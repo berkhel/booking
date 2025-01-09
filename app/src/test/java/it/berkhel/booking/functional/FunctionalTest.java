@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -18,6 +18,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -32,7 +33,10 @@ public class FunctionalTest {
 
     @Container
     @ServiceConnection
-    private static MySQLContainer<?> mySqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:5.7.34"));
+    @SuppressWarnings("resource")
+    private static MySQLContainer<?> mySqlContainer = new MySQLContainer<>(DockerImageName.parse("mysql:5.7.34"))
+    .withDatabaseName("booking")
+    .withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger(FunctionalTest.class)));
 
 
     private static MySqlDatabase mySqlDatabase;
@@ -43,7 +47,6 @@ public class FunctionalTest {
         Integer exposedPort = Integer.parseInt(Optional.ofNullable(mySqlContainer.getExposedPorts().getFirst().toString())
                 .orElse("3306"));
         Integer mappedHostPort = mySqlContainer.getMappedPort(exposedPort);
-        System.out.println("PORT="+mappedHostPort);
         mySqlDatabase = new MySqlDatabase(mappedHostPort);
     }
 

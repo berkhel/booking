@@ -14,37 +14,37 @@ import java.util.List;
 
 public class MySqlDatabase {
 
-    private String baseUrl;
+    private String url;
     private String user = "root";
     private String password = "test";
 
 
     public MySqlDatabase(Integer port) throws SQLException{
-        this.baseUrl ="jdbc:mysql://localhost:" + port;
+        this.url ="jdbc:mysql://localhost:" + port + "/booking";
         this.initDatabase();
     }
 
     private void initDatabase() throws SQLException{
-        try(Connection con = connection("");
-        PreparedStatement createDatabase = con.prepareStatement("CREATE DATABASE IF NOT EXISTS booking");
-        PreparedStatement useDatabase = con.prepareStatement("USE booking");
+        try(Connection con = connection();
+        // PreparedStatement createDatabase = con.prepareStatement("CREATE DATABASE IF NOT EXISTS booking");
+        //PreparedStatement useDatabase = con.prepareStatement("USE booking");
         PreparedStatement createTable = con.prepareStatement("CREATE TABLE reservation ( id VARCHAR(255) )");
         ){
-            createDatabase.execute();
-            useDatabase.execute();
+            // createDatabase.execute();
+            //useDatabase.execute();
             createTable.execute();
         }
     }
 
-    private Connection connection(String table) throws SQLException{
-        return DriverManager.getConnection(baseUrl+"/"+table, user, password);
+    private Connection connection() throws SQLException{
+        return DriverManager.getConnection(url, user, password);
     }
 
 
 
     public String query(String preparedQuery, List<String> queryParameters, String column) throws SQLException {
         String result = "";
-        try (Connection con = connection("booking");
+        try (Connection con = connection();
                 PreparedStatement stmt = con.prepareStatement(preparedQuery)) {
                 for(var i = 0; i < queryParameters.size(); i++){
                     stmt.setString(i+1, queryParameters.get(i));
@@ -59,11 +59,11 @@ public class MySqlDatabase {
     }
 
     public String queryRecordIdWithTheSameId(String id, String table) throws SQLException {
-        return query("SELECT * FROM "+ table + " WHERE id = ?", List.of(id), "id");
+        return query("SELECT id FROM "+ table + " WHERE id LIKE ?", List.of(id), "id");
     }
 
     public static ResponseAwareMatcher<Response> isEqualToRecordIdFrom(MySqlDatabase mySqlDatabase, String table){
-        return response -> equalTo(mySqlDatabase.queryRecordIdWithTheSameId(response.asString(), table));
+        return response -> equalTo(mySqlDatabase.queryRecordIdWithTheSameId(response.getBody().jsonPath().getString("id"), table));
     }
     
 }

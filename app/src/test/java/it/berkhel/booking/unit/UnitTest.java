@@ -16,10 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import it.berkhel.booking.App;
 import it.berkhel.booking.ForBooking;
 import it.berkhel.booking.ForStorage;
-import it.berkhel.booking.InMemoryStorage;
 import it.berkhel.booking.Reservation;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.UUID;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,13 +29,13 @@ class UnitTest {
 
     @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
         ForBooking app = App.init(theStorage);
-
         app.book(aReservation);
 
         verify(theStorage).save(aReservation);
     }
 
     @Test void booking_always_return_a_response(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
+        when(aReservation.getId()).thenReturn(UUID.randomUUID().toString());
         ForBooking app = App.init(theStorage);
 
         String response = app.book(aReservation);

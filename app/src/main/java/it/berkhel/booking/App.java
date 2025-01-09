@@ -1,6 +1,5 @@
 package it.berkhel.booking;
 
-import java.util.UUID;
 
 public class App implements ForBooking {
 
@@ -9,17 +8,15 @@ public class App implements ForBooking {
     }
     
     private ForStorage storage;
-    private String id;
 
     private App(ForStorage storage) {
-        this.id = UUID.randomUUID().toString();
         this.storage = storage;
     }
 
     @Override
     public String book(Reservation aReservation){
         storage.save(aReservation);
-        return this.id;
+        return aReservation.getId();
     }
 
 
