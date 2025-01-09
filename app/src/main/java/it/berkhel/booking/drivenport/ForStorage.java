@@ -1,4 +1,6 @@
-package it.berkhel.booking;
+package it.berkhel.booking.drivenport;
+
+import it.berkhel.booking.Reservation;
 
 public interface ForStorage {
 
