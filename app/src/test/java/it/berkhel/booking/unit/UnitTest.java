@@ -17,32 +17,34 @@ import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Purchase;
+import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.unit.fixture.InMemoryStorage;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.UUID;
 
 
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage) {
+    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock List<Ticket> tickets) {
         ForBooking app = App.init(theStorage);
 
-        Purchase reservation = app.book();
+        Purchase aPurchase = app.purchase(tickets);
 
-        verify(theStorage).save(reservation);
+        verify(theStorage).save(aPurchase);
     }
 
-    @Test void booking_always_return_a_response(@Mock ForStorage theStorage) {
+    @Test void booking_always_return_a_response(@Mock ForStorage theStorage, @Mock List<Ticket> tickets) {
         ForBooking app = App.init(theStorage);
 
-        Purchase reservation = app.book();
+        Purchase aPurchase = app.purchase(tickets);
 
-        assertThat(reservation, is(notNullValue()));
-        assertThat(reservation.getId(), hasLength(greaterThan(0)) );
+        assertThat(aPurchase, is(notNullValue()));
+        assertThat(aPurchase.getId(), hasLength(greaterThan(0)) );
     }
 
     @Test
