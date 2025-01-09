@@ -61,7 +61,7 @@ public class FunctionalTest {
     void testRestApi(@Autowired ForBooking bookingManager) {
 
         when().
-            get("/booking").
+            post("/booking").
         then().
             statusCode(200).
         and().body("id",
