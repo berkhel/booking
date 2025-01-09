@@ -14,9 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.berkhel.booking.App;
-import it.berkhel.booking.ForBooking;
 import it.berkhel.booking.ForStorage;
 import it.berkhel.booking.Reservation;
+import it.berkhel.booking.actionport.ForBooking;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
