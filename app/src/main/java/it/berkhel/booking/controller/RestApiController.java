@@ -19,7 +19,7 @@ public class RestApiController {
 
     @PostMapping(value = "/booking", produces = "application/json")
     public Purchase book() {
-       return bookingManager.book();
+       return bookingManager.purchase(null);
     }
 
     

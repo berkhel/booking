@@ -1,8 +1,11 @@
 package it.berkhel.booking.app;
 
+import java.util.List;
+
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Purchase;
+import it.berkhel.booking.entity.Ticket;
 
 public class App implements ForBooking {
 
@@ -17,7 +20,7 @@ public class App implements ForBooking {
     }
 
     @Override
-    public Purchase book(){
+    public Purchase purchase(List<Ticket> tickets){
         Purchase reservation = new Purchase();
         storage.save(reservation);
         return reservation;
