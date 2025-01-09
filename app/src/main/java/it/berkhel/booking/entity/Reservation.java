@@ -1,6 +1,7 @@
 package it.berkhel.booking.entity;
 
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -19,15 +20,23 @@ public class Reservation {
     @JsonProperty
     private String id = UUID.randomUUID().toString();
 
+    @JsonProperty
+    private List<Ticket> tickets;
+
 
     public String getId() {
         return id;
     }
 
+    public List<Ticket> getTickets(){
+        return tickets;
+    }
+
     @Override
     public String toString() {
-        return "Reservation [id=" + id + "]";
+        return "Reservation [id=" + id + ", tickets=" + tickets + "]";
     }
+
 
 
 }
