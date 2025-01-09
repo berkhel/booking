@@ -1,4 +1,4 @@
-package it.berkhel.booking;
+package it.berkhel.booking.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
