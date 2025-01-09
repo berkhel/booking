@@ -7,11 +7,11 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Reservation;
 
 @Repository
-public class JpaStorage implements ForStorage {
+public class StorageXReservationRepository implements ForStorage {
 
     private JpaRepository<Reservation, String> repo;
 
-    public JpaStorage(JpaRepository<Reservation, String> repo){
+    public StorageXReservationRepository(JpaRepository<Reservation, String> repo){
         this.repo = repo;
     }
 
