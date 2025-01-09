@@ -2,7 +2,7 @@ package it.berkhel.booking.app;
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
-import it.berkhel.booking.entity.Reservation;
+import it.berkhel.booking.entity.Purchase;
 
 public class App implements ForBooking {
 
@@ -17,8 +17,8 @@ public class App implements ForBooking {
     }
 
     @Override
-    public Reservation book(){
-        Reservation reservation = new Reservation();
+    public Purchase book(){
+        Purchase reservation = new Purchase();
         storage.save(reservation);
         return reservation;
     }

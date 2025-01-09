@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.berkhel.booking.app.actionport.ForBooking;
-import it.berkhel.booking.entity.Reservation;
+import it.berkhel.booking.entity.Purchase;
 
 @RestController
 public class RestApiController {
@@ -18,7 +18,7 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/booking", produces = "application/json")
-    public Reservation book() {
+    public Purchase book() {
        return bookingManager.book();
     }
 

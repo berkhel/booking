@@ -12,7 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Reservation {
+public class Purchase {
 
     @Id
     @JsonProperty

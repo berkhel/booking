@@ -1,11 +1,11 @@
 package it.berkhel.booking.app.drivenport;
 
-import it.berkhel.booking.entity.Reservation;
+import it.berkhel.booking.entity.Purchase;
 
 public interface ForStorage {
 
-    public void save(Reservation aReservation);
+    public void save(Purchase aReservation);
 
-    public Reservation retrieveById(String reservationId);
+    public Purchase retrieveById(String reservationId);
     
 }
