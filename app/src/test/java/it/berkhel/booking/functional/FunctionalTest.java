@@ -24,6 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import io.restassured.RestAssured;
 
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 
 
@@ -58,16 +59,27 @@ public class FunctionalTest {
 
 
     @Test
-    void testRestApi(@Autowired ForBooking bookingManager) {
+    void testSaveAndRetrieveBooking(@Autowired ForBooking bookingManager) {
 
+        String email = "test@example.it";
+
+        given().
+            header("Content-type", "application/json").
+            body("{ \"email\":\""+email+"\"}").
         when().
-            get("/booking").
+            post("/booking").
+        then().
+            statusCode(200);
+
+        
+        
+        when().
+            get("/booking?email="+email).
         then().
             statusCode(200).
         and().body("id",
             isEqualToRecordIdFrom(mySqlDatabase, "reservation"));
 
     }
-
     
 }
