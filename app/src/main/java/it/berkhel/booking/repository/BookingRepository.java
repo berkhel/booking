@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import it.berkhel.booking.entity.Purchase;
 
-public interface ReservationRepository extends JpaRepository<Purchase, String> {
+public interface BookingRepository extends JpaRepository<Purchase, String> {
 
 }
