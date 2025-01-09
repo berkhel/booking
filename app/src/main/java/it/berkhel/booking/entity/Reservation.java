@@ -4,8 +4,6 @@ package it.berkhel.booking.entity;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;

@@ -20,7 +20,11 @@ image::./resources/images/system.svg[System,width=640,height=480,opts=inline]
 
 == Container Diagram
 
-image::./resources/images/container.svg[Container,width=1280,height=960,opts=inline]
+image::./resources/images/container.svg[Container,width=960,height=720,opts=inline]
+
+== Component Diagram
+
+image::./resources/images/component.svg[Component,width=1280,height=960,opts=inline]
 
 == Data Model
 
