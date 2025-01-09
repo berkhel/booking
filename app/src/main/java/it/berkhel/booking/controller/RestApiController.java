@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.berkhel.booking.actionport.ForBooking;
+import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.entity.Reservation;
 
 @RestController

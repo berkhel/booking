@@ -3,7 +3,7 @@ package it.berkhel.booking.drivenadapter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import it.berkhel.booking.drivenport.ForStorage;
+import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Reservation;
 
 @Repository

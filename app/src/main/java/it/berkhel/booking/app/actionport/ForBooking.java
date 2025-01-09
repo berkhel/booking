@@ -1,4 +1,4 @@
-package it.berkhel.booking.actionport;
+package it.berkhel.booking.app.actionport;
 
 import it.berkhel.booking.entity.Reservation;
 

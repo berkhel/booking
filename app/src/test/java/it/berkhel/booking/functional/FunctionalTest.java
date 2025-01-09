@@ -1,6 +1,6 @@
 package it.berkhel.booking.functional;
 
-import it.berkhel.booking.actionport.ForBooking;
+import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
 import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.isEqualToRecordIdFrom;
