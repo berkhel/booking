@@ -63,5 +63,27 @@ class UnitTest {
 
     }
 
+    @Test
+    void three_tickets_for_reservation_are_allowed(@Mock ForStorage aStorage){
+        List<Ticket> fourTickets = Stream.generate(Ticket::new).limit(3).toList();
+        ForBooking app = App.init(aStorage);
+
+        assertDoesNotThrow(() -> {
+            app.purchase(fourTickets);
+        });
+
+    }
+
+    @Test
+    void zero_tickets_for_reservation_are_not_allowed(@Mock ForStorage aStorage){
+        List<Ticket> fourTickets = List.of();
+        ForBooking app = App.init(aStorage);
+
+        assertThrows(Exception.class, () -> {
+            app.purchase(fourTickets);
+        });
+
+    }
+
 
 }
