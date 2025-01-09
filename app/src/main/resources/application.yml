@@ -4,3 +4,4 @@ server:
 # spring:
 #   datasource:
 #     url: jdbc:mysql://localhost:3306/booking
+# spring.jpa.hibernate.ddl-auto=update

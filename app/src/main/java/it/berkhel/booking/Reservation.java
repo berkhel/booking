@@ -6,6 +6,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
@@ -13,11 +15,8 @@ public class Reservation {
 
     @Id
     @JsonProperty
-    private String id;
+    private String id = UUID.randomUUID().toString();
 
-    public Reservation(){
-        this.id = UUID.randomUUID().toString();
-    }
 
     public String getId() {
         return id;

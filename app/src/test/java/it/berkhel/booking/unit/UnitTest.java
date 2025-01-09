@@ -27,21 +27,21 @@ import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
+    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage) {
         ForBooking app = App.init(theStorage);
-        app.book(aReservation);
 
-        verify(theStorage).save(aReservation);
+        Reservation reservation = app.book();
+
+        verify(theStorage).save(reservation);
     }
 
-    @Test void booking_always_return_a_response(@Mock ForStorage theStorage, @Mock Reservation aReservation) {
-        when(aReservation.getId()).thenReturn(UUID.randomUUID().toString());
+    @Test void booking_always_return_a_response(@Mock ForStorage theStorage) {
         ForBooking app = App.init(theStorage);
 
-        String response = app.book(aReservation);
+        Reservation reservation = app.book();
 
-        assertThat(response, is(notNullValue()));
-        assertThat(response, hasLength(greaterThan(0)) );
+        assertThat(reservation, is(notNullValue()));
+        assertThat(reservation.getId(), hasLength(greaterThan(0)) );
     }
 
 
