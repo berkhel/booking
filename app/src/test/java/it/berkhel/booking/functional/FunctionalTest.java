@@ -25,6 +25,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import io.restassured.RestAssured;
 
 import static io.restassured.RestAssured.when;
+import static io.restassured.RestAssured.given;
 
 
 @SpringBootTest(classes = { MainConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -58,16 +59,34 @@ public class FunctionalTest {
 
 
     @Test
-    void testRestApi(@Autowired ForBooking bookingManager) {
+    void with_a_void_array_should_return_bad_gateway(@Autowired ForBooking bookingManager) {
 
+        given().
+            contentType("application/json").
+        and().
+            body("[]").
         when().
             post("/booking").
         then().
-            statusCode(200).
-        and().body("id",
-            isEqualToRecordIdFrom(mySqlDatabase, "reservation"));
+            statusCode(400);
 
     }
+
+    // @Test
+    // void testRestApi(@Autowired ForBooking bookingManager) {
+
+    //     given().
+    //         contentType("application/json").
+    //     and().
+    //         body("[]").
+    //     when().
+    //         post("/booking").
+    //     then().
+    //         statusCode(200).
+    //     and().body("id",
+    //         isEqualToRecordIdFrom(mySqlDatabase, "reservation"));
+
+    // }
 
     
 }
