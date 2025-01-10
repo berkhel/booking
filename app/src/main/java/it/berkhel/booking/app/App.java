@@ -21,6 +21,9 @@ public class App implements ForBooking {
 
     @Override
     public Purchase purchase(List<Ticket> tickets) throws Exception{
+        if(tickets.size() < 1){
+            throw new Exception("At least one ticket must be included in the request");
+        }
         if(tickets.size() > 3){
             throw new Exception("Cannot purchase more than 3 tickets");
         }

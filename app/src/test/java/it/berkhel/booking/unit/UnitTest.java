@@ -34,18 +34,18 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock List<Ticket> tickets) throws Exception {
+    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock Ticket aTicket) throws Exception {
         ForBooking app = App.init(theStorage);
 
-        Purchase aPurchase = app.purchase(tickets);
+        Purchase aPurchase = app.purchase(List.of(aTicket));
 
         verify(theStorage).save(aPurchase);
     }
 
-    @Test void booking_always_return_a_response(@Mock ForStorage aStorage, @Mock List<Ticket> tickets) throws Exception {
+    @Test void booking_always_return_a_response(@Mock ForStorage aStorage, @Mock Ticket aTicket) throws Exception {
         ForBooking app = App.init(aStorage);
 
-        Purchase thePurchase = app.purchase(tickets);
+        Purchase thePurchase = app.purchase(List.of(aTicket));
 
         assertThat(thePurchase, is(notNullValue()));
         assertThat(thePurchase.getId(), hasLength(greaterThan(0)) );
@@ -65,22 +65,22 @@ class UnitTest {
 
     @Test
     void three_tickets_for_reservation_are_allowed(@Mock ForStorage aStorage){
-        List<Ticket> fourTickets = Stream.generate(Ticket::new).limit(3).toList();
+        List<Ticket> threeTickets = Stream.generate(Ticket::new).limit(3).toList();
         ForBooking app = App.init(aStorage);
 
         assertDoesNotThrow(() -> {
-            app.purchase(fourTickets);
+            app.purchase(threeTickets);
         });
 
     }
 
     @Test
     void zero_tickets_for_reservation_are_not_allowed(@Mock ForStorage aStorage){
-        List<Ticket> fourTickets = List.of();
+        List<Ticket> noTickets = List.of();
         ForBooking app = App.init(aStorage);
 
         assertThrows(Exception.class, () -> {
-            app.purchase(fourTickets);
+            app.purchase(noTickets);
         });
 
     }
