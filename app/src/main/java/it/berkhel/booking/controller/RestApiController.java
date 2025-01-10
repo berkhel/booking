@@ -30,5 +30,10 @@ public class RestApiController {
        return bookingManager.purchase(tickets);
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Body Request not valid") // 409
+    @ExceptionHandler(Exception.class)
+    public void badRequest() {
+        // Nothing to do
+    }
     
 }
