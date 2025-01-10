@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Purchase {
@@ -19,6 +20,7 @@ public class Purchase {
     private String id = UUID.randomUUID().toString();
 
     @JsonProperty
+    @OneToMany
     private List<Ticket> tickets;
 
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Ticket {
@@ -12,9 +13,11 @@ public class Ticket {
     @JsonProperty
     private String id;
 
+    @ManyToOne
     @JsonProperty
     private Attendee attendee;
 
+    @ManyToOne
     @JsonProperty
     private Event event;
     
