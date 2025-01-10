@@ -9,8 +9,8 @@ public class Event {
     @Id
     String id;
 
-    Integer maxTickets;
+    Integer maxSeats;
 
-    Integer remainingTickets;
+    Integer remainingSeats;
     
 }

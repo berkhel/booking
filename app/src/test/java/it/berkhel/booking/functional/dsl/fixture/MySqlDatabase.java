@@ -67,10 +67,6 @@ public class MySqlDatabase {
     }
 
 
-    public void create(String eventId, Integer maxSeats, Integer remainingSeats){
-        String query =  "INSERT INTO event (eventId, maxSeats, remainingSeats) VALUES (?,?,?)";
-        List<String> params = List.of("0001","100","100");
-    }
 
 
     public String queryRecordIdWithTheSameId(String id, String table) throws SQLException {
