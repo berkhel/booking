@@ -30,20 +30,8 @@ public class MySqlDatabase {
 
     public MySqlDatabase(Integer port) throws SQLException{
         this.url ="jdbc:mysql://localhost:" + port + "/booking";
-        this.initDatabase();
     }
 
-    private void initDatabase() throws SQLException{
-        try(Connection con = connection();
-        // PreparedStatement createDatabase = con.prepareStatement("CREATE DATABASE IF NOT EXISTS booking");
-        //PreparedStatement useDatabase = con.prepareStatement("USE booking");
-       // PreparedStatement createTable = con.prepareStatement("CREATE TABLE purchase ( id VARCHAR(255) )");
-        ){
-            // createDatabase.execute();
-            //useDatabase.execute();
-        //    createTable.execute();
-        }
-    }
 
     private Connection connection() throws SQLException{
         return DriverManager.getConnection(url, user, password);
@@ -52,6 +40,8 @@ public class MySqlDatabase {
 
 
     public String query(QueryHolder queryHolder, Function<ResultSet, String> resultSetHandler) throws SQLException {
+        System.out.println("QUERY:"+queryHolder.query());
+        System.out.println("PARAMS:"+queryHolder.parameters());
         String result = "";
         try (Connection con = connection();
                 PreparedStatement stmt = con.prepareStatement(queryHolder.query())) {
@@ -61,12 +51,43 @@ public class MySqlDatabase {
                 }
             try (ResultSet resultSet = stmt.executeQuery()) {
                 result = resultSetHandler.apply(resultSet);
+            } catch(SQLException e ){
+                throw e;
             }
         }
         return result;
     }
 
+    public Integer update(QueryHolder queryHolder) throws SQLException {
+        System.out.println("QUERY:"+queryHolder.query());
+        System.out.println("PARAMS:"+queryHolder.parameters());
+        Integer result;
+        try (Connection con = connection();
+                PreparedStatement stmt = con.prepareStatement(queryHolder.query())) {
+                List<String> parameters = queryHolder.parameters();
+                for(var i = 0; i < parameters.size(); i++){
+                    stmt.setString(i+1, parameters.get(i));
+                }
+                result = stmt.executeUpdate();
+        }
+        return result;
+    }
 
+    public String query(QueryHolder queryHolder) throws SQLException {
+        return query(queryHolder, rs -> "");
+    }
+
+
+    public void createEvent(String eventId, Integer maxSeats, Integer remainingSeats) throws SQLException {
+        Integer insertedRows = update(InsertQueryBuilder.create("event")
+                .with("id", eventId)
+                .with("max_seats", maxSeats + "")
+                .with("remaining_seats", remainingSeats + "")
+                .build());
+
+        assert insertedRows == 1 : "Event not created!";
+
+    }
 
 
     public String queryRecordIdWithTheSameId(String id, String table) throws SQLException {
@@ -114,8 +135,6 @@ class SelectQueryBuilder {
 
         String query = "SELECT "+fields+" FROM " + table;
         List<String> values = new ArrayList<>();
-        if(whereClauses.size() > 0){
-        }
         for(var i = 0; i<whereClauses.size(); i++){
             var wq = whereClauses.get(i);
             query += (i == 0) ? " WHERE " : " AND ";
@@ -144,7 +163,8 @@ class InsertQueryBuilder {
     public QueryHolder build(){
         String query = "INSERT INTO " +table+
          " ("+ String.join(", ", fields) + ") "+
-         "VALUES (" + fields.stream().map(s -> "?").collect(Collectors.joining(", "));
+         "VALUES (" + fields.stream().map(s -> "?")
+            .collect(Collectors.joining(", ")) + ")";
         
         return new QueryHolder(query, values);
     }

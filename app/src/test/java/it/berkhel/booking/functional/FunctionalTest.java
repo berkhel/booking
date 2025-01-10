@@ -24,6 +24,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
 
 import static io.restassured.RestAssured.when;
 import static io.restassured.RestAssured.given;
@@ -55,6 +57,8 @@ public class FunctionalTest {
     @BeforeAll 
     static void setupRestClient(@LocalServerPort Integer port){
         RestAssured.baseURI = "http://localhost:"+ port;
+        RestAssured.requestSpecification = given().contentType(ContentType.JSON);
+
     }
 
 
@@ -63,8 +67,6 @@ public class FunctionalTest {
     void with_a_void_array_should_return_bad_gateway() {
 
         given().
-            contentType("application/json").
-        and().
             body("[]").
         when().
             post("/booking").
@@ -76,8 +78,6 @@ public class FunctionalTest {
     @Test
     void without_a_body_should_return_bad_gateway() {
 
-        given().
-            contentType("application/json").
         when().
             post("/booking").
         then().
@@ -86,11 +86,11 @@ public class FunctionalTest {
     }
 
     @Test
-    void single_ticket_purchase() {
+    void single_ticket_purchase() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 1, 10);
 
         given().
-            contentType("application/json").
-        and().
             body(Fake.singleTicketPurchaseForEvent("0001")).
         when().
             post("/booking").
