@@ -26,7 +26,6 @@ public class RestApiController {
 
     @PostMapping(value = "/booking" , produces = "application/json")
     public Purchase book(@RequestBody List<Ticket> tickets) throws Exception {
-        System.out.println("LOG: Called Controller");
        return bookingManager.purchase(tickets);
     }
 

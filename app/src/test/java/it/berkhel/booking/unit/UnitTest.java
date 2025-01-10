@@ -85,5 +85,15 @@ class UnitTest {
 
     }
 
+    @Test
+    void a_null_list_of_tickets_for_reservation_is_not_allowed(@Mock ForStorage aStorage){
+        List<Ticket> noTickets = null;
+        ForBooking app = App.init(aStorage);
+
+        assertThrows(Exception.class, () -> {
+            app.purchase(noTickets);
+        });
+
+    }
 
 }

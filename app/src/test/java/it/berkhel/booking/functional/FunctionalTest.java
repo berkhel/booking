@@ -59,7 +59,7 @@ public class FunctionalTest {
 
 
     @Test
-    void with_a_void_array_should_return_bad_gateway(@Autowired ForBooking bookingManager) {
+    void with_a_void_array_should_return_bad_gateway() {
 
         given().
             contentType("application/json").
@@ -72,21 +72,33 @@ public class FunctionalTest {
 
     }
 
-    // @Test
-    // void testRestApi(@Autowired ForBooking bookingManager) {
+    @Test
+    void without_a_body_should_return_bad_gateway() {
 
-    //     given().
-    //         contentType("application/json").
-    //     and().
-    //         body("[]").
-    //     when().
-    //         post("/booking").
-    //     then().
-    //         statusCode(200).
-    //     and().body("id",
-    //         isEqualToRecordIdFrom(mySqlDatabase, "reservation"));
+        given().
+            contentType("application/json").
+        when().
+            post("/booking").
+        then().
+            statusCode(400);
 
-    // }
+    }
+
+    @Test
+    void single_ticket_purchase() {
+
+        given().
+            contentType("application/json").
+        and().
+            body("[{ \"eventId\":\"0001\", \"attendee\" : {\"id\" : \"ABCD0001\", \"firstName\":\"Mario\", \"lastName\": \"Rossi\", \"birthDate\":\"1990-01-01\"}}]").
+        when().
+            post("/booking").
+        then().
+            statusCode(200).
+        and().body("id",
+            isEqualToRecordIdFrom(mySqlDatabase, "reservation"));
+
+    }
 
     
 }
