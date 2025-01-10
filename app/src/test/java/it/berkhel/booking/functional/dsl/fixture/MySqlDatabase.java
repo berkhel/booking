@@ -28,11 +28,11 @@ public class MySqlDatabase {
         try(Connection con = connection();
         // PreparedStatement createDatabase = con.prepareStatement("CREATE DATABASE IF NOT EXISTS booking");
         //PreparedStatement useDatabase = con.prepareStatement("USE booking");
-        PreparedStatement createTable = con.prepareStatement("CREATE TABLE reservation ( id VARCHAR(255) )");
+       // PreparedStatement createTable = con.prepareStatement("CREATE TABLE purchase ( id VARCHAR(255) )");
         ){
             // createDatabase.execute();
             //useDatabase.execute();
-            createTable.execute();
+        //    createTable.execute();
         }
     }
 

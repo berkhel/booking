@@ -96,7 +96,7 @@ public class FunctionalTest {
         then().
             statusCode(200).
         and().body("id",
-            isEqualToRecordIdFrom(mySqlDatabase, "reservation"));
+            isEqualToRecordIdFrom(mySqlDatabase, "purchase"));
 
     }
 

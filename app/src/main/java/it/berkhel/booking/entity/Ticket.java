@@ -1,5 +1,7 @@
 package it.berkhel.booking.entity;
 
+import org.springframework.data.annotation.Reference;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
@@ -17,8 +19,8 @@ public class Ticket {
     @JsonProperty
     private Attendee attendee;
 
-    @ManyToOne
     @JsonProperty
-    private Event event;
+    @Reference(to = Event.class)
+    private String eventId;
     
 }
