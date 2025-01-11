@@ -12,6 +12,7 @@ import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,10 @@ public class FunctionalTest {
 
     }
 
+    @AfterEach
+    void deleteAllRecordsFromTables(){
+        mySqlDatabase.deleteAllRecords();
+    }
 
 
     @Test
@@ -86,7 +91,7 @@ public class FunctionalTest {
     }
 
     @Test
-    void a_successful_ticket_purchase_should_return_a_resume_and_insert_records_into_purchase_and_ticket_tables() throws SQLException {
+    void a_successful_ticket_purchase_should_return_a_resume() throws SQLException {
 
         mySqlDatabase.createEvent("0001", 1, 10);
 
@@ -116,6 +121,21 @@ public class FunctionalTest {
         and().body("tickets[0].attendee.birthDate", equalTo("1990-01-01")).
         and().body("tickets[0].eventId", equalTo("0001")).
         and().body("tickets[0].id", not(emptyOrNullString())).
+        and().body("id", not(emptyOrNullString()));
+
+    }
+
+    @Test
+    void a_successful_ticket_purchase_should_insert_records_into_purchase_and_ticket_tables() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 1, 10);
+
+        given().
+            body(Fake.singleTicketPurchaseForEvent("0001")).
+        when().
+            post("/booking").
+        then().
+            statusCode(200).
         and().body("id",
             existsAsValueIn(mySqlDatabase, "purchase", "id")).
         and().body("id",
@@ -123,6 +143,5 @@ public class FunctionalTest {
 
 
     }
-
     
 }

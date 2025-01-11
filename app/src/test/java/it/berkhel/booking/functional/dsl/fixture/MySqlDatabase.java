@@ -55,6 +55,10 @@ public class MySqlDatabase {
         return result;
     }
 
+    public String query(QueryHolder queryHolder) throws SQLException {
+        return query(queryHolder, rs -> "");
+    }
+
     public Integer update(QueryHolder queryHolder) throws SQLException {
         System.out.println("QUERY:"+queryHolder.query());
         System.out.println("PARAMS:"+queryHolder.parameters());
@@ -70,9 +74,42 @@ public class MySqlDatabase {
         return result;
     }
 
-    public String query(QueryHolder queryHolder) throws SQLException {
-        return query(queryHolder, rs -> "");
+    public Integer update(String command) throws SQLException {
+        return update(new QueryHolder(command));
     }
+
+
+    public void deleteAllRecords() {
+        List<String> tables = List.of("ticket","attendee","purchase","event");
+
+        tables.forEach(table -> {
+            try {
+                update("DELETE FROM "+table);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Integer count = tables.stream().mapToInt( table -> {
+            try {
+              return Integer.parseInt(
+                    query(new QueryHolder("SELECT COUNT(*) AS total_rows FROM "+ table), rs -> {
+                try {
+                    return rs.getString("total_rows");
+                } catch (SQLException ex) {
+                    return "0";
+                }
+            } ));
+            } catch (SQLException e) {
+                return 0;
+            }
+        }).sum();
+
+        assert count == 0 : "Deleting all records failed!";
+        
+
+    }
+
 
 
     public void createEvent(String eventId, Integer maxSeats, Integer remainingSeats) throws SQLException {
@@ -195,5 +232,9 @@ class InsertQueryBuilder {
     }
 }
 
-record QueryHolder(String query, List<String> parameters){};
+record QueryHolder(String query, List<String> parameters){
+    public QueryHolder(String query){
+        this(query, List.of());
+    }
+};
 record WhereClause(String field, String operator, String value){};
