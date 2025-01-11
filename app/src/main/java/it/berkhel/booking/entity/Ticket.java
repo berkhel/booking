@@ -58,6 +58,11 @@ public class Ticket {
         this.event = event;
     }
 
+    @Override
+    public String toString() {
+        return "Ticket [id=" + id + ", attendee=" + attendee + ", purchase=" + purchase + ", event=" + event + "]";
+    }
+
 
 
 

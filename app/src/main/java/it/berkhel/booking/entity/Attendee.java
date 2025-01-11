@@ -21,4 +21,11 @@ public class Attendee {
     @JsonProperty
     private String birthDate;
 
+    @Override
+    public String toString() {
+        return "Attendee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
+                + "]";
+    }
+
+    
 }

@@ -1,10 +1,6 @@
 package it.berkhel.booking.entity;
 
-
 import java.util.List;
-import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,13 +12,11 @@ import jakarta.persistence.OneToMany;
 public class Purchase {
 
     @Id
-    @JsonProperty
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @JsonProperty
     @OneToMany(mappedBy = "purchase")
     private List<Ticket> tickets;
-
 
     public String getId() {
         return id;
@@ -38,10 +32,8 @@ public class Purchase {
 
     @Override
     public String toString() {
-        return "Reservation [id=" + id + ", tickets=" + tickets + "]";
+        return "Purchase [id=" + id + ", tickets=" + tickets + "]";
     }
-
-
 
 
 
