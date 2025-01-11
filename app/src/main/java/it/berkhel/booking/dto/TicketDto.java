@@ -6,7 +6,8 @@ import it.berkhel.booking.entity.Attendee;
 
 public class TicketDto {
 
-
+    @JsonProperty
+    private String id;
 
     @JsonProperty
     private Attendee attendee;
@@ -25,6 +26,10 @@ public class TicketDto {
 
     public String getEventId() {
         return eventId;
+    }
+
+    public void setId(String id){
+        this.id = id;
     }
 
     @Override

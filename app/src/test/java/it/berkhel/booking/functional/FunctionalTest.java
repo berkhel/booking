@@ -4,6 +4,9 @@ import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
 import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.existsAsValueIn;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
 
 
 import java.sql.SQLException;
@@ -83,16 +86,36 @@ public class FunctionalTest {
     }
 
     @Test
-    void single_ticket_purchase() throws SQLException {
+    void a_successful_ticket_purchase_should_return_a_resume_and_insert_records_into_purchase_and_ticket_tables() throws SQLException {
 
         mySqlDatabase.createEvent("0001", 1, 10);
 
+
+        String singlePurchase = 
+                "[" +
+                    "{" +
+                        "\"eventId\":\"0001\"," +
+                        "\"attendee\": {" +
+                            "\"id\": \"ABCD0001\"," +
+                            "\"firstName\":\"Mario\"," +
+                            "\"lastName\": \"Rossi\"," +
+                            "\"birthDate\":\"1990-01-01\"" +
+                        "}" +
+                    "}" +
+                "]";
+
         given().
-            body(Fake.singleTicketPurchaseForEvent("0001")).
+            body(singlePurchase).
         when().
             post("/booking").
         then().
             statusCode(200).
+        and().body("tickets[0].attendee.id", equalTo("ABCD0001")).
+        and().body("tickets[0].attendee.firstName", equalTo("Mario")).
+        and().body("tickets[0].attendee.lastName", equalTo("Rossi")).
+        and().body("tickets[0].attendee.birthDate", equalTo("1990-01-01")).
+        and().body("tickets[0].eventId", equalTo("0001")).
+        and().body("tickets[0].id", not(emptyOrNullString())).
         and().body("id",
             existsAsValueIn(mySqlDatabase, "purchase", "id")).
         and().body("id",

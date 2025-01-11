@@ -27,9 +27,11 @@ public class App implements ForBooking {
         if(tickets.size() > 3){
             throw new Exception("Cannot purchase more than 3 tickets");
         }
-        Purchase reservation = new Purchase();
-        storage.save(reservation);
-        return reservation;
+        Purchase purchase = new Purchase();
+        tickets.forEach(ticket -> ticket.setPurchase(purchase));
+        purchase.setTickets(tickets);
+        storage.save(purchase);
+        return purchase;
     }
 
 

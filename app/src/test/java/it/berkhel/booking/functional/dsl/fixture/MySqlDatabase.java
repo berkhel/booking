@@ -96,7 +96,7 @@ public class MySqlDatabase {
         return query(SelectQueryBuilder.select(columnName).from(table).where(columnName, "=", columnValue).build(),
                 rset -> {
                     try {
-                        return rset.next() ? rset.getString("id") : "";
+                        return rset.next() ? rset.getString(columnName) : "";
                     } catch (SQLException e) {
                         return "";
                     }

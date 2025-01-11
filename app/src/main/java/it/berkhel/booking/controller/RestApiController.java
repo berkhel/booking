@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.dto.DtoMapper;
+import it.berkhel.booking.dto.PurchaseDto;
 import it.berkhel.booking.dto.TicketDto;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -29,9 +29,9 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/booking", produces = "application/json")
-    public Purchase book(@RequestBody List<TicketDto> dtoTickets) throws Exception {
+    public PurchaseDto book(@RequestBody List<TicketDto> dtoTickets) throws Exception {
         List<Ticket> tickets = dtoTickets.stream().map(dtoMapper::toObject).toList();
-        return bookingManager.purchase(tickets);
+        return dtoMapper.toDto(bookingManager.purchase(tickets));
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Body Request not valid") // 409

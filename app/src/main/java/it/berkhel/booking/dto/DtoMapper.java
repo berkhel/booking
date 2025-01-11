@@ -1,8 +1,8 @@
 package it.berkhel.booking.dto;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.repository.EventRepository;
 
@@ -20,6 +20,19 @@ public class DtoMapper {
         ticket.setAttendee(ticketDto.getAttendee());
         ticket.setEvent(eventRepo.getReferenceById(ticketDto.getEventId()));
         return ticket;
+    }
+
+    public TicketDto toDto(Ticket ticket){
+       TicketDto ticketDto = new TicketDto(ticket.getAttendee(), ticket.getEvent().getId());
+       ticketDto.setId(ticket.getId());
+       return ticketDto;
+    }
+
+    public PurchaseDto toDto(Purchase purchase){
+        PurchaseDto purchaseDto = new PurchaseDto();
+        purchaseDto.setId(purchase.getId());
+        purchaseDto.setTickets(purchase.getTickets().stream().map(this::toDto).toList());
+        return purchaseDto;
     }
 
     

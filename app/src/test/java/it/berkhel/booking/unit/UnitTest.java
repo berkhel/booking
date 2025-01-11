@@ -111,7 +111,6 @@ class UnitTest {
 
         assertThat(ticket.getEvent().getId(), equalTo("0001"));
 
-        
     }
 
 }

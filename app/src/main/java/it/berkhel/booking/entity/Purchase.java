@@ -32,10 +32,16 @@ public class Purchase {
         return tickets;
     }
 
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
     @Override
     public String toString() {
         return "Reservation [id=" + id + ", tickets=" + tickets + "]";
     }
+
+
 
 
 
