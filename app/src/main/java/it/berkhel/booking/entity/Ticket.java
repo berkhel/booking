@@ -4,7 +4,10 @@ import org.springframework.data.annotation.Reference;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
@@ -12,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 public class Ticket {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ManyToOne
@@ -30,6 +34,14 @@ public class Ticket {
 
     public Event getEvent() {
         return event;
+    }
+
+    public void setAttendee(Attendee attendee) {
+        this.attendee = attendee;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
 

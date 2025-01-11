@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
@@ -17,7 +19,7 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 @EnableAutoConfiguration
 @EnableJpaRepositories(basePackages = {"it.berkhel.booking.repository"})
 @EntityScan("it.berkhel.booking.entity")
-@ComponentScan(basePackages = {"it.berkhel.booking.controller","it.berkhel.booking.drivenadapter"})
+@ComponentScan(basePackages = {"it.berkhel.booking.controller","it.berkhel.booking.drivenadapter", "it.berkhel.booking.dto"})
 public class MainConfig {
 
 
