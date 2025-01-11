@@ -3,7 +3,8 @@ package it.berkhel.booking.functional;
 import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
-import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.isEqualToRecordIdFrom;
+import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.existsAsValueIn;
+
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -93,7 +94,10 @@ public class FunctionalTest {
         then().
             statusCode(200).
         and().body("id",
-            isEqualToRecordIdFrom(mySqlDatabase, "purchase"));
+            existsAsValueIn(mySqlDatabase, "purchase", "id")).
+        and().body("id",
+            existsAsValueIn(mySqlDatabase, "ticket", "purchase_id"));
+
 
     }
 

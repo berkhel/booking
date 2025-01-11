@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+
 public class MySqlDatabase {
 
     private String url;
@@ -101,11 +104,30 @@ public class MySqlDatabase {
     }
 
     public static ResponseAwareMatcher<Response> isEqualToRecordIdFrom(MySqlDatabase mySqlDatabase, String table){
-        return response -> equalTo(mySqlDatabase.lookupId(response.getBody().jsonPath().getString("id"), table));
+        return response -> equalTo(mySqlDatabase.lookupId(response.path("id"), table));
     }
 
-    public static ResponseAwareMatcher<Response> existsAsColumnValueInRecord(MySqlDatabase mySqlDatabase, String table, String column){
-        return response -> equalTo(mySqlDatabase.lookupId(response.getBody().jsonPath().getString("id"), table));
+    public static ResponseAwareMatcher<Response> existsAsValueIn(MySqlDatabase mySqlDatabase, String table, String column){
+        return response -> new BaseMatcher<String>() {
+
+            private String expected;
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText(expected);
+            }
+
+            @Override
+            public boolean matches(Object actual) {
+                try {
+                this.expected = mySqlDatabase.lookup(table, column, (String) actual);
+                    return actual.equals(expected);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+        };
     }
     
 }
