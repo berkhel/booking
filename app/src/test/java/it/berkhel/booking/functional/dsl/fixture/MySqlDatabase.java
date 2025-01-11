@@ -84,8 +84,13 @@ public class MySqlDatabase {
     }
 
 
-    public String queryRecordIdWithTheSameId(String id, String table) throws SQLException {
-        return query(SelectQueryBuilder.select("id").from(table).where("id", "LIKE", id).build(),
+    public String lookupId(String id, String table) throws SQLException {
+        return lookup(table, "id", id);
+    }
+
+
+    public String lookup(String table, String columnName, String columnValue) throws SQLException {
+        return query(SelectQueryBuilder.select(columnName).from(table).where(columnName, "=", columnValue).build(),
                 rset -> {
                     try {
                         return rset.next() ? rset.getString("id") : "";
@@ -96,7 +101,11 @@ public class MySqlDatabase {
     }
 
     public static ResponseAwareMatcher<Response> isEqualToRecordIdFrom(MySqlDatabase mySqlDatabase, String table){
-        return response -> equalTo(mySqlDatabase.queryRecordIdWithTheSameId(response.getBody().jsonPath().getString("id"), table));
+        return response -> equalTo(mySqlDatabase.lookupId(response.getBody().jsonPath().getString("id"), table));
+    }
+
+    public static ResponseAwareMatcher<Response> existsAsColumnValueInRecord(MySqlDatabase mySqlDatabase, String table, String column){
+        return response -> equalTo(mySqlDatabase.lookupId(response.getBody().jsonPath().getString("id"), table));
     }
     
 }
