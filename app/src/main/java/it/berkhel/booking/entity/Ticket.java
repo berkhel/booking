@@ -12,15 +12,27 @@ import jakarta.persistence.ManyToOne;
 public class Ticket {
 
     @Id
-    @JsonProperty
     private String id;
 
     @ManyToOne
-    @JsonProperty
     private Attendee attendee;
 
-    @JsonProperty
-    @Reference(to = Event.class)
-    private String eventId;
+    @ManyToOne
+    private Event event;
+
+    public String getId() {
+        return id;
+    }
+
+    public Attendee getAttendee() {
+        return attendee;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+
+
     
 }
