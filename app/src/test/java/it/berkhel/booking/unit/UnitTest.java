@@ -16,6 +16,7 @@ import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.SoldoutException;
+import it.berkhel.booking.app.exception.TooManyTicketsException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -51,11 +52,9 @@ class UnitTest {
         List<Ticket> fourTickets = Stream.generate(Fake::ticket).limit(4).toList();
         ForBooking app = App.init(aStorage);
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(TooManyTicketsException.class, () -> {
             app.purchase(fourTickets);
         });
-        
-
     }
 
     @Test

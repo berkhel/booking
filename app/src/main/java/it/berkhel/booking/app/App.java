@@ -5,6 +5,7 @@ import java.util.List;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.SoldoutException;
+import it.berkhel.booking.app.exception.TooManyTicketsException;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 
@@ -26,7 +27,7 @@ public class App implements ForBooking {
             throw new Exception("At least one ticket must be included in the request");
         }
         if(tickets.size() > 3){
-            throw new Exception("Cannot purchase more than 3 tickets");
+            throw new TooManyTicketsException("Cannot purchase more than 3 tickets");
         }
         Purchase purchase = new Purchase();
         for(var ticket : tickets){
