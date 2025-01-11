@@ -1,17 +1,17 @@
 package it.berkhel.booking.drivenadapter;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Purchase;
+import it.berkhel.booking.repository.PurchaseRepository;
 
 @Repository
 public class StorageXJpaRepository implements ForStorage {
 
-    private JpaRepository<Purchase, String> repo;
+    private PurchaseRepository repo;
 
-    public StorageXJpaRepository(JpaRepository<Purchase, String> repo){
+    public StorageXJpaRepository(PurchaseRepository repo){
         this.repo = repo;
     }
 
