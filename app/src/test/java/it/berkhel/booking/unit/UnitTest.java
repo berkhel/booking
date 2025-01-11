@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void booking_a_reservation_targets_the_storage(@Mock ForStorage theStorage, @Mock Ticket aTicket) throws Exception {
+    @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock Ticket aTicket) throws Exception {
         ForBooking app = App.init(theStorage);
 
         Purchase aPurchase = app.purchase(List.of(aTicket));
@@ -56,7 +56,7 @@ class UnitTest {
     }
 
     @Test
-    void not_more_than_three_tickets_for_reservation(@Mock ForStorage aStorage){
+    void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage){
         List<Ticket> fourTickets = Stream.generate(Ticket::new).limit(4).toList();
         ForBooking app = App.init(aStorage);
 
@@ -68,7 +68,7 @@ class UnitTest {
     }
 
     @Test
-    void three_tickets_for_reservation_are_allowed(@Mock ForStorage aStorage){
+    void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage){
         List<Ticket> threeTickets = Stream.generate(Ticket::new).limit(3).toList();
         ForBooking app = App.init(aStorage);
 
@@ -79,7 +79,7 @@ class UnitTest {
     }
 
     @Test
-    void zero_tickets_for_reservation_are_not_allowed(@Mock ForStorage aStorage){
+    void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage){
         List<Ticket> noTickets = List.of();
         ForBooking app = App.init(aStorage);
 
@@ -90,7 +90,7 @@ class UnitTest {
     }
 
     @Test
-    void a_null_list_of_tickets_for_reservation_is_not_allowed(@Mock ForStorage aStorage){
+    void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage){
         List<Ticket> noTickets = null;
         ForBooking app = App.init(aStorage);
 
