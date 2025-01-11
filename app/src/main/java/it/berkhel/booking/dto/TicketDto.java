@@ -3,6 +3,8 @@ package it.berkhel.booking.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import it.berkhel.booking.entity.Attendee;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class TicketDto {
 
@@ -10,9 +12,11 @@ public class TicketDto {
     private String id;
 
     @JsonProperty
+    @NotNull
     private Attendee attendee;
 
     @JsonProperty
+    @NotBlank
     private String eventId;
 
     public TicketDto(Attendee attendee, String eventId) {
