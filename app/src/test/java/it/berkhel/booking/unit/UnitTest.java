@@ -2,7 +2,6 @@ package it.berkhel.booking.unit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -39,7 +38,7 @@ class UnitTest {
         verify(theStorage).save(aPurchase);
     }
 
-    @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock Ticket aTicket) throws Exception {
+    @Test void booking_normally_return_a_response(@Mock ForStorage aStorage) throws Exception {
         ForBooking app = App.init(aStorage);
 
         Purchase thePurchase = app.purchase(List.of(Fake.ticket()));
@@ -92,7 +91,7 @@ class UnitTest {
 
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage){
-        Event soldoutEvent = new Event("ID00A1", 100, 0);
+        Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
         Ticket arrivedLate = new Ticket();
         arrivedLate.setEvent(soldoutEvent);
 

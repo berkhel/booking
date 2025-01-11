@@ -13,7 +13,6 @@ import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.PurchaseDto;
 import it.berkhel.booking.dto.TicketDto;
-import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 
 @RestController
