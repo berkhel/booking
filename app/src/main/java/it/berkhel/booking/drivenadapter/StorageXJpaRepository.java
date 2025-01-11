@@ -1,6 +1,7 @@
 package it.berkhel.booking.drivenadapter;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Purchase;
@@ -11,24 +12,26 @@ import it.berkhel.booking.repository.TicketRepository;
 @Repository
 public class StorageXJpaRepository implements ForStorage {
 
+
     private final PurchaseRepository purchaseRepo;
     private final TicketRepository ticketRepo;
     private final AttendeeRepository attendeeRepo;
 
-    public StorageXJpaRepository(PurchaseRepository purchaseRepo, TicketRepository ticketRepo, AttendeeRepository attendeeRepo){
+    public StorageXJpaRepository(PurchaseRepository purchaseRepo, TicketRepository ticketRepo,
+            AttendeeRepository attendeeRepo) {
         this.purchaseRepo = purchaseRepo;
         this.ticketRepo = ticketRepo;
         this.attendeeRepo = attendeeRepo;
     }
 
-
+    @Transactional
     @Override
     public void save(Purchase purchase) {
         purchaseRepo.save(purchase);
-        purchase.getTickets().forEach(ticket -> {
-            attendeeRepo.save(ticket.getAttendee());
+        for(var ticket : purchase.getTickets()){
+            attendeeRepo.saveAndFlush(ticket.getAttendee());
             ticketRepo.save(ticket);
-        });
+        }
     }
 
     @Override
