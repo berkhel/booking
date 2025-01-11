@@ -4,6 +4,7 @@ import java.util.List;
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 
@@ -31,7 +32,7 @@ public class App implements ForBooking {
         for(var ticket : tickets){
             var event = ticket.getEvent();
             if(event.getRemainingSeats() < 1){
-                throw new Exception("There are no remaining seats for event "+event);
+                throw new SoldoutException("There are no remaining seats for event "+event);
             }
             ticket.setPurchase(purchase);
         }
