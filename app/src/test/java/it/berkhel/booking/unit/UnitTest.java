@@ -15,10 +15,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.dto.DtoToObjectMapper;
+import it.berkhel.booking.dto.TicketDto;
+import it.berkhel.booking.entity.Attendee;
+import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
+import it.berkhel.booking.repository.EventRepository;
 import it.berkhel.booking.unit.fixture.InMemoryStorage;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -92,6 +98,20 @@ class UnitTest {
             app.purchase(noTickets);
         });
 
+    }
+
+    @Test 
+    void ticket_dto_to_object(@Mock EventRepository fakeEventRepo){
+        when(fakeEventRepo.getReferenceById(anyString()))
+            .thenAnswer(method ->  new Event(method.getArgument(0), 0, 0));
+        DtoToObjectMapper dto2Object = new DtoToObjectMapper(fakeEventRepo);
+        TicketDto ticketDto = new TicketDto(new Attendee(), "0001");
+
+        Ticket ticket = dto2Object.toObject(ticketDto);
+
+        assertThat(ticket.getEvent().getId(), equalTo("0001"));
+
+        
     }
 
 }
