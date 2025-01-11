@@ -131,7 +131,7 @@ public class FunctionalTest {
         mySqlDatabase.createEvent("0001", 1, 10);
 
         given().
-            body(Fake.singleTicketPurchaseForEvent("0001")).
+            body(Fake.singlePurchaseForEvent("0001")).
         when().
             post("/booking").
         then().
