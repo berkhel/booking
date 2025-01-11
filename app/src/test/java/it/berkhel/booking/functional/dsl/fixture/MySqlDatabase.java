@@ -37,8 +37,6 @@ public class MySqlDatabase {
 
 
     public String query(QueryHolder queryHolder, Function<ResultSet, String> resultSetHandler) throws SQLException {
-        System.out.println("QUERY:"+queryHolder.query());
-        System.out.println("PARAMS:"+queryHolder.parameters());
         String result = "";
         try (Connection con = connection();
                 PreparedStatement stmt = con.prepareStatement(queryHolder.query())) {
@@ -60,8 +58,6 @@ public class MySqlDatabase {
     }
 
     public Integer update(QueryHolder queryHolder) throws SQLException {
-        System.out.println("QUERY:"+queryHolder.query());
-        System.out.println("PARAMS:"+queryHolder.parameters());
         Integer result;
         try (Connection con = connection();
                 PreparedStatement stmt = con.prepareStatement(queryHolder.query())) {
@@ -90,6 +86,8 @@ public class MySqlDatabase {
             }
         });
 
+
+        // check
         Integer count = tables.stream().mapToInt( table -> {
             try {
               return Integer.parseInt(

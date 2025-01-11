@@ -69,7 +69,7 @@ public class FunctionalTest {
 
 
     @Test
-    void with_a_void_array_should_return_bad_gateway() {
+    void with_a_void_array_should_return_bad_request() {
 
         given().
             body("[]").
@@ -81,7 +81,79 @@ public class FunctionalTest {
     }
 
     @Test
-    void without_a_body_should_return_bad_gateway() {
+    void with_an_array_with_empty_object_should_return_bad_request() {
+
+        given().
+            body("[{}]").
+        when().
+            post("/booking").
+        then().
+            statusCode(400);
+
+    }
+
+    @Test
+    void malformed_body_should_return_bad_request() {
+
+        given().
+            body("[{").
+        when().
+            post("/booking").
+        then().
+            statusCode(400);
+
+    }
+
+    @Test
+    void without_eventId_should_return_bad_request() {
+        String missingEventId = 
+                "[" +
+                    "{" +
+                        "\"eventId\":\"\"," +
+                        "\"attendee\": {" +
+                            "\"id\": \"ABCD0001\"," +
+                            "\"firstName\":\"Mario\"," +
+                            "\"lastName\": \"Rossi\"," +
+                            "\"birthDate\":\"1990-01-01\"" +
+                        "}" +
+                    "}" +
+                "]";
+
+        given().
+            body(missingEventId).
+        when().
+            post("/booking").
+        then().
+            statusCode(400);
+
+    }
+
+    @Test
+    void without_attendeeId_should_return_bad_request() {
+        String missingEventId = 
+                "[" +
+                    "{" +
+                        "\"eventId\":\"0001\"," +
+                        "\"attendee\": {" +
+                            "\"id\": \"\"," +
+                            "\"firstName\":\"Mario\"," +
+                            "\"lastName\": \"Rossi\"," +
+                            "\"birthDate\":\"1990-01-01\"" +
+                        "}" +
+                    "}" +
+                "]";
+
+        given().
+            body(missingEventId).
+        when().
+            post("/booking").
+        then().
+            statusCode(400);
+
+    }
+
+    @Test
+    void without_a_body_should_return_bad_request() {
 
         when().
             post("/booking").
