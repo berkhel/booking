@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -98,7 +99,7 @@ class UnitTest {
 
         ForBooking app = App.init(aStorage);
 
-        assertThrows(Exception.class, () -> {
+        assertThrows(SoldoutException.class, () -> {
             app.purchase(List.of(arrivedLate));
         });
 
