@@ -18,6 +18,7 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
+import it.berkhel.booking.unit.fixture.Fake;
 
 import static org.mockito.Mockito.verify;
 
@@ -28,25 +29,25 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock Ticket aTicket) throws Exception {
+    @Test void booking_targets_the_storage(@Mock ForStorage theStorage) throws Exception {
         ForBooking app = App.init(theStorage);
 
-        Purchase aPurchase = app.purchase(List.of(aTicket));
+        Purchase aPurchase = app.purchase(List.of(Fake.ticket()));
 
         verify(theStorage).save(aPurchase);
     }
 
-    @Test void booking_always_return_a_response(@Mock ForStorage aStorage, @Mock Ticket aTicket) throws Exception {
+    @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock Ticket aTicket) throws Exception {
         ForBooking app = App.init(aStorage);
 
-        Purchase thePurchase = app.purchase(List.of(aTicket));
+        Purchase thePurchase = app.purchase(List.of(Fake.ticket()));
 
         assertThat(thePurchase, any(Purchase.class));
     }
 
     @Test
     void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage){
-        List<Ticket> fourTickets = Stream.generate(Ticket::new).limit(4).toList();
+        List<Ticket> fourTickets = Stream.generate(Fake::ticket).limit(4).toList();
         ForBooking app = App.init(aStorage);
 
         assertThrows(Exception.class, () -> {
@@ -58,7 +59,7 @@ class UnitTest {
 
     @Test
     void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage){
-        List<Ticket> threeTickets = Stream.generate(Ticket::new).limit(3).toList();
+        List<Ticket> threeTickets = Stream.generate(Fake::ticket).limit(3).toList();
         ForBooking app = App.init(aStorage);
 
         assertDoesNotThrow(() -> {

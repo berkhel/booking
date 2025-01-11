@@ -28,7 +28,13 @@ public class App implements ForBooking {
             throw new Exception("Cannot purchase more than 3 tickets");
         }
         Purchase purchase = new Purchase();
-        tickets.forEach(ticket -> ticket.setPurchase(purchase));
+        for(var ticket : tickets){
+            var event = ticket.getEvent();
+            if(event.getRemainingSeats() < 1){
+                throw new Exception("There are no remaining seats for event "+event);
+            }
+            ticket.setPurchase(purchase);
+        }
         purchase.setTickets(tickets);
         storage.save(purchase);
         return purchase;
