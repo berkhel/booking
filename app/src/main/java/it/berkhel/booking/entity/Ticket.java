@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -19,9 +20,15 @@ public class Ticket {
     private String id;
 
     @ManyToOne
+    @JoinColumn(name = "attendee_id")
     private Attendee attendee;
 
     @ManyToOne
+    @JoinColumn(name = "purchase_id")
+    private Purchase purchase;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
     private Event event;
 
     public String getId() {

@@ -10,6 +10,8 @@ public class Event {
     @Id
     String id;
 
+    public Event(){}
+
     public Event(String id, Integer maxSeats, Integer remainingSeats){
         this.id = id;
         this.maxSeats = maxSeats;

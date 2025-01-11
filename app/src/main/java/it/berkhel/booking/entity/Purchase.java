@@ -20,7 +20,7 @@ public class Purchase {
     private String id = UUID.randomUUID().toString();
 
     @JsonProperty
-    @OneToMany
+    @OneToMany(mappedBy = "purchase")
     private List<Ticket> tickets;
 
 
