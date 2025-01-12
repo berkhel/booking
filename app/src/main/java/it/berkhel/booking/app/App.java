@@ -16,13 +16,15 @@ import it.berkhel.booking.entity.Ticket;
 public class App implements ForBooking {
 
     public static App init(ForStorage storage, ForSendingMessage messageBroker){
-        return new App(storage);
+        return new App(storage, messageBroker);
     }
     
-    private ForStorage storage;
+    private final ForStorage storage;
+    private final ForSendingMessage messageBroker;
 
-    private App(ForStorage storage) {
+    private App(ForStorage storage, ForSendingMessage messageBroker) {
         this.storage = storage;
+        this.messageBroker = messageBroker;
     }
 
     @Override
@@ -50,6 +52,12 @@ public class App implements ForBooking {
             checkSoldoutEvents(tickets);
             throw ex;
         }
+
+        for(var ticket : purchase.getTickets()){
+            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:"+ticket.getId());
+        }
+
+        
         return purchase;
     }
 

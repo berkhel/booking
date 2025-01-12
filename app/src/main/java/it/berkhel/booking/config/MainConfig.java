@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
+import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 
 
@@ -22,8 +23,8 @@ public class MainConfig {
 
 
     @Bean
-    ForBooking bookingManager(ForStorage storage){
-        return App.init(storage);
+    ForBooking bookingManager(ForStorage storage, ForSendingMessage messageBroker){
+        return App.init(storage, messageBroker);
     }
     
 }
