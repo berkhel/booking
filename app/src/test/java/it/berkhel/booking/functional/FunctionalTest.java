@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -274,10 +275,11 @@ public class FunctionalTest {
     }
     
     @Test
-    void a_successful_ticket_purchase_should_send_an_email_to_the_attendee()
+    void a_successful_ticket_purchase_should_send_an_email_to_the_attendee(
+        @Value("${custom.rabbitmq.queue.name}") String queueName)
             throws SQLException, IOException, TimeoutException {
 
-        rabbitmq.createQueue("test");
+        rabbitmq.createQueue(queueName);
         mySqlDatabase.createEvent("0001", 10, 10);
 
         given()

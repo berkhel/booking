@@ -15,6 +15,11 @@ spring:
   #   username: guest
   #   password: guest
 
+custom: #used for custom properties
+  rabbitmq:
+    queue:
+      name: booking
+
 # logging:
 #   level:
 #     root: DEBUG

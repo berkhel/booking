@@ -1,7 +1,7 @@
 package it.berkhel.booking.drivenadapter;
 
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.entity.Attendee;
@@ -11,18 +11,18 @@ public class SendingMessageXAmqpRabbitMQ implements ForSendingMessage{
 
     
     private final RabbitTemplate rabbitTemplate;
-    private final Queue queue;
+    private final String queueName;
     
 
-    public SendingMessageXAmqpRabbitMQ(
-        RabbitTemplate rabbitTemplate, Queue queue) {
+    public SendingMessageXAmqpRabbitMQ(RabbitTemplate rabbitTemplate,
+            @Value("${custom.rabbitmq.queue.name}") String queueName) {
         this.rabbitTemplate = rabbitTemplate;
-        this.queue = queue;
+        this.queueName = queueName;
     }
 
     @Override
     public void sendMessage(Attendee recipient, String message) {
         String jsonMsg = "{\"email\":\"" + recipient.getEmail() + "\", \"message\":\"" + message + "\"}";
-        rabbitTemplate.convertAndSend(queue.getName(), jsonMsg);
+        rabbitTemplate.convertAndSend(queueName, jsonMsg);
     }
 }

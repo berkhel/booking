@@ -1,7 +1,6 @@
 package it.berkhel.booking.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.amqp.core.Queue;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -21,10 +20,6 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 @ComponentScan(basePackages = {"it.berkhel.booking.controller","it.berkhel.booking.drivenadapter", "it.berkhel.booking.dto"})
 public class MainConfig {
 
-    @Bean
-    Queue queue() {
-        return new Queue("test");
-    }
 
     @Bean
     ForBooking bookingManager(ForStorage storage, ForSendingMessage messageBroker){
