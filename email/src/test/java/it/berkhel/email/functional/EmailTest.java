@@ -1,4 +1,4 @@
-package it.berkhel.email;
+package it.berkhel.email.functional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,6 +66,8 @@ public class EmailTest {
     void send_email_after_receiving_a_message(@Autowired EmailSender emailSender, @Autowired AmqpTemplate amqpTemplate) throws Exception {
 
         Integer dynamicPort = greenMail.getSmtp().getPort();
+        System.out.println("EMAIL SENDER HOST:"+emailSender.getHost());
+        System.out.println("EMAIL SENDER PORT:"+emailSender.getPort());
         emailSender.setHost("localhost");
         emailSender.setPort(dynamicPort);
 
@@ -75,7 +77,7 @@ public class EmailTest {
             final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
             assert receivedMessages.length > 0 : "Message not received yet";
             final MimeMessage receivedMessage = receivedMessages[0];
-            assertEquals("{\"email\":\"test@example.it\",\"message\":\"Hello!\"}", receivedMessage.getContent());
+            assertEquals("Hello!", receivedMessage.getContent());
         });
     }
 

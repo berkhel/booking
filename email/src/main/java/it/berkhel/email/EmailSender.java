@@ -14,13 +14,28 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+
+import it.berkhel.email.Message;
 
 @Component
-@RabbitListener(queuesToDeclare = @Queue("booking"))
+@RabbitListener(queuesToDeclare = @Queue("${custom.rabbitmq.queue.name}"))
 public class EmailSender {
 
+    @Value("${custom.simplejavamail.host}")
     private String host;
+
+    @Value("${custom.simplejavamail.port}")
     private Integer port;
+
+
+    public String getHost() {
+        return host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
 
 
     public void setHost(String host) {
@@ -32,9 +47,10 @@ public class EmailSender {
     }
 
     @RabbitHandler
-    public void receive(String msg){
-        System.out.println("CONVERTED MESSAGE:"+msg);
-       this.sendEmail("from@example.it","to@example.it", msg);
+    public void receive(String msg) throws Exception {
+        System.out.println("RECEIVED MESSAGE:"+msg);
+        Message message = Message.parse(msg);
+       this.sendEmail("from@example.it",message.getEmail(), message.getMessage());
     }
 
     public void sendEmail(String from, String to, String body){
@@ -53,5 +69,6 @@ public class EmailSender {
         mailer.sendMail(email);
 
     }
+
     
 }

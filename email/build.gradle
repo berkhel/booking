@@ -11,9 +11,10 @@ application {
 dependencies {
     implementation 'org.simplejavamail:simple-java-mail:8.12.4'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    testImplementation 'com.icegreen:greenmail:2.1.2'
-    testImplementation 'com.icegreen:greenmail-junit5:2.1.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
 }
+
+
 
 testing {
     suites {
@@ -43,7 +44,7 @@ testing {
             sources {
                 java {
                     srcDirs += ['src/test/java']
-                    include 'it/berkhel/email/**'
+                    include 'it/berkhel/email/functional/**'
                 }
             }
         }

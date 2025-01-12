@@ -1,0 +1,7 @@
+custom:
+  rabbitmq:
+    queue:
+      name: booking
+  simplejavamail:
+    host: smtp.yopmail.com
+    port: 25
