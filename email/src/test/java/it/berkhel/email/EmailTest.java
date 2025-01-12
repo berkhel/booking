@@ -13,7 +13,7 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 
 import jakarta.mail.internet.MimeMessage;
 
-import it.berkhel.email.Email;
+import it.berkhel.email.EmailSender;
 
 public class EmailTest {
 
@@ -22,7 +22,7 @@ public class EmailTest {
 
     @Test
     void simpleTest() throws Exception {
-        new Email().sendEmail("from@example.it","to@example.it","Hello!");
+        new EmailSender().sendEmail("from@example.it","to@example.it","Hello!");
         final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
         final MimeMessage receivedMessage = receivedMessages[0];
         assertEquals("Hello!", receivedMessage.getContent());
