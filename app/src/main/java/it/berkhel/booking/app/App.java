@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import it.berkhel.booking.app.actionport.ForBooking;
+import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.SoldoutException;
@@ -14,7 +15,7 @@ import it.berkhel.booking.entity.Ticket;
 
 public class App implements ForBooking {
 
-    public static App init(ForStorage storage){
+    public static App init(ForStorage storage, ForSendingMessage messageBroker){
         return new App(storage);
     }
     

@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
+import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.SoldoutException;
@@ -32,16 +33,24 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @Test void booking_targets_the_storage(@Mock ForStorage theStorage) throws Exception {
-        ForBooking app = App.init(theStorage);
+    @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
+        ForBooking app = App.init(theStorage, messageBroker);
 
         app.purchase(List.of(Fake.ticket()));
 
         verify(theStorage).save(Mockito.any(), Mockito.any());
     }
 
-    @Test void booking_normally_return_a_response(@Mock ForStorage aStorage) throws Exception {
-        ForBooking app = App.init(aStorage);
+    @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
+        ForBooking app = App.init(aStorage, theMessageBroker);
+
+        app.purchase(List.of(Fake.ticket()));
+
+        verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
+    }
+
+    @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
+        ForBooking app = App.init(aStorage, aMessageBroker);
 
         Purchase thePurchase = app.purchase(List.of(Fake.ticket()));
 
@@ -49,9 +58,9 @@ class UnitTest {
     }
 
     @Test
-    void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage){
+    void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         List<Ticket> fourTickets = Stream.generate(Fake::ticket).limit(4).toList();
-        ForBooking app = App.init(aStorage);
+        ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
             app.purchase(fourTickets);
@@ -59,9 +68,9 @@ class UnitTest {
     }
 
     @Test
-    void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage){
+    void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         List<Ticket> threeTickets = Stream.generate(Fake::ticket).limit(3).toList();
-        ForBooking app = App.init(aStorage);
+        ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
             app.purchase(threeTickets);
@@ -70,9 +79,9 @@ class UnitTest {
     }
 
     @Test
-    void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage){
+    void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         List<Ticket> noTickets = List.of();
-        ForBooking app = App.init(aStorage);
+        ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
             app.purchase(noTickets);
@@ -81,9 +90,9 @@ class UnitTest {
     }
 
     @Test
-    void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage){
+    void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         List<Ticket> nullTickets = null;
-        ForBooking app = App.init(aStorage);
+        ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
             app.purchase(nullTickets);
@@ -92,12 +101,12 @@ class UnitTest {
     }
 
     @Test
-    void cannot_purchase_after_soldout(@Mock ForStorage aStorage){
+    void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
         Ticket arrivedLate = new Ticket();
         arrivedLate.setEvent(soldoutEvent);
 
-        ForBooking app = App.init(aStorage);
+        ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
             app.purchase(List.of(arrivedLate));
@@ -105,11 +114,11 @@ class UnitTest {
     }
 
     @Test
-    void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage storage) throws Exception{
+    void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         Event event = new Event("EV0001", 100, 10);
         Ticket newTicket = new Ticket();
         newTicket.setEvent(event);
-        App app = App.init(storage);
+        App app = App.init(aStorage, aMessageBroker);
 
         app.purchase(List.of(newTicket));
 
