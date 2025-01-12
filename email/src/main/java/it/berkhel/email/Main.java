@@ -6,8 +6,6 @@ public class Main {
 
     public static void main(String[] args) {
         var emailSender = new EmailSender();
-        emailSender.setHost("smtp.yopmail.com");
-        emailSender.setPort(25);
         emailSender.sendEmail("mim@example.it", "alt.bl-1o9xryyt@yopmail.com", "Hello Pippo!");
         System.out.println("Starting email server");
     }

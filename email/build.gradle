@@ -27,6 +27,13 @@ testing {
                 }
             }
         }
+        test {
+            sources {
+                java {
+                    include 'it/berkhel/email/test/**'
+                }
+            }
+        }
         functionalTest(JvmTestSuite) {
             dependencies{
                 implementation project(':email')
