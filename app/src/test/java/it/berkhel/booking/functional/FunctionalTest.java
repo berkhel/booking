@@ -4,6 +4,7 @@ import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
 import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.existsAsValueIn;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
@@ -165,7 +166,7 @@ public class FunctionalTest {
     @Test
     void a_successful_ticket_purchase_should_return_a_resume() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 1, 10);
+        mySqlDatabase.createEvent("0001", 10, 10);
 
 
         String singlePurchase = 
@@ -200,7 +201,7 @@ public class FunctionalTest {
     @Test
     void a_successful_ticket_purchase_should_insert_records_into_purchase_and_ticket_tables() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 1, 10);
+        mySqlDatabase.createEvent("0001", 10, 10);
 
         given().
             body(Fake.singlePurchaseForEvent("0001")).
@@ -212,6 +213,26 @@ public class FunctionalTest {
             existsAsValueIn(mySqlDatabase, "purchase", "id")).
         and().body("id",
             existsAsValueIn(mySqlDatabase, "ticket", "purchase_id"));
+
+
+    }
+
+    @Test
+    void a_successful_ticket_purchase_should_decrement_event_available_seats() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 10, 1);
+
+        given().
+            body(Fake.singlePurchaseForEvent("0001")).
+        when().
+            post("/booking").
+        then().
+            statusCode(200);
+        
+        assertThat("0", equalTo(mySqlDatabase.select("remaining_seats")
+                .from("event")
+                .where("id", "=", "0001")
+                .query()));
 
 
     }

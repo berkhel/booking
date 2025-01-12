@@ -37,6 +37,8 @@ public class MySqlDatabase {
 
 
     public String query(QueryHolder queryHolder, Function<ResultSet, String> resultSetHandler) throws SQLException {
+        System.out.println("QUERY:"+queryHolder.query());
+        System.out.println("PARAM:"+queryHolder.parameters());
         String result = "";
         try (Connection con = connection();
                 PreparedStatement stmt = con.prepareStatement(queryHolder.query())) {
@@ -93,7 +95,9 @@ public class MySqlDatabase {
               return Integer.parseInt(
                     query(new QueryHolder("SELECT COUNT(*) AS total_rows FROM "+ table), rs -> {
                 try {
-                    return rs.getString("total_rows");
+                    return rs.next() 
+                        ? rs.getString("total_rows")
+                        : "0";
                 } catch (SQLException ex) {
                     return "0";
                 }
@@ -124,6 +128,42 @@ public class MySqlDatabase {
 
     public String lookupId(String id, String table) throws SQLException {
         return lookup(table, "id", id);
+    }
+
+    public SelectQuery select(String columnName){
+        return new SelectQuery(columnName);
+    }
+
+    public class SelectQuery {
+        
+        private SelectQueryBuilder builder; 
+        private String columnName;
+
+        public SelectQuery(String columnName){
+            this.columnName = columnName;
+            builder = SelectQueryBuilder.select(columnName);
+        }
+
+        public SelectQuery from(String table){
+            builder.from(table);
+            return this;
+        }
+
+        public SelectQuery where(String column, String operator, String value){
+            builder.where(column, operator, value);
+            return this;
+        }
+        
+        public String query() throws SQLException{
+            return MySqlDatabase.this.query(builder.build(), rs -> {
+                try {
+                    return rs.next() ? rs.getString(columnName) : "";
+                } catch (SQLException e) {
+                    return "";
+                }
+            });
+        }
+
     }
 
 
