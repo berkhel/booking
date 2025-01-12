@@ -7,6 +7,13 @@ import org.simplejavamail.mailer.MailerBuilder;
 
 public class EmailSender {
 
+    private String host;
+    private Integer port;
+
+    public EmailSender(String host, Integer port){
+        this.host = host;
+        this.port = port;
+    }
 
     public void sendEmail(String from, String to, String body){
 
@@ -17,7 +24,7 @@ public class EmailSender {
                 .buildEmail();
         
         Mailer mailer = MailerBuilder
-                .withSMTPServer("localhost", 3025)
+                .withSMTPServer(host, port)
                 .withDebugLogging(true)
                 .buildMailer();
 

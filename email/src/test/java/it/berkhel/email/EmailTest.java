@@ -18,11 +18,12 @@ import it.berkhel.email.EmailSender;
 public class EmailTest {
 
     @RegisterExtension
-    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP);
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP.dynamicPort());
 
     @Test
     void simpleTest() throws Exception {
-        new EmailSender().sendEmail("from@example.it","to@example.it","Hello!");
+        String dynamicPort = greenMail.getSmtp().getPort();
+        new EmailSender("localhost", dynamicPort).sendEmail("from@example.it","to@example.it","Hello!");
         final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
         final MimeMessage receivedMessage = receivedMessages[0];
         assertEquals("Hello!", receivedMessage.getContent());
