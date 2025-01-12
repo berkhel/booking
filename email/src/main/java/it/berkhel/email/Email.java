@@ -2,8 +2,9 @@ package it.berkhel.email;
 
 public class Email {
 
-    public String sayHello(){
-        return "Hello!";
+    public void sendEmail(String from, String to, String body){
+
+
     }
     
 }

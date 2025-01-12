@@ -7,7 +7,9 @@ application {
 }
 
 dependencies {
-
+    implementation 'org.simplejavamail:simple-java-mail:8.12.4'
+    testImplementation 'com.icegreen:greenmail:2.1.2'
+    testImplementation 'com.icegreen:greenmail-junit5:2.1.2'
 }
 
 testing {

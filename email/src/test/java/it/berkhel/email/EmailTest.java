@@ -6,14 +6,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
+
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
+
+import jakarta.mail.internet.MimeMessage;
 
 import it.berkhel.email.Email;
 
 public class EmailTest {
 
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP);
+
     @Test
-    void simpleTest(){
-        assertEquals("Hello!", new Email().sayHello());
+    void simpleTest() throws Exception {
+        new Email().sendEmail("from@example.it","to@example.it","Hello!");
+        final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        final MimeMessage receivedMessage = receivedMessages[0];
+        assertEquals("Hello!", receivedMessage.getContent());
     }
+
     
 }
