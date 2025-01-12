@@ -24,6 +24,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +48,6 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import jakarta.mail.internet.MimeMessage;
 import it.berkhel.email.AmqpConfiguration;
 import it.berkhel.email.EmailSender;
-import it.berkhel.email.dsl.fixture.RabbitMQ;
 
 @SpringBootTest(classes = { AmqpConfiguration.class })
 @Testcontainers
@@ -60,25 +60,23 @@ public class EmailTest {
     @ServiceConnection
     private static RabbitMQContainer rabbitMQContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.7.25-management-alpine"));
 
-    private static RabbitMQ rabbitmq;
 
-
-    @BeforeAll static void setupRabbitMqClient(@Autowired ConnectionFactory connectionFactory) {
-        assert rabbitMQContainer.isRunning() : "RabbitMQ container is not running";
-        rabbitmq = new RabbitMQ(connectionFactory);
-    }
 
     @Test
-    void send_email_after_receiving_a_message() throws Exception {
+    void send_email_after_receiving_a_message(@Autowired EmailSender emailSender, @Autowired AmqpTemplate amqpTemplate) throws Exception {
 
         Integer dynamicPort = greenMail.getSmtp().getPort();
+        emailSender.setHost("localhost");
+        emailSender.setPort(dynamicPort);
 
-        rabbitmq.publishOnQueue("booking","{\"email\":\"test@example.it\",\"message\":\"Hello!\"}");
+        amqpTemplate.convertAndSend("booking","{\"email\":\"test@example.it\",\"message\":\"Hello!\"}");
 
-       // new EmailSender("localhost", dynamicPort).sendEmail("from@example.it","to@example.it","Hello!");
-        final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        final MimeMessage receivedMessage = receivedMessages[0];
-        assertEquals("{\"email\":\"test@example.it\",\"message\":\"Hello!\"}", receivedMessage.getContent());
+        waitAtMost(Duration.ofSeconds(15)).untilAsserted(() -> {
+            final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+            assert receivedMessages.length > 0 : "Message not received yet";
+            final MimeMessage receivedMessage = receivedMessages[0];
+            assertEquals("{\"email\":\"test@example.it\",\"message\":\"Hello!\"}", receivedMessage.getContent());
+        });
     }
 
     

@@ -1,19 +1,40 @@
 package it.berkhel.email;
 
 import org.simplejavamail.email.EmailBuilder;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.stereotype.Component;
+
+@Component
+@RabbitListener(queuesToDeclare = @Queue("booking"))
 public class EmailSender {
 
     private String host;
     private Integer port;
 
-    public EmailSender(String host, Integer port){
+
+    public void setHost(String host) {
         this.host = host;
+    }
+
+    public void setPort(Integer port) {
         this.port = port;
+    }
+
+    @RabbitHandler
+    public void receive(String msg){
+        System.out.println("CONVERTED MESSAGE:"+msg);
+       this.sendEmail("from@example.it","to@example.it", msg);
     }
 
     public void sendEmail(String from, String to, String body){

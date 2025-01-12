@@ -5,8 +5,10 @@ import it.berkhel.email.EmailSender;
 public class Main {
 
     public static void main(String[] args) {
-        new EmailSender("smtp.yopmail.com", 25)
-        .sendEmail("mim@example.it", "alt.bl-1o9xryyt@yopmail.com", "Hello Pippo!");
+        var emailSender = new EmailSender();
+        emailSender.setHost("smtp.yopmail.com");
+        emailSender.setPort(25);
+        emailSender.sendEmail("mim@example.it", "alt.bl-1o9xryyt@yopmail.com", "Hello Pippo!");
         System.out.println("Starting email server");
     }
     
