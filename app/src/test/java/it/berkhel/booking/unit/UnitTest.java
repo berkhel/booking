@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.berkhel.booking.app.App;
@@ -33,9 +34,9 @@ class UnitTest {
     @Test void booking_targets_the_storage(@Mock ForStorage theStorage) throws Exception {
         ForBooking app = App.init(theStorage);
 
-        Purchase aPurchase = app.purchase(List.of(Fake.ticket()));
+        app.purchase(List.of(Fake.ticket()));
 
-        verify(theStorage).save(aPurchase);
+        verify(theStorage).save(Mockito.any(), Mockito.any());
     }
 
     @Test void booking_normally_return_a_response(@Mock ForStorage aStorage) throws Exception {

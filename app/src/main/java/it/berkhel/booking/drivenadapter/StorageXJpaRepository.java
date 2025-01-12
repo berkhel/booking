@@ -1,9 +1,14 @@
 package it.berkhel.booking.drivenadapter;
 
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.exception.SoldoutException;
+import it.berkhel.booking.app.exception.TransactionPostConditionException;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.repository.AttendeeRepository;
 import it.berkhel.booking.repository.PurchaseRepository;
@@ -26,11 +31,15 @@ public class StorageXJpaRepository implements ForStorage {
 
     @Transactional
     @Override
-    public void save(Purchase purchase) {
+    public void save(Purchase purchase, Predicate<Purchase> postCondition) throws TransactionPostConditionException {
         purchaseRepo.save(purchase);
         for(var ticket : purchase.getTickets()){
             attendeeRepo.saveAndFlush(ticket.getAttendee());
             ticketRepo.save(ticket);
+        }
+
+        if (postCondition.negate().test(purchase)) {
+            throw new TransactionPostConditionException();
         }
     }
 
