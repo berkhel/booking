@@ -72,7 +72,7 @@ public class FunctionalTest {
         mySqlDatabase = new MySqlDatabase(mappedHostPort);
     }
 
-    @BeforeAll static void setupRabbitMqClient(@Autowired ConnectionFactory connectionFactory) throws SQLException{
+    @BeforeAll static void setupRabbitMqClient(@Autowired ConnectionFactory connectionFactory) {
         assert rabbitMQContainer.isRunning() : "RabbitMQ container is not running";
         rabbitmq = new RabbitMQ(connectionFactory);
     }
