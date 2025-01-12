@@ -34,14 +34,14 @@ public class App implements ForBooking {
         }
 
 
-        checkSoldoutEvents(tickets);
-
-
         Purchase purchase = new Purchase();
         for(var ticket : tickets){
             ticket.setPurchase(purchase);
             ticket.getEvent().decrementAvailableSeats();
         }
+
+        checkSoldoutEvents(tickets);
+
         purchase.setTickets(tickets);
         try {
             storage.save(purchase, prch -> eventWithSoldout(prch.getTickets()).isEmpty());
@@ -55,7 +55,7 @@ public class App implements ForBooking {
     private Optional<Event> eventWithSoldout(List<Ticket> tickets) {
         for (var ticket : tickets) {
             var event = ticket.getEvent();
-            if (event.getRemainingSeats() < 1) {
+            if (event.getRemainingSeats() < 0) {
                 return Optional.of(event);
             }
         }
