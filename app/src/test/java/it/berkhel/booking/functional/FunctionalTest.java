@@ -3,15 +3,18 @@ package it.berkhel.booking.functional;
 import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
+import it.berkhel.booking.functional.dsl.fixture.RabbitMQ;
+
 import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.existsAsValueIn;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
 
-
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +26,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.RabbitMQContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -44,8 +48,13 @@ public class FunctionalTest {
     .withDatabaseName("booking")
     .withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger(FunctionalTest.class)));
 
+    @Container
+    @ServiceConnection
+    private static RabbitMQContainer rabbitMQContainer = new RabbitMQContainer(DockerImageName.parse("rabbitmq:3.7.25-management-alpine"));
+
 
     private static MySqlDatabase mySqlDatabase;
+    private static RabbitMQ rabbitmq;
 
 
     @BeforeAll static void setupMySqlClient() throws SQLException{
@@ -54,6 +63,11 @@ public class FunctionalTest {
                 .orElse("3306"));
         Integer mappedHostPort = mySqlContainer.getMappedPort(exposedPort);
         mySqlDatabase = new MySqlDatabase(mappedHostPort);
+    }
+
+    @BeforeAll static void setupRabbitMqClient() throws SQLException{
+        assert rabbitMQContainer.isRunning() : "RabbitMQ container is not running";
+        rabbitmq = new RabbitMQ(rabbitMQContainer);
     }
 
     @BeforeAll 
@@ -251,4 +265,19 @@ public class FunctionalTest {
 
     }
     
+    @Test
+    void a_successful_ticket_purchase_should_send_an_email_to_the_attendee() throws SQLException, IOException, TimeoutException {
+
+        mySqlDatabase.createEvent("0001", 10, 10);
+
+        given().
+            body(Fake.singlePurchaseForEvent("0001")).
+        when().
+            post("/booking").
+        then().
+            statusCode(200);
+
+        assertThat("Hello World!", equalTo(rabbitmq.consumedMessage("testqueue")));
+
+    }
 }
