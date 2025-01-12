@@ -1,0 +1,32 @@
+plugins {
+    id 'buildlogic.java-application-conventions'
+}
+
+application {
+    mainClass = 'it.berkhel.email.Main'
+}
+
+dependencies {
+
+}
+
+testing {
+    suites {
+        configureEach {
+            targets {
+                all {
+                    testTask.configure {
+                        jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+                    }
+                }
+            }
+        }
+        test {
+            sources {
+                java {
+                    include 'it/berkhel/email/**'
+                }
+            }
+        }
+    }
+}
