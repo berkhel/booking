@@ -40,6 +40,7 @@ public class App implements ForBooking {
         Purchase purchase = new Purchase();
         for(var ticket : tickets){
             ticket.setPurchase(purchase);
+            ticket.getEvent().decrementAvailableSeats();
         }
         purchase.setTickets(tickets);
         try {

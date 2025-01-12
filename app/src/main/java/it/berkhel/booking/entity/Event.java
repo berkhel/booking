@@ -36,6 +36,10 @@ public class Event {
         return remainingSeats;
     }
 
+    public void decrementAvailableSeats(){
+        remainingSeats--;
+    }
+
     @Override
     public String toString() {
         return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + remainingSeats + "]";
