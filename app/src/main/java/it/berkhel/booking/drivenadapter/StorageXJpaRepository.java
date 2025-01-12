@@ -1,13 +1,11 @@
 package it.berkhel.booking.drivenadapter;
 
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
-import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.app.exception.TransactionPostConditionException;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.repository.AttendeeRepository;
