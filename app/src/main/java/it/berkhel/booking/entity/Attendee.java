@@ -16,6 +16,10 @@ public class Attendee {
 
     @JsonProperty
     @NotBlank
+    private String email;
+
+    @JsonProperty
+    @NotBlank
     private String firstName;
 
     @JsonProperty
@@ -26,11 +30,17 @@ public class Attendee {
     @NotBlank 
     private String birthDate;
 
+
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public String toString() {
-        return "Attendee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
+        return "Attendee [id=" + id + ", firstName=" + firstName + ", email=" + email +", lastName=" + lastName + ", birthDate=" + birthDate
                 + "]";
     }
+
 
     
 }

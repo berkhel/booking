@@ -22,7 +22,7 @@ public class EmailTest {
 
     @Test
     void simpleTest() throws Exception {
-        String dynamicPort = greenMail.getSmtp().getPort();
+        Integer dynamicPort = greenMail.getSmtp().getPort();
         new EmailSender("localhost", dynamicPort).sendEmail("from@example.it","to@example.it","Hello!");
         final MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
         final MimeMessage receivedMessage = receivedMessages[0];

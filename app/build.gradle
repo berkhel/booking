@@ -13,6 +13,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
@@ -44,6 +45,8 @@ testing {
                 implementation 'org.springframework.boot:spring-boot-testcontainers:3.4.1'
                 implementation 'org.testcontainers:mysql:1.20.4'
                 implementation 'org.testcontainers:rabbitmq:1.20.4'
+                implementation 'org.springframework.boot:spring-boot-starter-amqp'
+                implementation 'org.awaitility:awaitility:4.2.2'
                 implementation 'com.rabbitmq:amqp-client:5.24.0'
             }
             sources { 

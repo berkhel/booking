@@ -53,7 +53,9 @@ public class App implements ForBooking {
             throw ex;
         }
 
+        System.out.println("PRE SENNDING MESSAGE");
         for(var ticket : purchase.getTickets()){
+            System.out.println("SENNDING MESSAGE");
             messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:"+ticket.getId());
         }
 
