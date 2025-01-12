@@ -4,6 +4,7 @@ import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
+import org.simplejavamail.api.mailer.config.TransportStrategy;
 
 public class EmailSender {
 
