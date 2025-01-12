@@ -3,6 +3,7 @@ package it.berkhel.booking.unit;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -81,11 +82,11 @@ class UnitTest {
 
     @Test
     void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage){
-        List<Ticket> noTickets = null;
+        List<Ticket> nullTickets = null;
         ForBooking app = App.init(aStorage);
 
         assertThrows(Exception.class, () -> {
-            app.purchase(noTickets);
+            app.purchase(nullTickets);
         });
 
     }
@@ -101,6 +102,18 @@ class UnitTest {
         assertThrows(SoldoutException.class, () -> {
             app.purchase(List.of(arrivedLate));
         });
+    }
+
+    @Test
+    void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage storage) throws Exception{
+        Event event = new Event("EV0001", 100, 10);
+        Ticket newTicket = new Ticket();
+        newTicket.setEvent(event);
+        App app = App.init(storage);
+
+        app.purchase(List.of(newTicket));
+
+        assertEquals(9, event.getRemainingSeats());
 
     }
 
