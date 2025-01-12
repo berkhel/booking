@@ -217,6 +217,7 @@ public class FunctionalTest {
 
     }
 
+
     @Test
     void a_successful_ticket_purchase_should_decrement_event_available_seats() throws SQLException {
 
@@ -234,6 +235,19 @@ public class FunctionalTest {
                 .where("id", "=", "0001")
                 .query()));
 
+    }
+
+    @Test
+    void a_ticket_request_for_a_soldout_event_should_return_bad_request() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 10, 0);
+
+        given().
+            body(Fake.singlePurchaseForEvent("0001")).
+        when().
+            post("/booking").
+        then().
+            statusCode(400);
 
     }
     
