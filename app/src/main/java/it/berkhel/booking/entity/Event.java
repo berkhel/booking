@@ -3,18 +3,23 @@ package it.berkhel.booking.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Event {
 
     @Id
+    @NotBlank
     String id;
 
+    @NotNull
     @Column(name = "max_seats")
     Integer maxSeats;
 
     @PositiveOrZero
+    @NotNull
     @Column(name = "remaining_seats")
     Integer remainingSeats;
 
