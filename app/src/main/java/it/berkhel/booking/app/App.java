@@ -8,6 +8,7 @@ import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.app.exception.TransactionPostConditionException;
@@ -41,11 +42,12 @@ public class App implements ForBooking, ForEvents {
 
 
         Purchase purchase = new Purchase();
-        for(var ticket : tickets){
+        for (var ticket : tickets) {
             ticket.setPurchase(purchase);
-            try{
-                ticket.getEvent().decrementAvailableSeats();
-            }catch(Exception ex){
+            try {
+                Event event = ticket.getEvent();
+                event.decrementAvailableSeats();
+            } catch (Exception ex) {
                 throw new EventNotFoundException("Event not found");
             }
         }
@@ -86,7 +88,10 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Event createEvent(Event event) {
+    public Event createEvent(Event event) throws EventAlreadyExistsException {
+        if (storage.getEventById(event.getId()).isPresent()) {
+            throw new EventAlreadyExistsException("Event already exists");
+        }
         return storage.save(event);
     }
 

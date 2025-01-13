@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.dto.DtoMapper;
@@ -50,17 +51,18 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/event", produces = "application/json")
-    public Event book(@Valid @RequestBody(required = true) Event event) {
+    public Event book(@Valid @RequestBody(required = true) Event event) throws EventAlreadyExistsException {
         return eventManager.createEvent(event);
     }
 
     @ExceptionHandler({
-        BadPurchaseRequestException.class,
-        SoldoutException.class,
-    EventNotFoundException.class})
+            BadPurchaseRequestException.class,
+            SoldoutException.class,
+            EventNotFoundException.class,
+            EventAlreadyExistsException.class })
     public ErrorResponse domainErrorRequest(Exception ex) {
-        return ErrorResponse.builder(ex,HttpStatus.BAD_REQUEST,ex.getMessage()).build();
-     }
+        return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage()).build();
+    }
 
     @ExceptionHandler({
         HttpMessageNotReadableException.class,

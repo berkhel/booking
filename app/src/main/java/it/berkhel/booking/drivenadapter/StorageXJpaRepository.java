@@ -1,5 +1,6 @@
 package it.berkhel.booking.drivenadapter;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.springframework.stereotype.Repository;
@@ -45,14 +46,14 @@ public class StorageXJpaRepository implements ForStorage {
         }
     }
 
-    @Override
-    public Purchase retrieveById(String reservationId) {
-        return purchaseRepo.getReferenceById(reservationId);
-    }
 
     @Override
     public Event save(Event event) {
         return eventRepo.save(event);
     }
 
+    @Override
+    public Optional<Event> getEventById(String eventId) {
+        return eventRepo.findById(eventId);
+    }
 }

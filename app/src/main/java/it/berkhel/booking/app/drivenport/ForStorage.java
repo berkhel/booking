@@ -1,5 +1,6 @@
 package it.berkhel.booking.app.drivenport;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import it.berkhel.booking.app.exception.TransactionPostConditionException;
@@ -10,9 +11,9 @@ public interface ForStorage {
 
     public void save(Purchase purchase, Predicate<Purchase> postCondition) throws TransactionPostConditionException;
 
-    public Purchase retrieveById(String purchaseId);
-
     public Event save(Event event);
+
+    public Optional<Event> getEventById(String any);
 
     
 }

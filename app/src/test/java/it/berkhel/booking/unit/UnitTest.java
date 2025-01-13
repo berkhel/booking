@@ -1,7 +1,7 @@
 package it.berkhel.booking.unit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,6 +18,7 @@ import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.entity.Event;
@@ -25,10 +26,12 @@ import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.unit.fixture.Fake;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -141,11 +144,14 @@ class UnitTest {
 
 
     @Test
-    void can_query_for_events(@Mock ForStorage theStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+    void can_detect_duplicate_events(@Mock ForStorage theStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+        when(theStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(Fake.event()));
 
         App app = App.init(theStorage, aMessageBroker);
 
-        verify(theStorage).getEventById(any(String.class));
+        assertThrows(EventAlreadyExistsException.class, () -> {
+            app.createEvent(Fake.event());
+        });
 
     }
 
