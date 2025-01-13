@@ -31,6 +31,17 @@ public class Attendee {
     private String birthDate;
 
 
+    public Attendee(){}
+
+    public Attendee(@NotBlank String id, @NotBlank String email, @NotBlank String firstName, @NotBlank String lastName,
+            @NotBlank String birthDate) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -39,6 +50,10 @@ public class Attendee {
     public String toString() {
         return "Attendee [id=" + id + ", firstName=" + firstName + ", email=" + email +", lastName=" + lastName + ", birthDate=" + birthDate
                 + "]";
+    }
+
+    public String getId() {
+        return id;
     }
 
 

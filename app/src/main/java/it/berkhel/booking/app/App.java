@@ -1,13 +1,17 @@
 package it.berkhel.booking.app;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
@@ -39,17 +43,30 @@ public class App implements ForBooking, ForEvents {
             throw new BadPurchaseRequestException("Cannot purchase more than 3 tickets");
         }
 
+        Set<String> checkDuplicateTickets = new HashSet<>();
 
 
         Purchase purchase = new Purchase();
         for (var ticket : tickets) {
             ticket.setPurchase(purchase);
+            Event event;
+            String eventId;
             try {
-                Event event = ticket.getEvent();
-                event.decrementAvailableSeats();
+                event = ticket.getEvent();
+                eventId = event.getId();
             } catch (Exception ex) {
                 throw new EventNotFoundException("Event not found");
             }
+            String attendeeId = ticket.getAttendee().getId();
+            String ticketKey = eventId + "~" + attendeeId;
+
+            if (checkDuplicateTickets.contains(ticketKey)) {
+                throw new DuplicateTicketException("Duplicate ticket for attendee " + attendeeId + " and event " + eventId);
+            }
+            checkDuplicateTickets.add(ticketKey);
+
+
+            event.decrementAvailableSeats();
         }
 
         checkSoldoutEvents(tickets);
@@ -83,7 +100,7 @@ public class App implements ForBooking, ForEvents {
     private void checkSoldoutEvents(List<Ticket> tickets) throws SoldoutException {
         Optional<Event> eventWithSoldoutTickets = eventWithSoldout(tickets);
         if (eventWithSoldoutTickets.isPresent()) {
-            throw new SoldoutException("Sorry, no remaining seats for event " + eventWithSoldoutTickets.get().getId());
+            throw new SoldoutException("Sorry, no enough seats in event " + eventWithSoldoutTickets.get().getId() + " for current request");
         }
     }
 

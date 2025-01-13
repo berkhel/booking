@@ -18,9 +18,11 @@ import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
+import it.berkhel.booking.entity.Attendee;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -110,6 +112,7 @@ class UnitTest {
         Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
         Ticket arrivedLate = new Ticket();
         arrivedLate.setEvent(soldoutEvent);
+        arrivedLate.setAttendee(Fake.attendee());
 
         ForBooking app = App.init(aStorage, aMessageBroker);
 
@@ -123,6 +126,7 @@ class UnitTest {
         Event event = new Event("EV0001", 100, 10);
         Ticket newTicket = new Ticket();
         newTicket.setEvent(event);
+        newTicket.setAttendee(Fake.attendee());
         App app = App.init(aStorage, aMessageBroker);
 
         app.purchase(List.of(newTicket));
@@ -152,6 +156,25 @@ class UnitTest {
         assertThrows(EventAlreadyExistsException.class, () -> {
             app.createEvent(Fake.event());
         });
+
+    }
+
+    @Test
+    void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+        Ticket ticketA = new Ticket();
+        ticketA.setEvent(new Event("0001", 10, 10));
+        ticketA.setAttendee(new Attendee("AB01", "/", "/", "/", "/"));
+        Ticket ticketB = new Ticket();
+        ticketB.setEvent(new Event("0001", 10, 10));
+        ticketB.setAttendee(new Attendee("AB01", "/", "/", "/", "/"));
+
+        App app = App.init(aStorage, aMessageBroker);
+
+        assertThrows(DuplicateTicketException.class, () -> {
+            app.purchase(List.of(ticketA, ticketB));
+        });
+
+
 
     }
 
