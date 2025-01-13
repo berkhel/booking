@@ -3,6 +3,7 @@ package it.berkhel.booking.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Event {
@@ -13,6 +14,7 @@ public class Event {
     @Column(name = "max_seats")
     Integer maxSeats;
 
+    @PositiveOrZero
     @Column(name = "remaining_seats")
     Integer remainingSeats;
 

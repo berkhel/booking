@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,6 +68,7 @@ public class RestApiController {
     @ExceptionHandler({
         HttpMessageNotReadableException.class,
         HandlerMethodValidationException.class,
+        MethodArgumentNotValidException.class,
         ConstraintViolationException.class,
         EntityNotFoundException.class})
     public ErrorResponse badRequest(Exception ex) {
@@ -80,6 +82,7 @@ public class RestApiController {
     public void internalServerError(Exception ex) {
         System.out.println("Exception class: " + ex.getClass().getName());
         System.out.println("Exception message: " + ex.getMessage());
+        System.out.println("This is a 500 Internal Server Error");
      }
     
 }
