@@ -313,7 +313,86 @@ public class FunctionalTest {
     }
 
     @Test
-    void event_created_should_be_present_in_database() throws SQLException {
+    void two_ticket_for_two_different_events_should_be_stored_in_database() throws SQLException {
+
+        mySqlDatabase.createEvent("FIRSTEVENT", 10, 10);
+        mySqlDatabase.createEvent("SECONDEVENT", 10, 10);
+
+
+        String twoTicketPurchase = Fake.Purchase.json()
+                .withTicket(Fake.Ticket.json().random().withEvent("FIRSTEVENT"))
+                .withTicket(Fake.Ticket.json().random().withEvent("SECONDEVENT"))
+                .build();
+        
+        System.out.println("FIRST PURCHASE : " + twoTicketPurchase );
+
+        given().
+            body(twoTicketPurchase).
+        when().
+            post("/booking").
+        then().
+            statusCode(200);
+        
+        assertThat("2", equalTo(mySqlDatabase.select("count(*)")
+                .from("ticket")
+                .query()));
+
+        assertThat("1", equalTo(mySqlDatabase.select("count(*)")
+                .from("purchase")
+                .query()));
+    }
+
+
+    @Test
+    void a_ticket_for_the_same_attendee_and_event_cannot_be_purchased_twice() throws SQLException {
+
+        mySqlDatabase.createEvent("SAMEEVENT", 10, 10);
+        mySqlDatabase.createEvent("OTHEREVENT1", 10, 10);
+        mySqlDatabase.createEvent("OTHEREVENT2", 10, 10);
+
+        String sameEventId = "SAMEEVENT";
+        String sameAttendeeId = "SAMEATTENDEE";
+
+        Fake.Ticket sameTicket = Fake.Ticket.json()
+                    .withEvent(sameEventId)
+                    .withAttendee(Fake.Attendee.json().withId(sameAttendeeId));
+
+
+        String firstPurchase = Fake.Purchase.json()
+                .withTicket(sameTicket)
+                .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT1"))
+                .build();
+        
+        System.out.println("FIRST PURCHASE : " + firstPurchase );
+
+        given().
+            body(firstPurchase).
+        when().
+            post("/booking").
+        then().
+            statusCode(200);
+        
+        String secondPurchase = Fake.Purchase.json()
+                .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT2"))
+                .withTicket(sameTicket)
+                .build();
+
+        System.out.println("SECOND PURCHASE : " + secondPurchase );
+
+        given().
+            body(secondPurchase).
+        when().
+            post("/booking").
+        then().
+            statusCode(400).
+        and().
+            body("detail",
+                    startsWith( "Ticket was already purchased in a previous session for" ));
+
+    }
+
+    @Test
+    void event_created_should_be_stored_in_database() throws SQLException {
 
         String newEvent = "{\"id\":\"0001\",\"maxSeats\":10,\"remainingSeats\":10}";
 
