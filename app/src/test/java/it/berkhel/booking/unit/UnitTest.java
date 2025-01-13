@@ -25,6 +25,7 @@ import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.unit.fixture.Fake;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
@@ -136,7 +137,15 @@ class UnitTest {
         assertThrows(EventNotFoundException.class, () -> {
             app.purchase(List.of(ticket));
         });
+    }
 
+
+    @Test
+    void can_query_for_events(@Mock ForStorage theStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+
+        App app = App.init(theStorage, aMessageBroker);
+
+        verify(theStorage).getEventById(any(String.class));
 
     }
 
