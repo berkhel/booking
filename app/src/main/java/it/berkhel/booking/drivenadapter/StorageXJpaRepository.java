@@ -40,7 +40,6 @@ public class StorageXJpaRepository implements ForStorage {
     public void save(Purchase purchase, Predicate<Purchase> postCondition) throws TransactionPostConditionException {
         purchaseRepo.save(purchase);
         for(var ticket : purchase.getTickets()){
-            System.out.println("PROCESSING TICKET:"+ticket);
             attendeeRepo.saveAndFlush(ticket.getAttendee());
             ticketRepo.save(ticket);
         }
@@ -48,7 +47,6 @@ public class StorageXJpaRepository implements ForStorage {
         if (postCondition.negate().test(purchase)) {
             throw new TransactionPostConditionException();
         }
-        System.out.println("FINISHING SAVE TICKETS");
     }
 
 
@@ -63,20 +61,9 @@ public class StorageXJpaRepository implements ForStorage {
     }
 
     @Override
-    public Optional<Ticket> getTicketBy(Event event, Attendee attendee){
+    public Optional<Ticket> getTicketBy(String eventId, String attendeeId){
 
-       // Ticket duplicate = ticketRepo.findByEventIdAndAttendeeId(event.getId(), attendee.getId());
-       List<Ticket> tickets = ticketRepo.findAll();
-       for (var ticket : tickets) {
-           System.out.println("TICKET FOUND= Attendee:" + ticket.getAttendee().getId() + " Event:" + ticket.getEvent().getId() );
-           System.out.println("CURRENT Attendee:"+attendee.getId() + " Event:"+event.getId());
-
-           if (ticket.getAttendee().getId().equals(attendee.getId()) && ticket.getEvent().getId().equals(event.getId())) {
-               System.out.println("DUPLICATE:" + ticket);
-               return Optional.of(ticket);
-           }
-       }
-       return Optional.empty();
+        return ticketRepo.findByEventIdAndAttendeeId(eventId, attendeeId);
 
     }
 }

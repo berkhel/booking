@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -40,6 +42,7 @@ public class RestApiController {
     private final ForBooking bookingManager;
     private final ForEvents eventManager;
 
+    private final Logger log = LoggerFactory.getLogger(RestApiController.class);
     private final DtoMapper dtoMapper;
 
     public RestApiController(ForBooking bookingManager, ForEvents eventManager, DtoMapper dtoMapper){
@@ -80,17 +83,14 @@ public class RestApiController {
         ConstraintViolationException.class,
         EntityNotFoundException.class})
     public ErrorResponse badRequest(Exception ex) {
-        System.out.println("Exception class: " + ex.getClass().getName());
-        System.out.println("Exception message: " + ex.getMessage());
+        log.info("Not valid request " + ex.getMessage(), ex);
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, "Request not valid").build();
      }
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Something gone wrong, contact the administrator") 
     @ExceptionHandler(Exception.class)
     public void internalServerError(Exception ex) {
-        System.out.println("Exception class: " + ex.getClass().getName());
-        System.out.println("Exception message: " + ex.getMessage());
-        System.out.println("This is a 500 Internal Server Error");
-     }
+        log.error("This is a 500 Internal Server Error", ex);
+    }
     
 }

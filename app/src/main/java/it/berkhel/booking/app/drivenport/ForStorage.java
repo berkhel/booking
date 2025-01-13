@@ -17,6 +17,6 @@ public interface ForStorage {
 
     public Optional<Event> getEventById(String any);
 
-    public Optional<Ticket> getTicketBy(Event event, Attendee attendee);
+    public Optional<Ticket> getTicketBy(String eventId, String attendeeId);
     
 }

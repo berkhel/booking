@@ -1,5 +1,7 @@
 package it.berkhel.booking.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import it.berkhel.booking.entity.Ticket;
@@ -7,5 +9,5 @@ import it.berkhel.booking.entity.Ticket;
 
 public interface TicketRepository extends JpaRepository<Ticket, String> {
 
-    Ticket findByEventIdAndAttendeeId(String eventId, String attendeeId);
+    Optional<Ticket> findByEventIdAndAttendeeId(String eventId, String attendeeId);
 }

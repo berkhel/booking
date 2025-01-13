@@ -63,7 +63,7 @@ public class App implements ForBooking, ForEvents {
             checkDuplicateTickets.add(ticketKey);
 
 
-            if(storage.getTicketBy(event, ticket.getAttendee()).isPresent()){
+            if(storage.getTicketBy(eventId, attendeeId).isPresent()){
                 throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee " + attendeeId + " and event " + eventId);
             }
 
