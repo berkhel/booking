@@ -2,9 +2,11 @@ package it.berkhel.booking.dto;
 
 import org.springframework.stereotype.Component;
 
+import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.repository.EventRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Component
 public class DtoMapper {
@@ -15,10 +17,17 @@ public class DtoMapper {
         this.eventRepo = eventRepo;
     }
 
-    public Ticket toObject(TicketDto ticketDto){
+    public Ticket toObject(TicketDto ticketDto) {
         Ticket ticket = new Ticket();
         ticket.setAttendee(ticketDto.getAttendee());
-        ticket.setEvent(eventRepo.getReferenceById(ticketDto.getEventId()));
+        Event event;
+        try{
+            event = eventRepo.getReferenceById(ticketDto.getEventId());
+        }catch(EntityNotFoundException ex){
+            System.out.println("DTO: NOT FOUND REPO "+ex.getMessage());
+            event = null;
+        }
+        ticket.setEvent(event);
         return ticket;
     }
 

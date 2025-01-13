@@ -43,11 +43,11 @@ public class App implements ForBooking, ForEvents {
         Purchase purchase = new Purchase();
         for(var ticket : tickets){
             ticket.setPurchase(purchase);
-            var event = ticket.getEvent();
-            if(event == null){
-                throw new EventNotFoundException("Event not found for ticket:"+ticket.getId());
+            try{
+                ticket.getEvent().decrementAvailableSeats();
+            }catch(Exception ex){
+                throw new EventNotFoundException("Event not found");
             }
-            ticket.getEvent().decrementAvailableSeats();
         }
 
         checkSoldoutEvents(tickets);

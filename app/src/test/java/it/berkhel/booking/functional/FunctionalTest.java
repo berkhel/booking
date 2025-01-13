@@ -305,8 +305,10 @@ public class FunctionalTest {
         when().
             post("/booking").
         then().
+            statusCode(400).
+        and().
             body("detail",
-                    startsWith( "Event not found for ticket:" ));
+                    startsWith( "Event not found" ));
 
     }
 
