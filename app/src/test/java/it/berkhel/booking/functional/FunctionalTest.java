@@ -324,7 +324,27 @@ public class FunctionalTest {
         then().
             statusCode(200);
 
-        assertThat("0001", equalTo(mySqlDatabase.select("id")
+        assertThat("1", equalTo(mySqlDatabase.select("count(*)")
+                .from("event")
+                .where("id", "=", "0001")
+                .query()));
+    }
+
+    @Test
+    void cannot_created_an_event_twice() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 10, 10);
+
+        String newEvent = "{\"id\":\"0001\",\"maxSeats\":10,\"remainingSeats\":10}";
+
+        given().
+            body(newEvent).
+        when().
+            post("/event").
+        then().
+            statusCode(400);
+
+        assertThat("1", equalTo(mySqlDatabase.select("count(*)")
                 .from("event")
                 .where("id", "=", "0001")
                 .query()));
