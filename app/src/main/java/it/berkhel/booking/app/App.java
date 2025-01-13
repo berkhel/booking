@@ -35,7 +35,7 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase purchase(List<Ticket> tickets) throws Exception{
+    public Purchase purchase(Set<Ticket> tickets) throws Exception{
         if(tickets.size() < 1){
             throw new BadPurchaseRequestException("At least one ticket must be included in the request");
         }
@@ -63,6 +63,12 @@ public class App implements ForBooking, ForEvents {
             }
             checkDuplicateTickets.add(ticketKey);
 
+
+            if(storage.getTicketBy(event, ticket.getAttendee()).isPresent()){
+                throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee " + attendeeId + " and event " + eventId);
+            }
+
+
             event.decrementAvailableSeats();
         }
 
@@ -71,6 +77,7 @@ public class App implements ForBooking, ForEvents {
         Purchase purchase = new Purchase();
         tickets.forEach(ticket -> ticket.setPurchase(purchase));
         purchase.setTickets(tickets);
+
         try {
             storage.save(purchase, prch -> eventWithSoldout(prch.getTickets()).isEmpty());
         }catch(TransactionPostConditionException ex){
@@ -86,7 +93,7 @@ public class App implements ForBooking, ForEvents {
         return purchase;
     }
 
-    private Optional<Event> eventWithSoldout(List<Ticket> tickets) {
+    private Optional<Event> eventWithSoldout(Set<Ticket> tickets) {
         for (var ticket : tickets) {
             var event = ticket.getEvent();
             if (event.getRemainingSeats() < 0) {
@@ -96,7 +103,7 @@ public class App implements ForBooking, ForEvents {
         return Optional.empty();
     }
 
-    private void checkSoldoutEvents(List<Ticket> tickets) throws SoldoutException {
+    private void checkSoldoutEvents(Set<Ticket> tickets) throws SoldoutException {
         Optional<Event> eventWithSoldoutTickets = eventWithSoldout(tickets);
         if (eventWithSoldoutTickets.isPresent()) {
             throw new SoldoutException("Sorry, no enough seats in event " + eventWithSoldoutTickets.get().getId() + " for current request");

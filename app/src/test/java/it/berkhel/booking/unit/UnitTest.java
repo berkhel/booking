@@ -34,6 +34,8 @@ import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
 
 
@@ -43,7 +45,7 @@ class UnitTest {
     @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
         ForBooking app = App.init(theStorage, messageBroker);
 
-        app.purchase(List.of(Fake.ticket()));
+        app.purchase(Set.of(Fake.ticket()));
 
         verify(theStorage).save(Mockito.any(), Mockito.any());
     }
@@ -51,7 +53,7 @@ class UnitTest {
     @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
         ForBooking app = App.init(aStorage, theMessageBroker);
 
-        app.purchase(List.of(Fake.ticket()));
+        app.purchase(Set.of(Fake.ticket()));
 
         verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
     }
@@ -59,14 +61,14 @@ class UnitTest {
     @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
-        Purchase thePurchase = app.purchase(List.of(Fake.ticket()));
+        Purchase thePurchase = app.purchase(Set.of(Fake.ticket()));
 
         assertThat(thePurchase, any(Purchase.class));
     }
 
     @Test
     void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        List<Ticket> fourTickets = Stream.generate(Fake::ticket).limit(4).toList();
+        Set<Ticket> fourTickets = Stream.generate(Fake::ticket).limit(4).collect(toSet());
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
@@ -76,7 +78,7 @@ class UnitTest {
 
     @Test
     void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        List<Ticket> threeTickets = Stream.generate(Fake::ticket).limit(3).toList();
+        Set<Ticket> threeTickets = Stream.generate(Fake::ticket).limit(3).collect(toSet());
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
@@ -87,7 +89,7 @@ class UnitTest {
 
     @Test
     void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        List<Ticket> noTickets = List.of();
+        Set<Ticket> noTickets = Set.of();
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
@@ -98,7 +100,7 @@ class UnitTest {
 
     @Test
     void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        List<Ticket> nullTickets = null;
+        Set<Ticket> nullTickets = null;
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
@@ -117,7 +119,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
-            app.purchase(List.of(arrivedLate));
+            app.purchase(Set.of(arrivedLate));
         });
     }
 
@@ -129,7 +131,7 @@ class UnitTest {
         newTicket.setAttendee(Fake.attendee());
         App app = App.init(aStorage, aMessageBroker);
 
-        app.purchase(List.of(newTicket));
+        app.purchase(Set.of(newTicket));
 
         assertEquals(9, event.getRemainingSeats());
 
@@ -142,7 +144,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(EventNotFoundException.class, () -> {
-            app.purchase(List.of(ticket));
+            app.purchase(Set.of(ticket));
         });
     }
 
@@ -171,7 +173,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(DuplicateTicketException.class, () -> {
-            app.purchase(List.of(ticketA, ticketB));
+            app.purchase(Set.of(ticketA, ticketB));
         });
 
 

@@ -19,11 +19,15 @@ spring:
     show-sql: true
     hibernate: 
       ddl-auto: create
+  jackson:
+    deserialization:
+      accept-single-value-as-array: true
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+  
 
 custom: #used for custom properties
   rabbitmq:

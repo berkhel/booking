@@ -2,8 +2,11 @@ package it.berkhel.booking.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +20,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
@@ -44,14 +48,14 @@ public class RestApiController {
         this.dtoMapper = dtoMapper;
     }
 
-    @PostMapping(value = "/booking", produces = "application/json")
+    @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseDto book(@Valid @RequestBody(required = true) List<TicketDto> dtoTickets) throws Exception {
-        List<Ticket> tickets = dtoTickets.stream().map(dtoMapper::toObject).toList();
+        Set<Ticket> tickets = dtoTickets.stream().map(dtoMapper::toObject).collect(Collectors.toSet());
         Purchase purchase = bookingManager.purchase(tickets);
         return dtoMapper.toDto(purchase);
     }
 
-    @PostMapping(value = "/event", produces = "application/json")
+    @PostMapping(value = "/event", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Event book(@Valid @RequestBody(required = true) Event event) throws EventAlreadyExistsException {
         return eventManager.createEvent(event);
     }
@@ -60,7 +64,8 @@ public class RestApiController {
             BadPurchaseRequestException.class,
             SoldoutException.class,
             EventNotFoundException.class,
-            EventAlreadyExistsException.class })
+            EventAlreadyExistsException.class,
+            DuplicateTicketException.class })
     public ErrorResponse domainErrorRequest(Exception ex) {
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage()).build();
     }

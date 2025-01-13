@@ -363,8 +363,6 @@ public class FunctionalTest {
                 .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT1"))
                 .build();
         
-        System.out.println("FIRST PURCHASE : " + firstPurchase );
-
         given().
             body(firstPurchase).
         when().
@@ -372,12 +370,12 @@ public class FunctionalTest {
         then().
             statusCode(200);
         
+
+
         String secondPurchase = Fake.Purchase.json()
                 .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT2"))
                 .withTicket(sameTicket)
                 .build();
-
-        System.out.println("SECOND PURCHASE : " + secondPurchase );
 
         given().
             body(secondPurchase).

@@ -15,15 +15,15 @@ public class Ticket {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "attendee_id")
+    @JoinColumn(name = "attendee_id", nullable = false)
     private Attendee attendee;
 
     @ManyToOne
-    @JoinColumn(name = "purchase_id")
+    @JoinColumn(name = "purchase_id", nullable = false)
     private Purchase purchase;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
     public String getId() {
@@ -60,7 +60,7 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket [id=" + id + ", attendee=" + attendee + ", purchase=" + purchase + ", event=" + event + "]";
+        return "Ticket [id=" + id + "]";
     }
 
 
