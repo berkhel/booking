@@ -18,6 +18,7 @@ import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
@@ -123,6 +124,19 @@ class UnitTest {
         app.purchase(List.of(newTicket));
 
         assertEquals(9, event.getRemainingSeats());
+
+    }
+
+    @Test
+    void event_cannot_be_empty(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+        Ticket ticket = new Ticket();
+        ticket.setEvent(null);
+        App app = App.init(aStorage, aMessageBroker);
+
+        assertThrows(EventNotFoundException.class, () -> {
+            app.purchase(List.of(ticket));
+        });
+
 
     }
 
