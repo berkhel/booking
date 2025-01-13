@@ -312,4 +312,22 @@ public class FunctionalTest {
 
     }
 
+    @Test
+    void event_created_should_be_present_in_database() throws SQLException {
+
+        String newEvent = "{\"id\":\"0001\",\"maxSeats\":10,\"remainingSeats\":10}";
+
+        given().
+            body(newEvent).
+        when().
+            post("/event").
+        then().
+            statusCode(200);
+
+        assertThat("0001", equalTo(mySqlDatabase.select("id")
+                .from("event")
+                .where("id", "=", "0001")
+                .query()));
+    }
+
 }
