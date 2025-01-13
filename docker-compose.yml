@@ -13,7 +13,6 @@ services:
       - MYSQL_PASSWORD=admin
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306  
-      # - MYSQL_ROOT_HOST="%"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -28,9 +27,13 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    networks:
+      - springboot-rabbitmq-network
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
@@ -44,17 +47,13 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/booking?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
-      - MYSQL_PORT=3306  
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_PORT=5672
       - SPRING_RABBITMQ_USERNAME=guest
       - SPRING_RABBITMQ_PASSWORD=guest
-      - CUSTOM_RABBITMQ_QUEUE_NAME=booking
     networks:
       - springboot-mysql-network
+      - springboot-rabbitmq-network
     depends_on:
       - mysql
       - rabbitmq
@@ -67,21 +66,19 @@ services:
       context: .
       dockerfile: ./email/Dockerfile
     container_name: email
+    networks:
+      - springboot-rabbitmq-network
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
-      - CUSTOM_RABBITMQ_QUEUE_NAME=booking
-      - SIMPLEJAVAMAIL_SMTP_HOST=smtp.default.com
-      - SIMPLEJAVAMAIL_SMTP_PORT=25
-      - CUSTOM_SIMPLEJAVAMAIL_HOST=smtp.yopmail.com
-      - CUSTOM_SIMPLEJAVAMAIL_PORT=25
     depends_on:
       - rabbitmq
-    # ports:
-    #   - 8082:8080
 
 
 volumes:
   mysql-data:
+  rabbitmq_data:
 networks:
   springboot-mysql-network:
     name: springboot-mysql-network
+  springboot-rabbitmq-network:
+    name: springboot-rabbitmq-network
