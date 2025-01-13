@@ -37,8 +37,8 @@ public class MySqlDatabase {
 
 
     public String query(QueryHolder queryHolder, Function<ResultSet, String> resultSetHandler) throws SQLException {
-        System.out.println("QUERY:"+queryHolder.query());
-        System.out.println("PARAM:"+queryHolder.parameters());
+        // System.out.println("QUERY:"+queryHolder.query());
+        // System.out.println("PARAM:"+queryHolder.parameters());
         String result = "";
         try (Connection con = connection();
                 PreparedStatement stmt = con.prepareStatement(queryHolder.query())) {

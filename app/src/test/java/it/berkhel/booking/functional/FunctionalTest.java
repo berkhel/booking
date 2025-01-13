@@ -333,7 +333,7 @@ public class FunctionalTest {
     @Test
     void cannot_created_an_event_twice() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 10);
+        //mySqlDatabase.createEvent("0001", 10, 10);
 
         String newEvent = "{\"id\":\"0001\",\"maxSeats\":10,\"remainingSeats\":10}";
 
@@ -342,12 +342,37 @@ public class FunctionalTest {
         when().
             post("/event").
         then().
-            statusCode(400);
+            statusCode(200);
+
+        given().
+            body(newEvent).
+        when().
+            post("/event").
+        then().
+            statusCode(400).
+        and().
+            body("detail", startsWith("Event already exists"));
+        
 
         assertThat("1", equalTo(mySqlDatabase.select("count(*)")
                 .from("event")
                 .where("id", "=", "0001")
                 .query()));
+    }
+
+    @Test
+    void cannot_created_an_event_with_negative_remaining_seats() throws SQLException {
+
+
+        String newEvent = "{\"id\":\"0045\",\"maxSeats\":10,\"remainingSeats\":-1}";
+
+        given().
+            body(newEvent).
+        when().
+            post("/event").
+        then().
+            statusCode(400);
+
     }
 
 }
