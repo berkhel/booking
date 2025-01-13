@@ -5,3 +5,7 @@ custom:
   simplejavamail:
     host: smtp.yopmail.com
     port: 25
+simplejavamail:
+  smtp:
+    host: smtp.yopmail.com
+    port: 25

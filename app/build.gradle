@@ -15,6 +15,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'mysql:mysql-connector-java:8.0.33'
+    //runtimeOnly 'org.hibernate:hibernate:3.5.4-Final'
 }
 
 

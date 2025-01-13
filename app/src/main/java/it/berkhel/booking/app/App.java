@@ -74,7 +74,7 @@ public class App implements ForBooking {
     private void checkSoldoutEvents(List<Ticket> tickets) throws SoldoutException {
         Optional<Event> eventWithSoldoutTickets = eventWithSoldout(tickets);
         if (eventWithSoldoutTickets.isPresent()) {
-            throw new SoldoutException("Sorry, no remaining seats for event " + eventWithSoldoutTickets.get());
+            throw new SoldoutException("Sorry, no remaining seats for event " + eventWithSoldoutTickets.get().getId());
         }
     }
 
