@@ -1,5 +1,6 @@
 package it.berkhel.booking.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,7 +50,10 @@ public class RestApiController {
 
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseDto book(@Valid @RequestBody(required = true) List<TicketDto> dtoTickets) throws Exception {
-        Set<Ticket> tickets = dtoTickets.stream().map(dtoMapper::toObject).collect(Collectors.toSet());
+        Set<Ticket> tickets = new HashSet<>();
+        for(var dtoTicket : dtoTickets){
+            tickets.add(dtoMapper.toObject(dtoTicket));
+        }
         Purchase purchase = bookingManager.purchase(tickets);
         return dtoMapper.toDto(purchase);
     }

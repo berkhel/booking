@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -18,11 +19,11 @@ public class DtoMapper {
         this.eventRepo = eventRepo;
     }
 
-    public Ticket toObject(TicketDto ticketDto) {
+    public Ticket toObject(TicketDto ticketDto) throws EventNotFoundException {
         Ticket ticket = new Ticket();
         ticket.setAttendee(ticketDto.getAttendee());
         Optional<Event> event = eventRepo.findById(ticketDto.getEventId());
-        ticket.setEvent(event.orElse(null));
+        ticket.setEvent(event.orElseThrow(() -> new EventNotFoundException("Event not found : "+ticketDto.getEventId())));
         return ticket;
     }
 
