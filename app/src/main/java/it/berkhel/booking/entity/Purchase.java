@@ -1,6 +1,5 @@
 package it.berkhel.booking.entity;
 
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;

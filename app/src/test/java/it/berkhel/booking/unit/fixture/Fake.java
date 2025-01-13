@@ -5,8 +5,6 @@ import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Ticket;
 
 import java.util.Random;
-import java.util.stream.IntStream;
-
 import it.berkhel.booking.entity.Attendee;
 
 public class Fake {

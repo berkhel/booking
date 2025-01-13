@@ -8,7 +8,6 @@ import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.repository.EventRepository;
-import jakarta.persistence.EntityNotFoundException;
 
 @Component
 public class DtoMapper {

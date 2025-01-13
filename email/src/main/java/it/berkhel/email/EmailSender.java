@@ -2,21 +2,14 @@ package it.berkhel.email;
 
 import org.simplejavamail.email.EmailBuilder;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
-import org.simplejavamail.api.mailer.config.TransportStrategy;
-
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
-
-import it.berkhel.email.Message;
 
 @Component
 @RabbitListener(queuesToDeclare = @Queue("${custom.rabbitmq.queue.name}"))
