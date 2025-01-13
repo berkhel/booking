@@ -1,5 +1,7 @@
 package it.berkhel.booking.dto;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import it.berkhel.booking.entity.Event;
@@ -20,14 +22,8 @@ public class DtoMapper {
     public Ticket toObject(TicketDto ticketDto) {
         Ticket ticket = new Ticket();
         ticket.setAttendee(ticketDto.getAttendee());
-        Event event;
-        try{
-            event = eventRepo.getReferenceById(ticketDto.getEventId());
-        }catch(EntityNotFoundException ex){
-            System.out.println("DTO: NOT FOUND REPO "+ex.getMessage());
-            event = null;
-        }
-        ticket.setEvent(event);
+        Optional<Event> event = eventRepo.findById(ticketDto.getEventId());
+        ticket.setEvent(event.orElse(null));
         return ticket;
     }
 

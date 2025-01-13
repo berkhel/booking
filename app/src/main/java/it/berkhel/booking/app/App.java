@@ -46,9 +46,7 @@ public class App implements ForBooking, ForEvents {
         Set<String> checkDuplicateTickets = new HashSet<>();
 
 
-        Purchase purchase = new Purchase();
         for (var ticket : tickets) {
-            ticket.setPurchase(purchase);
             Event event;
             String eventId;
             try {
@@ -65,12 +63,13 @@ public class App implements ForBooking, ForEvents {
             }
             checkDuplicateTickets.add(ticketKey);
 
-
             event.decrementAvailableSeats();
         }
 
         checkSoldoutEvents(tickets);
 
+        Purchase purchase = new Purchase();
+        tickets.forEach(ticket -> ticket.setPurchase(purchase));
         purchase.setTickets(tickets);
         try {
             storage.save(purchase, prch -> eventWithSoldout(prch.getTickets()).isEmpty());

@@ -16,13 +16,15 @@ import it.berkhel.booking.repository.EventRepository;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 @ExtendWith(MockitoExtension.class)
 public class DtoTest {
 
     @Test 
     void ticket_dto_to_object(@Mock EventRepository fakeEventRepo){
-        when(fakeEventRepo.getReferenceById(anyString()))
-            .thenAnswer(method ->  new Event(method.getArgument(0), 0, 0));
+        when(fakeEventRepo.findById(anyString()))
+            .thenAnswer(method ->  Optional.of(new Event(method.getArgument(0), 0, 0)));
         DtoMapper dto2Object = new DtoMapper(fakeEventRepo);
         TicketDto ticketDto = new TicketDto(new Attendee(), "0001");
 
