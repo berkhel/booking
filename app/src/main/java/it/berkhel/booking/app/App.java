@@ -4,16 +4,18 @@ import java.util.List;
 import java.util.Optional;
 
 import it.berkhel.booking.app.actionport.ForBooking;
+import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.app.exception.TransactionPostConditionException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
 
-public class App implements ForBooking {
+public class App implements ForBooking, ForEvents {
 
     public static App init(ForStorage storage, ForSendingMessage messageBroker){
         return new App(storage, messageBroker);
@@ -37,9 +39,14 @@ public class App implements ForBooking {
         }
 
 
+
         Purchase purchase = new Purchase();
         for(var ticket : tickets){
             ticket.setPurchase(purchase);
+            var event = ticket.getEvent();
+            if(event == null){
+                throw new EventNotFoundException("Event not found for ticket:"+ticket.getId());
+            }
             ticket.getEvent().decrementAvailableSeats();
         }
 
@@ -76,6 +83,11 @@ public class App implements ForBooking {
         if (eventWithSoldoutTickets.isPresent()) {
             throw new SoldoutException("Sorry, no remaining seats for event " + eventWithSoldoutTickets.get().getId());
         }
+    }
+
+    @Override
+    public Event createEvent(Event event) {
+        return storage.save(event);
     }
 
 
