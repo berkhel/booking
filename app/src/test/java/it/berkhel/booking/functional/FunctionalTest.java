@@ -296,4 +296,18 @@ public class FunctionalTest {
 
     }
 
+    @Test
+    void a_ticket_with_a_non_valid_event_should_tell_it_in_the_response() throws SQLException {
+
+
+        given().
+            body(Fake.singlePurchaseForEvent("0001")).
+        when().
+            post("/booking").
+        then().
+            body("detail",
+                    startsWith( "Event not found for ticket:" ));
+
+    }
+
 }
