@@ -23,6 +23,11 @@ workspace "Name" "Description"
                         technology "Spring Data JPA"
                         tag "Repository"
                     }
+                ampq = component "Publisher" {
+                        description "Push messages into the queue of the message broker"
+                        technology "Spring AMPQ"
+                        tag "AMPQ"
+                    }
                 
                 config = component "Configurator" {
                         description "Instantiates the app and the other components"
@@ -35,6 +40,16 @@ workspace "Name" "Description"
                 description "Stores events and relative remaining tickets\n Stores successful bookings"
                 tags "Database"
             }
+            mq = container "Message Broker" {
+                technology "RabbitMQ"
+                description "Send asynchronously message to the Email Server"
+                tags "Queue"
+            }
+            email = container "Email Server" {
+                technology "Spring AMPQ + SimpleJavaMail"
+                description "Consumes messages and then send emails to User"
+                tags "Email" 
+            }
         }
 
         u -> ss.wa.ctrl "Send Booking Request" "HTTP"
@@ -42,8 +57,13 @@ workspace "Name" "Description"
         ss.wa.config -> ss.wa.repo "Instantiates"
         ss.wa.config -> ss.wa.app "Instanciates"
         ss.wa.config -> ss.wa.ctrl "Instantiates"
+        ss.wa.config -> ss.wa.ampq "Instantiates"
         ss.wa.ctrl -> ss.wa.app "Uses"
         ss.wa.app -> ss.wa.repo "Uses"
+        ss.wa.app -> ss.wa.ampq "Uses"
+        ss.wa.ampq -> ss.mq "Push Messages"
+        ss.email -> ss.mq "Consumes"
+        ss.email -> u "Notify" "SMTP"
         
     }
 
@@ -57,6 +77,7 @@ workspace "Name" "Description"
             autolayout lr
         }
         component ss.wa "BookingApp" {
+            include ss.email
             include *
             autolayout lr
         }
@@ -78,18 +99,27 @@ workspace "Name" "Description"
             element "Database" {
                 shape cylinder
             }
-             element "Controller" {
+            element "Queue" {
+                shape pipe
+            }
+            element "Controller" {
                 background #71ce81
                 shape component
                 color black 
                 icon ./images/spring-boot-logo.png
             } 
-             element "App" {
+            element "App" {
                 background #71ce81
                 shape hexagon
                 color black 
             }
             element "Repository" {
+                background #71ce81
+                shape component
+                color black
+                icon ./images/spring-boot-logo.png
+            } 
+            element "AMPQ" {
                 background #71ce81
                 shape component
                 color black

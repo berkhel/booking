@@ -1,0 +1,158 @@
+openapi: 3.1.0
+info:
+  title: Booking API Documentation
+  description: All the following API resources are available on url http://localhost:8090
+
+components:
+  schemas:
+    TicketRequest:
+      type: object
+      properties:
+        attendee: 
+          type: object
+          description: ID of Attendee, typically a document ID
+          $ref: '#/components/schemas/Attendee'
+        eventId:
+          type: string
+          description: ID of the event
+          example: "event789"
+    TicketResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the ticket, this can be used to access the event
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        attendee: 
+          type: object
+          description: ID of the attendee
+          $ref: '#/components/schemas/Attendee'
+        eventId:
+          type: string
+          description: ID of the event
+          example: "event789"
+    Purchase:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the Purchase
+          example: "456e4567-e89b-12d3-a456-426614174001"
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketResponse'
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the Event
+          example: "event123"
+        maxSeats: 
+          type: integer
+          description: Maximum number of seats for the Event
+          example: 100
+        remainingSeats: 
+          type: integer
+          description: Remaining number of seats for the Event
+          example: 50
+    Attendee:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID of the Attendee, typically a document ID
+          example: "attendee123"
+        email:
+          type: string
+          description: Email of the Attendee, this will be the recipient for the notification in case of success.
+          example: "attendee@example.com"
+        firstName: 
+          type: string
+          description: First name of the Attendee
+          example: "John"
+        lastName: 
+          type: string
+          description: Last name of the Attendee
+          example: "Doe"
+        birthDate:
+          type: string
+          description: Birth date of the Attendee
+          example: "1990-01-01"
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: "URI reference that identifies the problem type"
+          example: "about:blank"
+        title:
+          type: string
+          description: "Short summary of the problem"
+          example: "Bad Request"
+        status:
+          type: integer
+          description: "HTTP status code of the problem"
+          example: 400
+        detail:
+          type: string
+          description: "Detailed description of the problem"
+          example: "Request not valid" 
+        instance: 
+          type: string 
+          description: "URI reference that identifies the specific occurrence of the problem" 
+          example: "/booking"
+
+paths:
+  /booking:
+    post:
+      summary: Create a new booking
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TicketRequest'
+      responses:
+        '200':
+          description: Purchase created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Purchase'
+        '400':
+          description: The request was rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '5xx':
+          description: Internal Server Error, The app wasn't designed to handle this 
+
+  /event:
+    post:
+      summary: Create a new event, this is necessary before any request to /booking
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: The request was rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '5xx':
+          description: Internal Server Error, The app wasn't designed to handle this 

@@ -1,0 +1,54 @@
+= Booking System
+
+== Descrizione
+Questo è un semplice sistema per prenotare dei biglietti di eventi.
+
+Il caso d'uso potrebbe essere quello di un tifoso 
+che prenota i biglietti per un concerto per sé e per gli amici. 
+
+È anche possibile creare un nuovo evento. 
+Questa funzionalità è pensata per essere usata dagli organizzatori di eventi. 
+
+== Lanciare l'applicazione
+
+Bisogna avere installato link:https://www.docker.com/get-started/[docker]
+
+Quindi lanciare:
+[,bash]
+----
+docker compose up --build 
+----
+
+usare 'sudo' davanti eventualmente.
+
+Una volta che il server è on, è possibile chiamare le API su localhost:8090 da un Postman o curl.
+
+Per usare il sistema di email, bisogna usare una mail di link:https://yopmail.com/en/[yopmail], in quanto l'smtp host è hardcodato.
+
+== Api Docs
+La documentazione delle api è disponibile come link:docs/src/openapi/openapi.yml[openapi.yml]
+
+Per lanciare la UI bisogna posizionarsi sul path docs/src/openapi e lanciare scaricare i pachetti con link:https://docs.npmjs.com/about-npm[npm].
+
+[,bash]
+----
+cd docs/src/openapi
+npm install
+----
+
+Lanciare quindi il server su una qualsiasi porta, in quest caso la 9090:
+
+[,bash]
+----
+npx http-server -p 9090 -c-1 .
+----
+
+== Schema Architetturale
+
+La documentazione architetturale si trova link:docs/build/docs/asciidoc/arch.adoc[qui].
+Nel caso non fosse presente, lanciare 
+
+[,bash]
+----
+./gradlew asciidoctor
+----

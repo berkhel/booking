@@ -1,0 +1,30 @@
+classDiagram
+    
+
+    class Purchase{
+      String id
+      Set~Ticket~ tickets
+    }
+    class Event {
+      String id
+      int maxTickets
+      int remainingTickets
+    }
+    class Ticket {
+      String id
+      Event event
+      Attendee attendee
+      Purchase purchase
+    }
+
+    class Attendee {
+       String id
+       String email
+       String firstName
+       String lastName
+       int birthDate
+    }
+   
+   Attendee "1" -- "1..*" Ticket
+   Event "1" -- "1..*" Ticket
+   Purchase "1" -- "1..3" Ticket
