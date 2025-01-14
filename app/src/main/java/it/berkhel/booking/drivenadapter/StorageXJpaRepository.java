@@ -1,6 +1,5 @@
 package it.berkhel.booking.drivenadapter;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -9,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.TransactionPostConditionException;
-import it.berkhel.booking.entity.Attendee;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;

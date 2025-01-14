@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import it.berkhel.booking.app.exception.TransactionPostConditionException;
-import it.berkhel.booking.entity.Attendee;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;

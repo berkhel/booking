@@ -28,7 +28,7 @@ Per usare il sistema di email, bisogna usare una mail di link:https://yopmail.co
 == Api Docs
 La documentazione delle api è disponibile come link:docs/src/openapi/openapi.yml[openapi.yml]
 
-Per lanciare la UI bisogna posizionarsi sul path docs/src/openapi e lanciare scaricare i pachetti con link:https://docs.npmjs.com/about-npm[npm].
+Per lanciare la UI bisogna posizionarsi sul path docs/src/openapi e scaricare i pachetti con link:https://docs.npmjs.com/about-npm[npm].
 
 [,bash]
 ----
@@ -51,4 +51,23 @@ Nel caso non fosse presente, lanciare
 [,bash]
 ----
 ./gradlew asciidoctor
+----
+
+== Testing
+
+Per eseguire i test
+
+=== Unit test:
+
+[,bash]
+----
+./gradlew test
+----
+
+=== Functional test:
+(Anche qui è richiesto docker)
+
+[,bash]
+----
+./gradlew functionalTest
 ----
