@@ -3,7 +3,7 @@
 == Descrizione
 Questo è un semplice sistema per prenotare dei biglietti di eventi.
 
-Il caso d'uso potrebbe essere quello di un tifoso 
+Il caso d'uso potrebbe essere quello di una persona
 che prenota i biglietti per un concerto per sé e per gli amici. 
 
 È anche possibile creare un nuovo evento. 
