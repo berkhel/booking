@@ -45,7 +45,7 @@ npx http-server -p 9090 -c-1 .
 
 == Schema Architetturale
 
-La documentazione architetturale si trova link:docs/build/docs/asciidoc/arch.adoc[qui].
+La documentazione architetturale si trova link:docs/build/docs/asciidoc/arch.html[qui].
 Nel caso non fosse presente, lanciare 
 
 [,bash]
