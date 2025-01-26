@@ -38,6 +38,7 @@ public class StorageXJpaRepository implements ForStorage {
     public void save(Purchase purchase, Predicate<Purchase> postCondition) throws TransactionPostConditionException {
         purchaseRepo.save(purchase);
         for(var ticket : purchase.getTickets()){
+            eventRepo.save(ticket.getEvent());
             attendeeRepo.saveAndFlush(ticket.getAttendee());
             ticketRepo.save(ticket);
         }

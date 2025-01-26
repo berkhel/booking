@@ -3,6 +3,7 @@ package it.berkhel.booking.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -13,6 +14,11 @@ public class Event {
     @Id
     @NotBlank
     String id;
+
+    @Version
+    @Column(columnDefinition = "integer DEFAULT 0")
+    private Long version;
+
 
     @NotNull
     @Column(name = "max_seats")
@@ -33,6 +39,10 @@ public class Event {
 
     public String getId() {
         return id;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public Integer getMaxSeats() {
