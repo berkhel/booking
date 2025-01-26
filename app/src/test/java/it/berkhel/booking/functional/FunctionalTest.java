@@ -1,10 +1,14 @@
 package it.berkhel.booking.functional;
 
+import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.config.MainConfig;
+import it.berkhel.booking.dto.DtoMapper;
+import it.berkhel.booking.entity.Attendee;
+import it.berkhel.booking.entity.Event;
+import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
 import it.berkhel.booking.functional.dsl.fixture.RabbitMQ;
-
 import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.existsAsValueIn;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -16,6 +20,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -42,6 +50,7 @@ import static io.restassured.RestAssured.when;
 import static io.restassured.RestAssured.given;
 
 import static org.awaitility.Awaitility.waitAtMost;
+import static org.awaitility.Awaitility.await;
 
 
 @SpringBootTest(classes = { MainConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -324,8 +333,6 @@ public class FunctionalTest {
                 .withTicket(Fake.Ticket.json().random().withEvent("SECONDEVENT"))
                 .build();
         
-        System.out.println("FIRST PURCHASE : " + twoTicketPurchase );
-
         given().
             body(twoTicketPurchase).
         when().
@@ -342,6 +349,64 @@ public class FunctionalTest {
                 .query()));
     }
 
+    @Test
+    void same_attendee_different_events() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 10, 1);
+        mySqlDatabase.createEvent("0002", 10, 1);
+
+        var oneAttendeeTwoEvents = Fake.Purchase.json()
+                .withTicket(Fake.Ticket.json()
+                        .withAttendee(Fake.Attendee.json().withId("SAME"))
+                        .withEvent("0001"))
+                .withTicket(Fake.Ticket.json()
+                        .withAttendee(Fake.Attendee.json().withId("SAME"))
+                        .withEvent("0002"))
+                .build();
+
+        given().
+            body(oneAttendeeTwoEvents).
+        when().
+            post("/booking").
+        then().
+            statusCode(200);
+        
+        assertThat("1", equalTo(mySqlDatabase.select("count(*)")
+                .from("attendee")
+                .query()));
+
+    }
+
+    @Test
+    void same_event_different_attendees() throws SQLException {
+
+        mySqlDatabase.createEvent("0001", 10, 2);
+
+        var oneEventTwoAttendees = Fake.Purchase.json()
+                .withTicket(Fake.Ticket.json()
+                        .withAttendee(Fake.Attendee.json().withId("A001"))
+                        .withEvent("0001"))
+                .withTicket(Fake.Ticket.json()
+                        .withAttendee(Fake.Attendee.json().withId("A002"))
+                        .withEvent("0001"))
+                .build();
+
+        given().
+            body(oneEventTwoAttendees).
+        when().
+            post("/booking").
+        then().
+            statusCode(200);
+        
+        assertThat("2", equalTo(mySqlDatabase.select("count(*)")
+                .from("attendee")
+                .query()));
+
+        assertThat("0", equalTo(mySqlDatabase.select("remaining_seats")
+                .from("event")
+                .where("id","=","0001")
+                .query()));
+    }
 
     @Test
     void a_ticket_for_the_same_attendee_and_event_cannot_be_purchased_twice() throws SQLException {
@@ -407,7 +472,7 @@ public class FunctionalTest {
                 .query()));
     }
 
-    @Test
+   @Test
     void cannot_created_an_event_twice() throws SQLException {
 
         //mySqlDatabase.createEvent("0001", 10, 10);
@@ -420,6 +485,7 @@ public class FunctionalTest {
             post("/event").
         then().
             statusCode(200);
+
 
         given().
             body(newEvent).
@@ -437,7 +503,7 @@ public class FunctionalTest {
                 .query()));
     }
 
-    @Test
+   @Test
     void cannot_created_an_event_with_negative_remaining_seats() throws SQLException {
 
 
@@ -452,4 +518,40 @@ public class FunctionalTest {
 
     }
 
+    @Test
+    void concurrent_test(@Autowired ForBooking app, @Autowired DtoMapper mapper) throws Exception {
+        
+        mySqlDatabase.createEvent("0001", 8, 8);
+
+        ExecutorService threadPool = Executors.newCachedThreadPool();
+
+
+        for (var i = 0; i < 10; i++) {
+            threadPool.execute(() -> {
+                Attendee attendee = new Attendee(UUID.randomUUID().toString(), "/", "/", "/", "/");
+                Event event = new Event("0001", 8, 8);
+                Ticket ticket = new Ticket();
+                ticket.setAttendee(attendee);
+                ticket.setEvent(event);
+
+                try {
+                    app.purchase(Set.of(ticket));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        await().pollDelay(Duration.ofSeconds(5)).atMost(Duration.ofSeconds(10)).untilAsserted(() ->
+        {
+            assertThat(mySqlDatabase.select("count(*)")
+                    .from("ticket")
+                    .query(), equalTo("8"));
+            assertThat(mySqlDatabase.select("remaining_seats")
+                    .from("event")
+                    .where("id", "=", "0001")
+                    .query(), equalTo("0"));
+
+        });
+    }
 }
