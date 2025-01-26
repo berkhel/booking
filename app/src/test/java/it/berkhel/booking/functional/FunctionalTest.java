@@ -1,8 +1,10 @@
 package it.berkhel.booking.functional;
 
+import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
+import it.berkhel.booking.app.drivenport.ForSendingMessage;
+import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.config.MainConfig;
-import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.entity.Attendee;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Ticket;
@@ -12,9 +14,13 @@ import it.berkhel.booking.functional.dsl.fixture.RabbitMQ;
 import static it.berkhel.booking.functional.dsl.fixture.MySqlDatabase.existsAsValueIn;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,6 +35,8 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -519,17 +527,22 @@ public class FunctionalTest {
     }
 
     @Test
-    void concurrent_test(@Autowired ForBooking app, @Autowired DtoMapper mapper) throws Exception {
-        
-        mySqlDatabase.createEvent("0001", 8, 8);
+    void concurrent_test(@Autowired ForStorage storage) throws Exception {
+
+        ForSendingMessage mockMessenger = mock(ForSendingMessage.class);
+
+        ForBooking app = App.init(storage, mockMessenger);
+
+        final Integer STARTING_TICKETS = 2;
+        mySqlDatabase.createEvent("0001", STARTING_TICKETS, STARTING_TICKETS);
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
 
 
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < STARTING_TICKETS + 1; i++) {
             threadPool.execute(() -> {
                 Attendee attendee = new Attendee(UUID.randomUUID().toString(), "/", "/", "/", "/");
-                Event event = new Event("0001", 8, 8);
+                Event event = storage.getEventById("0001").get();
                 Ticket ticket = new Ticket();
                 ticket.setAttendee(attendee);
                 ticket.setEvent(event);
@@ -544,14 +557,19 @@ public class FunctionalTest {
 
         await().pollDelay(Duration.ofSeconds(5)).atMost(Duration.ofSeconds(10)).untilAsserted(() ->
         {
-            assertThat(mySqlDatabase.select("count(*)")
-                    .from("ticket")
-                    .query(), equalTo("8"));
-            assertThat(mySqlDatabase.select("remaining_seats")
+
+            Integer remainingTickets = Integer.parseInt(mySqlDatabase.select("remaining_seats")
                     .from("event")
                     .where("id", "=", "0001")
-                    .query(), equalTo("0"));
+                    .query());
+            Integer soldTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
+                    .from("ticket")
+                    .query());
+            assertThat(soldTickets, greaterThan(0));
+            assertThat(remainingTickets + soldTickets, equalTo(STARTING_TICKETS));
+            verify(mockMessenger, times(soldTickets)).sendMessage(Mockito.any(), Mockito.any());
 
         });
+
     }
 }

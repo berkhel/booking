@@ -32,6 +32,7 @@ public class RabbitMQ {
         return messages.poll();
     }
 
+
     public void createQueue(String queue)
             throws IOException, TimeoutException {
         try (Connection connection = getConnection()) {
@@ -52,6 +53,18 @@ public class RabbitMQ {
                 });
             }
         }
+    }
+
+    public Queue<String> getMessages() {
+        return messages;
+    }
+
+    public ConnectionFactory getConnectionFactory() {
+        return connectionFactory;
+    }
+
+    public void flushMessages() {
+        this.messages.clear();
     }
 
 }

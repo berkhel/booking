@@ -21,6 +21,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
@@ -70,7 +71,8 @@ public class RestApiController {
             SoldoutException.class,
             EventNotFoundException.class,
             EventAlreadyExistsException.class,
-            DuplicateTicketException.class })
+            DuplicateTicketException.class,
+            ConcurrentPurchaseException.class })
     public ErrorResponse domainErrorRequest(Exception ex) {
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage()).build();
     }

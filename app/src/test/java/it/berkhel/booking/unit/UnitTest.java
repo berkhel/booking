@@ -44,7 +44,7 @@ class UnitTest {
 
         app.purchase(Set.of(Fake.ticket()));
 
-        verify(theStorage).save(Mockito.any(), Mockito.any());
+        verify(theStorage).save(Mockito.any(Purchase.class));
     }
 
     @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {

@@ -10,11 +10,11 @@ import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
+import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
-import it.berkhel.booking.app.exception.TransactionPostConditionException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -34,7 +34,7 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase purchase(Set<Ticket> tickets) throws Exception{
+    public Purchase purchase(Set<Ticket> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
         if(tickets.size() < 1){
             throw new BadPurchaseRequestException("At least one ticket must be included in the request");
         }
@@ -77,16 +77,12 @@ public class App implements ForBooking, ForEvents {
         tickets.forEach(ticket -> ticket.setPurchase(purchase));
         purchase.setTickets(tickets);
 
-        try {
-            storage.save(purchase, prch -> eventWithSoldout(prch.getTickets()).isEmpty());
-        }catch(TransactionPostConditionException ex){
-            checkSoldoutEvents(tickets);
-            throw ex;
+        storage.save(purchase);
+
+        for (var ticket : purchase.getTickets()) {
+            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId());
         }
 
-        for(var ticket : purchase.getTickets()){
-            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:"+ticket.getId());
-        }
 
         
         return purchase;

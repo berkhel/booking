@@ -29,6 +29,10 @@ public class Event {
     @Column(name = "remaining_seats")
     Integer remainingSeats;
 
+    public void setRemainingSeats(Integer remainingSeats) {
+        this.remainingSeats = remainingSeats;
+    }
+
     public Event(){}
 
     public Event(String id, Integer maxSeats, Integer remainingSeats){

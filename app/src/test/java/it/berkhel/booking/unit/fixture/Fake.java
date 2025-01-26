@@ -10,7 +10,7 @@ import it.berkhel.booking.entity.Attendee;
 public class Fake {
 
     public static Event event(){
-        return new Event("EVFAKE"+new Random().nextInt(),new Random().nextInt(100),new Random().nextInt(100));
+        return new Event("EVFAKE"+new Random().nextInt(),10, 10);
     }
 
     public static Attendee attendee(){

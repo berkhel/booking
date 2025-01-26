@@ -3,11 +3,13 @@ package it.berkhel.booking.drivenadapter;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
-import it.berkhel.booking.app.exception.TransactionPostConditionException;
+import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -35,17 +37,18 @@ public class StorageXJpaRepository implements ForStorage {
 
     @Transactional
     @Override
-    public void save(Purchase purchase, Predicate<Purchase> postCondition) throws TransactionPostConditionException {
+    public Purchase save(Purchase purchase) throws ConcurrentPurchaseException {
         purchaseRepo.save(purchase);
-        for(var ticket : purchase.getTickets()){
-            eventRepo.save(ticket.getEvent());
+        for (var ticket : purchase.getTickets()) {
+            try {
+                eventRepo.saveAndFlush(ticket.getEvent());
+            } catch (ObjectOptimisticLockingFailureException ex) {
+                throw new ConcurrentPurchaseException("Cannot purchase tickets concurrently");
+            }
             attendeeRepo.saveAndFlush(ticket.getAttendee());
             ticketRepo.save(ticket);
         }
-
-        if (postCondition.negate().test(purchase)) {
-            throw new TransactionPostConditionException();
-        }
+        return purchase;
     }
 
 
