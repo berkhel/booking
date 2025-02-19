@@ -36,14 +36,22 @@ public class App implements ForBooking, ForEvents {
     @Override
     public Purchase purchase(Set<Ticket> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
 
-        validateSize(tickets);
+        Purchase purchase = new Purchase(tickets);
 
-        checkEvent(tickets);
+        checkDuplicateInStorage(tickets);
 
-        checkDuplicate(tickets);
+        checkSoldoutEvents(tickets);
 
+        storage.save(purchase);
 
+        for (var ticket : purchase.getTickets()) {
+            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId());
+        }
+        
+        return purchase;
+    }
 
+    private void checkDuplicateInStorage(Set<Ticket> tickets) throws DuplicateTicketException {
         for (var ticket : tickets) {
             var event = ticket.getEvent();
             var eventId = event.getId();
@@ -54,53 +62,8 @@ public class App implements ForBooking, ForEvents {
             }
 
         }
-
-        checkSoldoutEvents(tickets);
-
-        Purchase purchase = new Purchase(tickets);
-
-        storage.save(purchase);
-
-        for (var ticket : purchase.getTickets()) {
-            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId());
-        }
-
-
-        
-        return purchase;
     }
 
-    private void checkEvent(Set<Ticket> tickets) throws EventNotFoundException {
-        for (var ticket : tickets) {
-            if(ticket == null || ticket.getEvent() == null){
-                throw new EventNotFoundException("Event not found");
-            }
-        }
-    }
-
-    private void validateSize(Set<Ticket> tickets) throws BadPurchaseRequestException {
-        if(tickets.size() < 1){
-            throw new BadPurchaseRequestException("At least one ticket must be included in the request");
-        }
-        if(tickets.size() > 3){
-            throw new BadPurchaseRequestException("Cannot purchase more than 3 tickets");
-        }
-    }
-
-    private void checkDuplicate(Set<Ticket> tickets) throws DuplicateTicketException{
-        Set<String> checkDuplicateTickets = new HashSet<>();
-
-        for (var ticket : tickets) {
-            String attendeeId = ticket.getAttendee().getId();
-            String eventId = ticket.getEvent().getId();
-            String ticketKey = eventId + "~" + attendeeId;
-
-            if (checkDuplicateTickets.contains(ticketKey)) {
-                throw new DuplicateTicketException("Duplicate ticket for attendee " + attendeeId + " and event " + eventId);
-            }
-            checkDuplicateTickets.add(ticketKey);
-        }
-    }
     private Optional<Event> eventWithSoldout(Set<Ticket> tickets) {
         for (var ticket : tickets) {
             var event = ticket.getEvent();
