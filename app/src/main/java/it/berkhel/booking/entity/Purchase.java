@@ -23,7 +23,7 @@ public class Purchase {
     
     public Purchase(Set<Ticket> tickets){
         tickets.forEach(ticket -> ticket.setPurchase(this));
-        this.setTickets(tickets);
+        this.tickets = tickets;
     }
 
     public String getId() {
@@ -34,9 +34,6 @@ public class Purchase {
         return tickets;
     }
 
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 
     @Override
     public String toString() {
