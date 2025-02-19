@@ -9,7 +9,7 @@ import jakarta.persistence.Version;
 public class Event {
 
     @Id
-    String id;
+    private String id;
 
     @Version
     @Column(columnDefinition = "integer DEFAULT 0")
@@ -17,14 +17,11 @@ public class Event {
 
 
     @Column(name = "max_seats")
-    Integer maxSeats;
+    private Integer maxSeats;
 
     @Column(name = "remaining_seats")
-    Integer remainingSeats;
+    private Integer remainingSeats;
 
-    public void setRemainingSeats(Integer remainingSeats) {
-        this.remainingSeats = remainingSeats;
-    }
 
     private Event(){} //for JPA
 
