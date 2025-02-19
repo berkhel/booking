@@ -1,9 +1,6 @@
 package it.berkhel.booking.app;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
@@ -38,28 +35,13 @@ public class App implements ForBooking, ForEvents {
 
         Purchase purchase = new Purchase(tickets);
 
-        //checkDuplicateInStorage(tickets);
-
         storage.save(purchase);
 
-        for (var ticket : tickets) {
-            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId());
-        }
+        tickets.forEach(ticket ->
+            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId())
+        );
         
         return purchase;
-    }
-
-    private void checkDuplicateInStorage(Set<Ticket> tickets) throws DuplicateTicketException {
-        for (var ticket : tickets) {
-            var event = ticket.getEvent();
-            var eventId = event.getId();
-            var attendeeId = ticket.getAttendee().getId();
-
-            if(storage.getTicketBy(event.getId(), attendeeId).isPresent()){
-                throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee " + attendeeId + " and event " + eventId);
-            }
-
-        }
     }
 
 
