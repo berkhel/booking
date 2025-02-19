@@ -1,6 +1,7 @@
 package it.berkhel.booking.entity;
 
 import it.berkhel.booking.app.exception.EventNotFoundException;
+import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,9 +31,15 @@ public class Ticket {
     private Ticket(){} // for JPA
 
     public Ticket(Event event, Attendee attendee) {
-        event.registerTicket(this);
+        if(event == null){
+            throw new NullPointerException();
+        }
         this.event = event;
         this.attendee = attendee;
+    }
+
+    public void register() throws SoldoutException{
+        event.registerTicket(this);
     }
 
     public String getId() {

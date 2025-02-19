@@ -40,11 +40,9 @@ public class App implements ForBooking, ForEvents {
 
         checkDuplicateInStorage(tickets);
 
-        checkSoldoutEvents(tickets);
-
         storage.save(purchase);
 
-        for (var ticket : purchase.getTickets()) {
+        for (var ticket : tickets) {
             messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId());
         }
         
@@ -64,22 +62,7 @@ public class App implements ForBooking, ForEvents {
         }
     }
 
-    private Optional<Event> eventWithSoldout(Set<Ticket> tickets) {
-        for (var ticket : tickets) {
-            var event = ticket.getEvent();
-            if (event.getRemainingSeats() < 0) {
-                return Optional.of(event);
-            }
-        }
-        return Optional.empty();
-    }
 
-    private void checkSoldoutEvents(Set<Ticket> tickets) throws SoldoutException {
-        Optional<Event> eventWithSoldoutTickets = eventWithSoldout(tickets);
-        if (eventWithSoldoutTickets.isPresent()) {
-            throw new SoldoutException("Sorry, no enough seats in event " + eventWithSoldoutTickets.get().getId() + " for current request");
-        }
-    }
 
     @Override
     public Event createEvent(Event event) throws EventAlreadyExistsException {

@@ -1,5 +1,6 @@
 package it.berkhel.booking.entity;
 
+import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,7 +14,7 @@ public class Event {
 
     @Version
     @Column(columnDefinition = "integer DEFAULT 0")
-    private Long version;
+    private Long version; // for optimistic locking
 
 
     @Column(name = "max_seats")
@@ -47,7 +48,10 @@ public class Event {
         return remainingSeats;
     }
 
-    private void decrementAvailableSeats(){
+    private void decrementAvailableSeats() throws SoldoutException{
+        if(remainingSeats == 0){
+            throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
+        }
         remainingSeats--;
     }
 
@@ -56,7 +60,7 @@ public class Event {
         return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + remainingSeats + "]";
     }
 
-    public void registerTicket(Ticket ticket) {
+    public void registerTicket(Ticket ticket) throws SoldoutException {
         decrementAvailableSeats();
     }
    

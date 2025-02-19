@@ -6,6 +6,7 @@ import java.util.Set;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
+import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,11 +26,14 @@ public class Purchase {
 
     private Purchase(){} // for JPA
     
-    public Purchase(Set<Ticket> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException{
+    public Purchase(Set<Ticket> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
         validateSize(tickets);
         checkEvent(tickets);
         checkDuplicate(tickets);
-        tickets.forEach(ticket -> ticket.setPurchase(this));
+        for(var ticket : tickets){
+            ticket.register();
+            ticket.setPurchase(this);
+        };
         this.tickets = tickets;
     }
 
