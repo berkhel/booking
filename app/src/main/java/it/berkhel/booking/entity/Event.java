@@ -4,15 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Event {
 
     @Id
-    @NotBlank
     String id;
 
     @Version
@@ -20,12 +16,9 @@ public class Event {
     private Long version;
 
 
-    @NotNull
     @Column(name = "max_seats")
     Integer maxSeats;
 
-    @PositiveOrZero
-    @NotNull
     @Column(name = "remaining_seats")
     Integer remainingSeats;
 
@@ -33,7 +26,7 @@ public class Event {
         this.remainingSeats = remainingSeats;
     }
 
-    public Event(){}
+    private Event(){} //for JPA
 
     public Event(String id, Integer maxSeats, Integer remainingSeats){
         this.id = id;

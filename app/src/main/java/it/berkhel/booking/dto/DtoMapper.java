@@ -27,6 +27,10 @@ public class DtoMapper {
         return ticket;
     }
 
+    public Event toObject(EventDto eventDto){
+        return new Event(eventDto.id, eventDto.maxSeats, eventDto.remainingSeats);
+    }
+
     public TicketDto toDto(Ticket ticket){
        TicketDto ticketDto = new TicketDto(ticket.getAttendee(), ticket.getEvent().getId());
        ticketDto.setId(ticket.getId());

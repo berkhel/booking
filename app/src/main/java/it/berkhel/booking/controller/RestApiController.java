@@ -27,6 +27,7 @@ import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.dto.DtoMapper;
+import it.berkhel.booking.dto.EventDto;
 import it.berkhel.booking.dto.PurchaseDto;
 import it.berkhel.booking.dto.TicketDto;
 import it.berkhel.booking.entity.Event;
@@ -62,8 +63,8 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/event", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Event book(@Valid @RequestBody(required = true) Event event) throws EventAlreadyExistsException {
-        return eventManager.createEvent(event);
+    public Event book(@Valid @RequestBody(required = true) EventDto eventDto) throws EventAlreadyExistsException {
+        return eventManager.createEvent(dtoMapper.toObject(eventDto));
     }
 
     @ExceptionHandler({
