@@ -73,9 +73,7 @@ public class App implements ForBooking, ForEvents {
 
         checkSoldoutEvents(tickets);
 
-        Purchase purchase = new Purchase();
-        tickets.forEach(ticket -> ticket.setPurchase(purchase));
-        purchase.setTickets(tickets);
+        Purchase purchase = new Purchase(tickets);
 
         storage.save(purchase);
 

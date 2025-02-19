@@ -109,9 +109,7 @@ class UnitTest {
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
-        Ticket arrivedLate = new Ticket();
-        arrivedLate.setEvent(soldoutEvent);
-        arrivedLate.setAttendee(Fake.attendee());
+        Ticket arrivedLate = new Ticket(soldoutEvent, Fake.attendee());
 
         ForBooking app = App.init(aStorage, aMessageBroker);
 
@@ -123,9 +121,8 @@ class UnitTest {
     @Test
     void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         Event event = new Event("EV0001", 100, 10);
-        Ticket newTicket = new Ticket();
-        newTicket.setEvent(event);
-        newTicket.setAttendee(Fake.attendee());
+        Ticket newTicket = new Ticket(event, Fake.attendee());
+
         App app = App.init(aStorage, aMessageBroker);
 
         app.purchase(Set.of(newTicket));
@@ -136,8 +133,8 @@ class UnitTest {
 
     @Test
     void event_cannot_be_empty(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Ticket ticket = new Ticket();
-        ticket.setEvent(null);
+        Ticket ticket = new Ticket(null, null);
+
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(EventNotFoundException.class, () -> {
@@ -160,12 +157,8 @@ class UnitTest {
 
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Ticket ticketA = new Ticket();
-        ticketA.setEvent(new Event("0001", 10, 10));
-        ticketA.setAttendee(new Attendee("AB01", "/", "/", "/", "/"));
-        Ticket ticketB = new Ticket();
-        ticketB.setEvent(new Event("0001", 10, 10));
-        ticketB.setAttendee(new Attendee("AB01", "/", "/", "/", "/"));
+        Ticket ticketA = new Ticket(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
+        Ticket ticketB = new Ticket(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
 
         App app = App.init(aStorage, aMessageBroker);
 

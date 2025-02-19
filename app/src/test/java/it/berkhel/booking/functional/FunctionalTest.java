@@ -543,9 +543,7 @@ public class FunctionalTest {
             threadPool.execute(() -> {
                 Attendee attendee = new Attendee(UUID.randomUUID().toString(), "/", "/", "/", "/");
                 Event event = storage.getEventById("0001").get();
-                Ticket ticket = new Ticket();
-                ticket.setAttendee(attendee);
-                ticket.setEvent(event);
+                Ticket ticket = new Ticket(event, attendee);
 
                 try {
                     app.purchase(Set.of(ticket));

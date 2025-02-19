@@ -21,10 +21,10 @@ public class DtoMapper {
     }
 
     public Ticket toObject(TicketDto ticketDto) throws EventNotFoundException {
-        Ticket ticket = new Ticket();
-        ticket.setAttendee(toObject(ticketDto.getAttendee()));
         Optional<Event> event = eventRepo.findById(ticketDto.getEventId());
-        ticket.setEvent(event.orElseThrow(() -> new EventNotFoundException("Event not found : "+ticketDto.getEventId())));
+        Ticket ticket = new Ticket(
+                event.orElseThrow(() -> new EventNotFoundException("Event not found : " + ticketDto.getEventId())),
+                toObject(ticketDto.getAttendee()));
         return ticket;
     }
 

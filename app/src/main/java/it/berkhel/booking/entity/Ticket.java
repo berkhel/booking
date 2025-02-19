@@ -26,6 +26,13 @@ public class Ticket {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    private Ticket(){} // for JPA
+
+    public Ticket(Event event, Attendee attendee){
+        this.event = event;
+        this.attendee = attendee;
+    }
+
     public String getId() {
         return id;
     }

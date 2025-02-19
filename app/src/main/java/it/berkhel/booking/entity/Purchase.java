@@ -19,6 +19,13 @@ public class Purchase {
     @OneToMany(mappedBy = "purchase", fetch = FetchType.LAZY)
     private Set<Ticket> tickets;
 
+    private Purchase(){} // for JPA
+    
+    public Purchase(Set<Ticket> tickets){
+        tickets.forEach(ticket -> ticket.setPurchase(this));
+        this.setTickets(tickets);
+    }
+
     public String getId() {
         return id;
     }

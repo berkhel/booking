@@ -18,10 +18,7 @@ public class Fake {
     }
 
     public static Ticket ticket(){
-        Ticket ticket = new Ticket();
-        ticket.setEvent(event());
-        ticket.setAttendee(attendee());
-        return ticket;
+        return new Ticket(event(), attendee());
     }
     
 }
