@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.berkhel.booking.app.exception.EventNotFoundException;
+import it.berkhel.booking.dto.AttendeeDto;
 import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.TicketDto;
 import it.berkhel.booking.entity.Attendee;
@@ -27,7 +28,7 @@ public class DtoTest {
         when(fakeEventRepo.findById(anyString()))
             .thenAnswer(method ->  Optional.of(new Event(method.getArgument(0), 0, 0)));
         DtoMapper dto2Object = new DtoMapper(fakeEventRepo);
-        TicketDto ticketDto = new TicketDto(new Attendee(), "0001");
+        TicketDto ticketDto = new TicketDto(new AttendeeDto(), "0001");
 
         Ticket ticket = dto2Object.toObject(ticketDto);
 
