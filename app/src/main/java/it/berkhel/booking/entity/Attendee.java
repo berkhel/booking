@@ -11,34 +11,24 @@ import jakarta.validation.constraints.NotBlank;
 public class Attendee {
 
     @Id
-    @JsonProperty
-    @NotBlank
     private String id;
 
-    @JsonProperty
-    @NotBlank
     private String email;
 
-    @JsonProperty
-    @NotBlank
     @Column(name = "first_name")
     private String firstName;
 
-    @JsonProperty
-    @NotBlank
     @Column(name = "last_name")
     private String lastName;
 
-    @JsonProperty
-    @NotBlank 
     @Column(name = "birth_date")
     private String birthDate;
 
 
-    public Attendee(){}
+    private Attendee(){} // for JPA
 
-    public Attendee(@NotBlank String id, @NotBlank String email, @NotBlank String firstName, @NotBlank String lastName,
-            @NotBlank String birthDate) {
+    public Attendee(String id, String email, String firstName, String lastName,
+            String birthDate) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -46,9 +36,6 @@ public class Attendee {
         this.birthDate = birthDate;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
     @Override
     public String toString() {
@@ -60,6 +47,21 @@ public class Attendee {
         return id;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
 
     
 }

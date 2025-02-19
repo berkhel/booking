@@ -13,18 +13,18 @@ public class TicketDto {
 
     @JsonProperty
     @NotNull
-    private Attendee attendee;
+    private AttendeeDto attendee;
 
     @JsonProperty
     @NotBlank
     private String eventId;
 
-    public TicketDto(Attendee attendee, String eventId) {
+    public TicketDto(AttendeeDto attendee, String eventId) {
         this.attendee = attendee;
         this.eventId = eventId;
     }
 
-    public Attendee getAttendee() {
+    public AttendeeDto getAttendee() {
         return attendee;
     }
 

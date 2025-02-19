@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import it.berkhel.booking.app.exception.EventNotFoundException;
+import it.berkhel.booking.entity.Attendee;
 import it.berkhel.booking.entity.Event;
 import it.berkhel.booking.entity.Purchase;
 import it.berkhel.booking.entity.Ticket;
@@ -21,7 +22,7 @@ public class DtoMapper {
 
     public Ticket toObject(TicketDto ticketDto) throws EventNotFoundException {
         Ticket ticket = new Ticket();
-        ticket.setAttendee(ticketDto.getAttendee());
+        ticket.setAttendee(toObject(ticketDto.getAttendee()));
         Optional<Event> event = eventRepo.findById(ticketDto.getEventId());
         ticket.setEvent(event.orElseThrow(() -> new EventNotFoundException("Event not found : "+ticketDto.getEventId())));
         return ticket;
@@ -31,8 +32,12 @@ public class DtoMapper {
         return new Event(eventDto.id, eventDto.maxSeats, eventDto.remainingSeats);
     }
 
+    public Attendee toObject(AttendeeDto attendeeDto){
+        return new Attendee(attendeeDto.id, attendeeDto.email, attendeeDto.firstName, attendeeDto.lastName, attendeeDto.birthDate);
+    }
+
     public TicketDto toDto(Ticket ticket){
-       TicketDto ticketDto = new TicketDto(ticket.getAttendee(), ticket.getEvent().getId());
+       TicketDto ticketDto = new TicketDto(toDto(ticket.getAttendee()), ticket.getEvent().getId());
        ticketDto.setId(ticket.getId());
        return ticketDto;
     }
@@ -44,5 +49,14 @@ public class DtoMapper {
         return purchaseDto;
     }
 
+    public AttendeeDto toDto(Attendee attendee){
+        var dto = new AttendeeDto();
+        dto.id = attendee.getId();
+        dto.email = attendee.getEmail();
+        dto.firstName = attendee.getFirstName();
+        dto.lastName = attendee.getLastName();
+        dto.birthDate = attendee.getBirthDate();
+        return dto;
+    }
     
 }
