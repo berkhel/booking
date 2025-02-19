@@ -1,5 +1,6 @@
 package it.berkhel.booking.entity;
 
+import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Entity;
@@ -38,7 +39,7 @@ public class Ticket {
         this.attendee = attendee;
     }
 
-    public void register() throws SoldoutException{
+    public void register() throws SoldoutException, DuplicateTicketException{
         event.registerTicket(this);
     }
 
@@ -75,7 +76,6 @@ public class Ticket {
     public String toString() {
         return "Ticket [id=" + id + "]";
     }
-
 
 
 

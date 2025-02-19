@@ -38,7 +38,7 @@ public class App implements ForBooking, ForEvents {
 
         Purchase purchase = new Purchase(tickets);
 
-        checkDuplicateInStorage(tickets);
+        //checkDuplicateInStorage(tickets);
 
         storage.save(purchase);
 
