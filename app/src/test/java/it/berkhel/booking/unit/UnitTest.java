@@ -133,12 +133,8 @@ class UnitTest {
 
     @Test
     void event_cannot_be_empty(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Ticket ticket = new Ticket(null, null);
-
-        App app = App.init(aStorage, aMessageBroker);
-
-        assertThrows(EventNotFoundException.class, () -> {
-            app.purchase(Set.of(ticket));
+        assertThrows(RuntimeException.class, () -> {
+            new Ticket(null, Fake.attendee());
         });
     }
 

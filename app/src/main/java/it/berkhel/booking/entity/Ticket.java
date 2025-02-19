@@ -1,5 +1,6 @@
 package it.berkhel.booking.entity;
 
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +29,8 @@ public class Ticket {
 
     private Ticket(){} // for JPA
 
-    public Ticket(Event event, Attendee attendee){
+    public Ticket(Event event, Attendee attendee) {
+        event.registerTicket(this);
         this.event = event;
         this.attendee = attendee;
     }
@@ -61,9 +63,6 @@ public class Ticket {
         return event;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
-    }
 
     @Override
     public String toString() {
