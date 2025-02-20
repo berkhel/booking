@@ -42,7 +42,7 @@ The system uses a hardcoded SMTP host configuration. For testing purposes, pleas
 == API Documentation
 
 === Viewing the Documentation
-The API documentation is available in OpenAPI format at `docs/src/openapi/openapi.yml`
+The API documentation is available in OpenAPI format link:docs/src/openapi/openapi.yml[here]
 
 === Setting up the Documentation UI
 Navigate to the OpenAPI documentation directory and install dependencies:
@@ -61,7 +61,7 @@ npx http-server -p 9090 -c-1 .
 ----
 
 == Architecture Documentation
-The architectural documentation can be found at `docs/build/docs/asciidoc/arch.html`
+The architectural documentation can be found link:docs/build/docs/asciidoc/arch.html[here]
 
 If the documentation is not present, generate it using:
 
@@ -85,10 +85,3 @@ NOTE: Docker is required for functional tests
 ----
 ./gradlew functionalTest
 ----
-
-== Development Notes
-Important technical details:
-
-* The API server runs on port 8090 by default
-* Email functionality requires a valid Yopmail address
-* All API endpoints are documented in the OpenAPI specification
