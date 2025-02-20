@@ -1,13 +1,5 @@
 package it.berkhel.booking.functional;
 
-import it.berkhel.booking.app.App;
-import it.berkhel.booking.app.actionport.ForBooking;
-import it.berkhel.booking.app.drivenport.ForSendingMessage;
-import it.berkhel.booking.app.drivenport.ForStorage;
-import it.berkhel.booking.app.entity.Attendee;
-import it.berkhel.booking.app.entity.Event;
-import it.berkhel.booking.app.entity.Ticket;
-import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
@@ -19,16 +11,11 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyOrNullString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
@@ -36,7 +23,6 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,9 +75,12 @@ public class FunctionalTest {
         mySqlDatabase = new MySqlDatabase(mappedHostPort);
     }
 
-    @BeforeAll static void setupRabbitMqClient(@Autowired ConnectionFactory connectionFactory) {
+    @BeforeAll static void setupRabbitMqClient(
+        @Autowired ConnectionFactory connectionFactory,
+        @Value("${custom.rabbitmq.queue.name}") String queueName) throws IOException, TimeoutException {
         assert rabbitMQContainer.isRunning() : "RabbitMQ container is not running";
         rabbitmq = new RabbitMQ(connectionFactory);
+        rabbitmq.createQueue(queueName);
     }
 
     @BeforeAll 
@@ -293,10 +282,9 @@ public class FunctionalTest {
     
     @Test
     void a_successful_ticket_purchase_should_send_an_email_to_the_attendee(
-        @Value("${custom.rabbitmq.queue.name}") String queueName)
+        )
             throws SQLException, IOException, TimeoutException {
 
-        rabbitmq.createQueue(queueName);
         mySqlDatabase.createEvent("0001", 10, 10);
 
         given()
@@ -514,7 +502,6 @@ public class FunctionalTest {
    @Test
     void cannot_created_an_event_with_negative_remaining_seats() throws SQLException {
 
-
         String newEvent = "{\"id\":\"0045\",\"maxSeats\":10,\"remainingSeats\":-1}";
 
         given().
@@ -527,13 +514,9 @@ public class FunctionalTest {
     }
 
     @Test
-    void concurrent_test(@Autowired ForStorage storage) throws Exception {
+    void concurrent_test() throws Exception {
 
-        ForSendingMessage mockMessenger = mock(ForSendingMessage.class);
-
-        ForBooking app = App.init(storage, mockMessenger);
-
-        final Integer STARTING_TICKETS = 2;
+        final Integer STARTING_TICKETS = 10;
         mySqlDatabase.createEvent("0001", STARTING_TICKETS, STARTING_TICKETS);
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -541,12 +524,10 @@ public class FunctionalTest {
 
         for (var i = 0; i < STARTING_TICKETS + 1; i++) {
             threadPool.execute(() -> {
-                Attendee attendee = new Attendee(UUID.randomUUID().toString(), "/", "/", "/", "/");
-                Event event = storage.getEventById("0001").get();
-                Ticket ticket = null;
                 try {
-                    ticket = new Ticket(event, attendee);
-                    app.purchase(Set.of(ticket));
+                    given().body(Fake.Purchase.json()
+                            .withTicket(Fake.Ticket.json().random().withEvent("0001")).build()).when().post("/booking")
+                            .then().extract();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -563,9 +544,9 @@ public class FunctionalTest {
             Integer soldTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
                     .from("ticket")
                     .query());
-            assertThat(soldTickets, greaterThan(0));
+            assertThat(soldTickets, greaterThan(1));
             assertThat(remainingTickets + soldTickets, equalTo(STARTING_TICKETS));
-            verify(mockMessenger, times(soldTickets)).sendMessage(Mockito.any(), Mockito.any());
+            assertThat(rabbitmq.getMessagesSize(), equalTo(soldTickets));
 
         });
 

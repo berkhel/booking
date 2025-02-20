@@ -36,7 +36,7 @@ testing{
                     testTask.configure {
                         testLogging { 
                             events = [
-                           //     "passed",
+                               "passed",
                                 "failed"//,
                             //    "skipped"
                             ]

@@ -18,16 +18,22 @@ import it.berkhel.booking.app.exception.SoldoutException;
 
 public class App implements ForBooking, ForEvents {
 
-    public static App init(ForStorage storage, ForSendingMessage messageBroker){
-        return new App(storage, messageBroker);
+    static App instance;
+
+    public static App init(ForStorage storage, ForSendingMessage messageSender){
+        if(instance != null){
+            throw new RuntimeException("Cannot instanciate the app twice");
+        }
+        instance = new App(storage, messageSender);
+        return instance;
     }
     
     private final ForStorage storage;
-    private final ForSendingMessage messageBroker;
+    private final ForSendingMessage messageSender;
 
-    private App(ForStorage storage, ForSendingMessage messageBroker) {
+    private App(ForStorage storage, ForSendingMessage messageSender) {
         this.storage = storage;
-        this.messageBroker = messageBroker;
+        this.messageSender = messageSender;
     }
 
     @Override
@@ -38,7 +44,7 @@ public class App implements ForBooking, ForEvents {
         storage.save(purchase);
 
         tickets.forEach(ticket ->
-            messageBroker.sendMessage(ticket.getAttendee(), "Here's your ticket:" + ticket.getId())
+            messageSender.sendMessage(ticket.getAttendee(), "Here's your ticket: " + ticket.getId())
         );
         
         return purchase;

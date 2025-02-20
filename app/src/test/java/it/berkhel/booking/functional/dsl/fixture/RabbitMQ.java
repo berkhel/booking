@@ -55,8 +55,8 @@ public class RabbitMQ {
         }
     }
 
-    public Queue<String> getMessages() {
-        return messages;
+    public Integer getMessagesSize() {
+        return messages.size();
     }
 
     public ConnectionFactory getConnectionFactory() {

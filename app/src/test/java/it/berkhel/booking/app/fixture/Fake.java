@@ -1,4 +1,4 @@
-package it.berkhel.booking.unit.fixture;
+package it.berkhel.booking.app.fixture;
 
 
 import java.util.Random;

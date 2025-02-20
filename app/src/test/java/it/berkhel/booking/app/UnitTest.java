@@ -1,4 +1,4 @@
-package it.berkhel.booking.unit;
+package it.berkhel.booking.app;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -26,7 +27,7 @@ import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
-import it.berkhel.booking.unit.fixture.Fake;
+import it.berkhel.booking.app.fixture.Fake;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +39,11 @@ import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
+
+    @BeforeEach
+    void restoreApp(){
+        App.instance = null;
+    }
 
     @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
         ForBooking app = App.init(theStorage, messageBroker);

@@ -34,7 +34,8 @@ testing {
         test {
             sources {
                 java {
-                    include 'it/berkhel/booking/unit/**'
+                    include 'it/berkhel/booking/app/**'
+                    include 'it/berkhel/booking/dto/**'
                 }
             }
         }

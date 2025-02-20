@@ -1,4 +1,4 @@
-package it.berkhel.booking.unit;
+package it.berkhel.booking.dto;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
