@@ -7,14 +7,14 @@ import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.entity.Attendee;
 
 @Component
-public class SendingMessageXAmqpRabbitMQ implements ForSendingMessage{
+public class RabbitMqPublisher implements ForSendingMessage{
 
     
     private final RabbitTemplate rabbitTemplate;
     private final String queueName;
     
 
-    public SendingMessageXAmqpRabbitMQ(RabbitTemplate rabbitTemplate,
+    public RabbitMqPublisher(RabbitTemplate rabbitTemplate,
             @Value("${custom.rabbitmq.queue.name}") String queueName) {
         this.rabbitTemplate = rabbitTemplate;
         this.queueName = queueName;

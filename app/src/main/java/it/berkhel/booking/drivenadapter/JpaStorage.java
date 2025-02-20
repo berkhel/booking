@@ -18,14 +18,14 @@ import it.berkhel.booking.repository.TicketRepository;
 
 @Repository
 @Transactional
-public class StorageXJpaRepository implements ForStorage {
+public class JpaStorage implements ForStorage {
 
     private final PurchaseRepository purchaseRepo;
     private final TicketRepository ticketRepo;
     private final AttendeeRepository attendeeRepo;
     private final EventRepository eventRepo;
 
-    public StorageXJpaRepository(PurchaseRepository purchaseRepo, TicketRepository ticketRepo,
+    public JpaStorage(PurchaseRepository purchaseRepo, TicketRepository ticketRepo,
             AttendeeRepository attendeeRepo, EventRepository eventRepo) {
         this.purchaseRepo = purchaseRepo;
         this.ticketRepo = ticketRepo;
