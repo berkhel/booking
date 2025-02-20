@@ -1,11 +1,9 @@
 package it.berkhel.booking.drivenadapter;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
