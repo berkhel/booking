@@ -1,4 +1,4 @@
-package it.berkhel.booking.entity;
+package it.berkhel.booking.app.entity;
 
 import java.util.HashSet;
 import java.util.Set;

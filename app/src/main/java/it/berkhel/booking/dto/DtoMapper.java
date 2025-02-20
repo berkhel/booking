@@ -4,11 +4,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import it.berkhel.booking.app.entity.Attendee;
+import it.berkhel.booking.app.entity.Event;
+import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.EventNotFoundException;
-import it.berkhel.booking.entity.Attendee;
-import it.berkhel.booking.entity.Event;
-import it.berkhel.booking.entity.Purchase;
-import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.repository.EventRepository;
 
 @Component

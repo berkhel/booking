@@ -7,13 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import it.berkhel.booking.app.entity.Attendee;
+import it.berkhel.booking.app.entity.Event;
+import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.dto.AttendeeDto;
 import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.TicketDto;
-import it.berkhel.booking.entity.Attendee;
-import it.berkhel.booking.entity.Event;
-import it.berkhel.booking.entity.Ticket;
 import it.berkhel.booking.repository.EventRepository;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;

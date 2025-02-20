@@ -16,7 +16,7 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @EnableJpaRepositories(basePackages = {"it.berkhel.booking.repository"})
-@EntityScan("it.berkhel.booking.entity")
+@EntityScan("it.berkhel.booking.app.entity")
 @ComponentScan(basePackages = {"it.berkhel.booking.controller","it.berkhel.booking.drivenadapter", "it.berkhel.booking.dto"})
 public class MainConfig {
 

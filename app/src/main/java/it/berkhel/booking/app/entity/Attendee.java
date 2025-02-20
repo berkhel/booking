@@ -1,4 +1,4 @@
-package it.berkhel.booking.entity;
+package it.berkhel.booking.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

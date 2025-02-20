@@ -2,10 +2,10 @@ package it.berkhel.booking.app.drivenport;
 
 import java.util.Optional;
 
+import it.berkhel.booking.app.entity.Event;
+import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
-import it.berkhel.booking.entity.Event;
-import it.berkhel.booking.entity.Purchase;
-import it.berkhel.booking.entity.Ticket;
 
 public interface ForStorage {
 

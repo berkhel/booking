@@ -1,4 +1,4 @@
-package it.berkhel.booking.entity;
+package it.berkhel.booking.app.entity;
 
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;

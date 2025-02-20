@@ -6,15 +6,15 @@ import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.entity.Event;
+import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
-import it.berkhel.booking.entity.Event;
-import it.berkhel.booking.entity.Purchase;
-import it.berkhel.booking.entity.Ticket;
 
 public class App implements ForBooking, ForEvents {
 

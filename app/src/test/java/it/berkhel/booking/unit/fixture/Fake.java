@@ -1,11 +1,11 @@
 package it.berkhel.booking.unit.fixture;
 
 
-import it.berkhel.booking.entity.Event;
-import it.berkhel.booking.entity.Ticket;
-
 import java.util.Random;
-import it.berkhel.booking.entity.Attendee;
+
+import it.berkhel.booking.app.entity.Attendee;
+import it.berkhel.booking.app.entity.Event;
+import it.berkhel.booking.app.entity.Ticket;
 
 public class Fake {
 

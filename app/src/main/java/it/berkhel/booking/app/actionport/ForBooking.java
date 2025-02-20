@@ -2,8 +2,8 @@ package it.berkhel.booking.app.actionport;
 
 import java.util.Set;
 
-import it.berkhel.booking.entity.Purchase;
-import it.berkhel.booking.entity.Ticket;
+import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.Ticket;
 
 public interface ForBooking {
     

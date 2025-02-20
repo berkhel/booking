@@ -1,6 +1,6 @@
 package it.berkhel.booking.app.drivenport;
 
-import it.berkhel.booking.entity.Attendee;
+import it.berkhel.booking.app.entity.Attendee;
 
 public interface ForSendingMessage {
 

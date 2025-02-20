@@ -20,6 +20,9 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
+import it.berkhel.booking.app.entity.Event;
+import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -30,9 +33,6 @@ import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.EventDto;
 import it.berkhel.booking.dto.PurchaseDto;
 import it.berkhel.booking.dto.TicketDto;
-import it.berkhel.booking.entity.Event;
-import it.berkhel.booking.entity.Purchase;
-import it.berkhel.booking.entity.Ticket;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;

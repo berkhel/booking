@@ -2,7 +2,7 @@ package it.berkhel.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import it.berkhel.booking.entity.Attendee;
+import it.berkhel.booking.app.entity.Attendee;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
