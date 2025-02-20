@@ -5,7 +5,7 @@
 
 == Overview
 
-This is a ticketing system designed for event bookings. The primary use case is for individuals booking concert tickets for themselves and their friends. The system also includes functionality for event creation, intended for event organizers.
+This is a walking skeleton for a ticketing system designed for event bookings. The primary use case is for individuals booking concert tickets for themselves and their friends. The system also includes functionality for event creation, intended for event organizers.
 
 image::./docs/src/resources/images/container.svg[]
 
