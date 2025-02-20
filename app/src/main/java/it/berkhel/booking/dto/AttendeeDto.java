@@ -8,7 +8,7 @@ public class AttendeeDto {
     
     @JsonProperty
     @NotBlank
-    String id;
+    public String id;
 
     @JsonProperty
     @NotBlank

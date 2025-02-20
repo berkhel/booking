@@ -56,7 +56,12 @@ public class RestApiController {
     public PurchaseDto book(@Valid @RequestBody(required = true) List<TicketDto> dtoTickets) throws Exception {
         Set<Ticket> tickets = new HashSet<>();
         for(var dtoTicket : dtoTickets){
-            tickets.add(dtoMapper.toObject(dtoTicket));
+            try{
+                var ticket = dtoMapper.toObject(dtoTicket);
+                tickets.add(ticket);
+            }catch(IllegalArgumentException duplicateEx){
+                throw new DuplicateTicketException("Duplicate ticket for attendee " + dtoTicket.getAttendee().id + " and event " + dtoTicket.getEventId());
+            }
         }
         Purchase purchase = bookingManager.purchase(tickets);
         return dtoMapper.toDto(purchase);

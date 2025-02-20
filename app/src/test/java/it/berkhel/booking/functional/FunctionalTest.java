@@ -7,6 +7,7 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.config.MainConfig;
 import it.berkhel.booking.functional.dsl.fixture.Fake;
 import it.berkhel.booking.functional.dsl.fixture.MySqlDatabase;
@@ -542,9 +543,9 @@ public class FunctionalTest {
             threadPool.execute(() -> {
                 Attendee attendee = new Attendee(UUID.randomUUID().toString(), "/", "/", "/", "/");
                 Event event = storage.getEventById("0001").get();
-                Ticket ticket = new Ticket(event, attendee);
-
+                Ticket ticket = null;
                 try {
+                    ticket = new Ticket(event, attendee);
                     app.purchase(Set.of(ticket));
                 } catch (Exception e) {
                     e.printStackTrace();

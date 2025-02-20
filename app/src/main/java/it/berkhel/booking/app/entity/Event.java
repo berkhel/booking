@@ -44,14 +44,6 @@ public class Event {
         return id;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public Integer getMaxSeats() {
-        return maxSeats;
-    }
-
     public Integer getRemainingSeats() {
         return remainingSeats;
     }
@@ -63,16 +55,42 @@ public class Event {
         remainingSeats--;
     }
 
+
+    public void registerTicket(Ticket ticket) throws SoldoutException, DuplicateTicketException {
+        if (tickets.contains(ticket)) {
+            throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
+                    + ticket.getAttendee().getId() + " and event " + id);
+        }
+        tickets.add(ticket);
+        decrementAvailableSeats();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 17;
+        return prime + ((id == null) ? 0 : id.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Event other = (Event) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + remainingSeats + "]";
-    }
-
-    public void registerTicket(Ticket ticket) throws SoldoutException, DuplicateTicketException {
-        if(tickets.stream().anyMatch(tkt -> tkt.getAttendee().getId().equals(ticket.getAttendee().getId()))){
-            throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee " + ticket.getAttendee().getId() + " and event " + id);
-        }
-        decrementAvailableSeats();
     }
    
     

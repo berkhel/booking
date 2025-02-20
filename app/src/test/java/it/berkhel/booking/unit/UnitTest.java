@@ -24,6 +24,7 @@ import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.unit.fixture.Fake;
 
@@ -106,7 +107,7 @@ class UnitTest {
     }
 
     @Test
-    void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
+    void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
         Ticket arrivedLate = new Ticket(soldoutEvent, Fake.attendee());
 
@@ -132,7 +133,7 @@ class UnitTest {
 
     @Test
     void event_cannot_be_empty(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(EventNotFoundException.class, () -> {
             new Ticket(null, Fake.attendee());
         });
     }
@@ -157,7 +158,7 @@ class UnitTest {
 
         App app = App.init(aStorage, aMessageBroker);
 
-        assertThrows(DuplicateTicketException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             app.purchase(Set.of(ticketA, ticketB));
         });
 

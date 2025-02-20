@@ -1,6 +1,7 @@
 package it.berkhel.booking.app.entity;
 
 import it.berkhel.booking.app.exception.DuplicateTicketException;
+import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,9 +31,9 @@ public class Ticket {
 
     private Ticket(){} // for JPA
 
-    public Ticket(Event event, Attendee attendee) {
+    public Ticket(Event event, Attendee attendee) throws EventNotFoundException {
         if(event == null){
-            throw new NullPointerException();
+            throw new EventNotFoundException("Event not found");
         }
         this.event = event;
         this.attendee = attendee;
@@ -46,37 +47,52 @@ public class Ticket {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Attendee getAttendee() {
         return attendee;
-    }
-
-    public void setAttendee(Attendee attendee) {
-        this.attendee = attendee;
-    }
-
-    public Purchase getPurchase() {
-        return purchase;
-    }
-
-    public void setPurchase(Purchase purchase) {
-        this.purchase = purchase;
     }
 
     public Event getEvent() {
         return event;
     }
 
+    void setPurchase(Purchase purchase) {
+        this.purchase = purchase;
+    }
 
     @Override
     public String toString() {
         return "Ticket [id=" + id + "]";
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 29;
+        int result = 1;
+        result = prime * result + ((attendee == null) ? 0 : attendee.hashCode());
+        result = prime * result + ((event == null) ? 0 : event.hashCode());
+        return result;
+    }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Ticket other = (Ticket) obj;
+        if (attendee == null) {
+            if (other.attendee != null)
+                return false;
+        } else if (!attendee.equals(other.attendee))
+            return false;
+        if (event == null) {
+            if (other.event != null)
+                return false;
+        } else if (!event.equals(other.event))
+            return false;
+        return true;
+    }
     
 }
