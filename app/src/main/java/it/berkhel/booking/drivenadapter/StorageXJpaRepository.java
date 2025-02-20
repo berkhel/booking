@@ -17,8 +17,8 @@ import it.berkhel.booking.repository.PurchaseRepository;
 import it.berkhel.booking.repository.TicketRepository;
 
 @Repository
+@Transactional
 public class StorageXJpaRepository implements ForStorage {
-
 
     private final PurchaseRepository purchaseRepo;
     private final TicketRepository ticketRepo;
@@ -33,7 +33,6 @@ public class StorageXJpaRepository implements ForStorage {
         this.eventRepo = eventRepo;
     }
 
-    @Transactional
     @Override
     public Purchase save(Purchase purchase) throws ConcurrentPurchaseException {
         purchaseRepo.save(purchase);
@@ -60,10 +59,4 @@ public class StorageXJpaRepository implements ForStorage {
         return eventRepo.findById(eventId);
     }
 
-    @Override
-    public Optional<Ticket> getTicketBy(String eventId, String attendeeId){
-
-        return ticketRepo.findByEventIdAndAttendeeId(eventId, attendeeId);
-
-    }
 }

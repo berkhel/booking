@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
-import it.berkhel.booking.app.entity.Ticket;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 
 public interface ForStorage {
@@ -15,6 +14,6 @@ public interface ForStorage {
 
     public Optional<Event> getEventById(String any);
 
-    public Optional<Ticket> getTicketBy(String eventId, String attendeeId);
+    // public Optional<Ticket> getTicketBy(String eventId, String attendeeId);
     
 }
