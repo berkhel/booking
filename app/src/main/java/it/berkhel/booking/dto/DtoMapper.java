@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.repository.EventRepository;
 
@@ -20,9 +20,9 @@ public class DtoMapper {
         this.eventRepo = eventRepo;
     }
 
-    public Ticket toObject(TicketDto ticketDto) throws EventNotFoundException {
+    public TicketEntry toObject(TicketDto ticketDto) throws EventNotFoundException {
         Optional<Event> event = eventRepo.findById(ticketDto.getEventId());
-        Ticket ticket = new Ticket(
+        TicketEntry ticket = new TicketEntry(
                 event.orElseThrow(() -> new EventNotFoundException("Event not found : " + ticketDto.getEventId())),
                 toObject(ticketDto.getAttendee()));
         return ticket;
@@ -36,7 +36,7 @@ public class DtoMapper {
         return new Attendee(attendeeDto.id, attendeeDto.email, attendeeDto.firstName, attendeeDto.lastName, attendeeDto.birthDate);
     }
 
-    public TicketDto toDto(Ticket ticket){
+    public TicketDto toDto(TicketEntry ticket){
        TicketDto ticketDto = new TicketDto(toDto(ticket.getAttendee()), ticket.getEvent().getId());
        ticketDto.setId(ticket.getId());
        return ticketDto;

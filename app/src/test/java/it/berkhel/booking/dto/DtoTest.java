@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.berkhel.booking.app.entity.Event;
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.dto.AttendeeDto;
 import it.berkhel.booking.dto.DtoMapper;
@@ -29,7 +29,7 @@ public class DtoTest {
         DtoMapper dto2Object = new DtoMapper(fakeEventRepo);
         TicketDto ticketDto = new TicketDto(new AttendeeDto(), "0001");
 
-        Ticket ticket = dto2Object.toObject(ticketDto);
+        TicketEntry ticket = dto2Object.toObject(ticketDto);
 
         assertThat(ticket.getEvent().getId(), equalTo("0001"));
 

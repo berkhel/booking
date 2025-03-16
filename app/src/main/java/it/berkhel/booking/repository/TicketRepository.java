@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 
 
-public interface TicketRepository extends JpaRepository<Ticket, String> {
+public interface TicketRepository extends JpaRepository<TicketEntry, String> {
 
-    Optional<Ticket> findByEventIdAndAttendeeId(String eventId, String attendeeId);
+    Optional<TicketEntry> findByEventIdAndAttendeeId(String eventId, String attendeeId);
 }

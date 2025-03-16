@@ -241,7 +241,7 @@ public class FunctionalTest {
         and().body("id",
             existsAsValueIn(mySqlDatabase, "purchase", "id")).
         and().body("id",
-            existsAsValueIn(mySqlDatabase, "ticket", "purchase_id"));
+            existsAsValueIn(mySqlDatabase, "ticket_entry", "purchase_id"));
 
 
     }
@@ -337,7 +337,7 @@ public class FunctionalTest {
             statusCode(200);
         
         assertThat("2", equalTo(mySqlDatabase.select("count(*)")
-                .from("ticket")
+                .from("ticket_entry")
                 .query()));
 
         assertThat("1", equalTo(mySqlDatabase.select("count(*)")
@@ -542,7 +542,7 @@ public class FunctionalTest {
                     .where("id", "=", "0001")
                     .query());
             Integer soldTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
-                    .from("ticket")
+                    .from("ticket_entry")
                     .query());
             assertThat(soldTickets, greaterThan(1));
             assertThat(remainingTickets + soldTickets, equalTo(STARTING_TICKETS));

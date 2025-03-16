@@ -8,7 +8,7 @@ import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -37,7 +37,7 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase purchase(Set<Ticket> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
+    public Purchase purchase(Set<TicketEntry> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
 
         Purchase purchase = new Purchase(tickets);
 

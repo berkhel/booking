@@ -26,7 +26,7 @@ public class Event implements SeatsAccount {
     private Long version; // for optimistic locking
 
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
-    private Set<Ticket> tickets = new HashSet<>();
+    private Set<TicketEntry> tickets = new HashSet<>();
 
     @Column(name = "max_seats")
     private Integer maxSeats;
@@ -59,7 +59,7 @@ public class Event implements SeatsAccount {
     }
 
 
-    public void registerTicket(Ticket ticket) throws SoldoutException, DuplicateTicketException {
+    public void registerTicket(TicketEntry ticket) throws SoldoutException, DuplicateTicketException {
         if (tickets.contains(ticket)) {
             throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
                     + ticket.getAttendee().getId() + " and event " + id);

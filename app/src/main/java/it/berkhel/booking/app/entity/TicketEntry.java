@@ -10,12 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-/**
- * Ticket is the resource that can be exchanged for a seat the day of the event
- * It belongs to a ticket account and should belong to it
- */
 @Entity
-public class Ticket {
+public class TicketEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,9 +29,9 @@ public class Ticket {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    private Ticket(){} // for JPA
+    private TicketEntry(){} // for JPA
 
-    public Ticket(Event event, Attendee attendee) throws EventNotFoundException {
+    public TicketEntry(Event event, Attendee attendee) throws EventNotFoundException {
         if(event == null){
             throw new EventNotFoundException("Event not found");
         }
@@ -85,7 +81,7 @@ public class Ticket {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Ticket other = (Ticket) obj;
+        TicketEntry other = (TicketEntry) obj;
         if (attendee == null) {
             if (other.attendee != null)
                 return false;

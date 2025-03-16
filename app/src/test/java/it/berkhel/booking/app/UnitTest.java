@@ -21,7 +21,7 @@ import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventAlreadyExistsException;
@@ -71,7 +71,7 @@ class UnitTest {
 
     @Test
     void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        Set<Ticket> fourTickets = Stream.generate(Fake::ticket).limit(4).collect(toSet());
+        Set<TicketEntry> fourTickets = Stream.generate(Fake::ticket).limit(4).collect(toSet());
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
@@ -81,7 +81,7 @@ class UnitTest {
 
     @Test
     void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        Set<Ticket> threeTickets = Stream.generate(Fake::ticket).limit(3).collect(toSet());
+        Set<TicketEntry> threeTickets = Stream.generate(Fake::ticket).limit(3).collect(toSet());
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
@@ -92,7 +92,7 @@ class UnitTest {
 
     @Test
     void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        Set<Ticket> noTickets = Set.of();
+        Set<TicketEntry> noTickets = Set.of();
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
@@ -103,7 +103,7 @@ class UnitTest {
 
     @Test
     void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        Set<Ticket> nullTickets = null;
+        Set<TicketEntry> nullTickets = null;
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
@@ -115,7 +115,7 @@ class UnitTest {
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
-        Ticket arrivedLate = new Ticket(soldoutEvent, Fake.attendee());
+        TicketEntry arrivedLate = new TicketEntry(soldoutEvent, Fake.attendee());
 
         ForBooking app = App.init(aStorage, aMessageBroker);
 
@@ -127,7 +127,7 @@ class UnitTest {
     @Test
     void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         Event event = new Event("EV0001", 100, 10);
-        Ticket newTicket = new Ticket(event, Fake.attendee());
+        TicketEntry newTicket = new TicketEntry(event, Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
 
@@ -140,7 +140,7 @@ class UnitTest {
     @Test
     void event_cannot_be_empty(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         assertThrows(EventNotFoundException.class, () -> {
-            new Ticket(null, Fake.attendee());
+            new TicketEntry(null, Fake.attendee());
         });
     }
 
@@ -159,8 +159,8 @@ class UnitTest {
 
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Ticket ticketA = new Ticket(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
-        Ticket ticketB = new Ticket(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
+        TicketEntry ticketA = new TicketEntry(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
+        TicketEntry ticketB = new TicketEntry(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
 
         App app = App.init(aStorage, aMessageBroker);
 

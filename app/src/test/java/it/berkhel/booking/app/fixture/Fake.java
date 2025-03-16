@@ -5,7 +5,7 @@ import java.util.Random;
 
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 
 public class Fake {
@@ -18,10 +18,10 @@ public class Fake {
         return new Attendee("ATFAKE"+new Random().nextInt(),"/","/","/","/");
     }
 
-    public static Ticket ticket(){
-        Ticket ticket = null;
+    public static TicketEntry ticket(){
+        TicketEntry ticket = null;
         try {
-            ticket = new Ticket(event(), attendee());
+            ticket = new TicketEntry(event(), attendee());
         } catch (EventNotFoundException e) {
             e.printStackTrace();
         }

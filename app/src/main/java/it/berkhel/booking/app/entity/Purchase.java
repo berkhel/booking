@@ -24,11 +24,11 @@ public class Purchase {
     private String id;
 
     @OneToMany(mappedBy = "purchase")
-    private Set<Ticket> tickets;
+    private Set<TicketEntry> tickets;
 
     private Purchase(){} // for JPA
     
-    public Purchase(Set<Ticket> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
+    public Purchase(Set<TicketEntry> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
         validateSize(tickets);
         for(var ticket : tickets){
             ticket.register();
@@ -37,7 +37,7 @@ public class Purchase {
         this.tickets = tickets;
     }
 
-    private void validateSize(Set<Ticket> tickets) throws BadPurchaseRequestException {
+    private void validateSize(Set<TicketEntry> tickets) throws BadPurchaseRequestException {
         if(tickets.size() < 1){
             throw new BadPurchaseRequestException("At least one ticket must be included in the request");
         }
@@ -50,7 +50,7 @@ public class Purchase {
         return id;
     }
 
-    public Set<Ticket> getTickets(){
+    public Set<TicketEntry> getTickets(){
         return tickets;
     }
 

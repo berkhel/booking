@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
-import it.berkhel.booking.app.entity.Ticket;
+import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.repository.AttendeeRepository;
 import it.berkhel.booking.repository.EventRepository;
