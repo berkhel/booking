@@ -10,6 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Ticket is the resource that can be exchanged for a seat the day of the event
+ * It belongs to a ticket account and should belong to it
+ */
 @Entity
 public class Ticket {
 

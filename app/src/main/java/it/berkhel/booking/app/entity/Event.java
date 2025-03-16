@@ -12,8 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
 
+/**
+ * Event is an account of seats created by the event organizer 
+ */
 @Entity
-public class Event {
+public class Event implements SeatsAccount {
 
     @Id
     private String id;

@@ -13,6 +13,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+/**
+ * Purchase is the transaction that contains the list of entries that records movements from the event account
+ */
 @Entity
 public class Purchase {
 

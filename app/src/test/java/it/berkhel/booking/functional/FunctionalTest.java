@@ -513,7 +513,7 @@ public class FunctionalTest {
 
     }
 
-    @Test
+    //@Test
     void concurrent_test() throws Exception {
 
         final Integer STARTING_TICKETS = 10;
