@@ -259,9 +259,9 @@ public class FunctionalTest {
         then().
             statusCode(200);
         
-        assertThat("0", equalTo(mySqlDatabase.select("remaining_seats")
-                .from("event")
-                .where("id", "=", "0001")
+        assertThat("0", equalTo(mySqlDatabase.select("count(*)")
+                .from("ticket")
+                .where("event", "=", "0001")
                 .query()));
 
     }
@@ -398,9 +398,9 @@ public class FunctionalTest {
                 .from("attendee")
                 .query()));
 
-        assertThat("0", equalTo(mySqlDatabase.select("remaining_seats")
-                .from("event")
-                .where("id","=","0001")
+        assertThat("0", equalTo(mySqlDatabase.select("count(*)")
+                .from("ticket")
+                .where("event","=","0001")
                 .query()));
     }
 
@@ -453,7 +453,7 @@ public class FunctionalTest {
     @Test
     void event_created_should_be_stored_in_database() throws SQLException {
 
-        String newEvent = "{\"id\":\"0001\",\"maxSeats\":10,\"remainingSeats\":10}";
+        String newEvent =  "{\"id\":\"0001\",\"maxSeats\":10}";
 
         given().
             body(newEvent).
@@ -537,9 +537,9 @@ public class FunctionalTest {
         await().pollDelay(Duration.ofSeconds(5)).atMost(Duration.ofSeconds(10)).untilAsserted(() ->
         {
 
-            Integer remainingTickets = Integer.parseInt(mySqlDatabase.select("remaining_seats")
-                    .from("event")
-                    .where("id", "=", "0001")
+            Integer remainingTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
+                    .from("ticket")
+                    .where("event", "=", "0001")
                     .query());
             Integer soldTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
                     .from("ticket_entry")

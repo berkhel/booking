@@ -44,7 +44,7 @@ testing{
                             //showCauses = true 
                             showExceptions = true 
                             //showStackTraces = true 
-                            //showStandardStreams = true 
+                            showStandardStreams = true 
                         }
                     }
                 }

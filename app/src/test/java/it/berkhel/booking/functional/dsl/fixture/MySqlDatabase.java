@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -78,7 +79,7 @@ public class MySqlDatabase {
 
 
     public void deleteAllRecords() {
-        List<String> tables = List.of("ticket_entry","attendee","purchase","event");
+        List<String> tables = List.of("ticket_entry","ticket","attendee","purchase","event");
 
         tables.forEach(table -> {
             try {
@@ -118,10 +119,22 @@ public class MySqlDatabase {
         Integer insertedRows = update(InsertQueryBuilder.create("event")
                 .with("id", eventId)
                 .with("max_seats", maxSeats + "")
-                .with("remaining_seats", maxSeats + "")
                 .build());
+        
+        
 
         assert insertedRows == 1 : "Event not created!";
+
+
+        Integer insertedTickets = 0;
+        for(var i = 0; i < maxSeats; i++){
+           insertedTickets += update(InsertQueryBuilder.create("ticket")
+            .with("id",UUID.randomUUID().toString())
+            .with("event",eventId)
+            .build());
+        }
+
+        assert insertedTickets == maxSeats : "Tickets not created!";
 
     }
 

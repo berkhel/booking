@@ -1,6 +1,8 @@
 package it.berkhel.booking.app.entity;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -8,6 +10,7 @@ import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
@@ -28,19 +31,24 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     private Set<TicketEntry> tickets = new HashSet<>();
 
+
+
     @Column(name = "max_seats")
     private Integer maxSeats;
 
-    @Column(name = "remaining_seats")
-    private Integer remainingSeats;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> ticketSeats;
+
 
 
     private Event(){} //for JPA
 
+
     public Event(String id, Integer maxSeats){
         this.id = id;
         this.maxSeats = maxSeats;
-        this.remainingSeats = maxSeats;
+        this.ticketSeats = createTickets(maxSeats);
     }
 
     public String getId() {
@@ -48,14 +56,14 @@ public class Event {
     }
 
     public Integer getRemainingSeats() {
-        return remainingSeats;
+        return ticketSeats.size();
     }
 
     private void decrementAvailableSeats() throws SoldoutException{
-        if(remainingSeats == 0){
+        if(ticketSeats.size() == 0){
             throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
         }
-        remainingSeats--;
+        ticketSeats.removeFirst();
     }
 
 
@@ -93,7 +101,35 @@ public class Event {
 
     @Override
     public String toString() {
-        return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + remainingSeats + "]";
+        return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + getRemainingSeats() + "]";
+    }
+
+    private List<Ticket> createTickets(Integer ticketQty) {
+
+        Character lastTicketLetter = 'A';
+        Integer lastTicketNumber = 0;
+
+        List<Ticket> tickets = new LinkedList<>();
+
+        while(ticketQty-- > 0){
+            if ((lastTicketLetter + lastTicketNumber) % 2 == 0) {
+                lastTicketNumber++;
+                if (lastTicketLetter > 'A') {
+                    lastTicketLetter = lastTicketLetter--;
+                }
+            } else {
+                lastTicketLetter++; 
+                if (lastTicketNumber > 0) {
+                    lastTicketNumber--;
+                }
+            }
+
+            tickets.add(new Ticket(this,lastTicketLetter + "" + lastTicketNumber));
+
+        }
+
+        return tickets;
+
     }
    
     

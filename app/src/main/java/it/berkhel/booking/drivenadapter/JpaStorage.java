@@ -15,20 +15,21 @@ import it.berkhel.booking.repository.AttendeeRepository;
 import it.berkhel.booking.repository.EventRepository;
 import it.berkhel.booking.repository.PurchaseRepository;
 import it.berkhel.booking.repository.TicketRepository;
+import it.berkhel.booking.repository.TicketEntryRepository;
 
 @Repository
 @Transactional
 public class JpaStorage implements ForStorage {
 
     private final PurchaseRepository purchaseRepo;
-    private final TicketRepository ticketRepo;
+    private final TicketEntryRepository ticketEntryRepo;
     private final AttendeeRepository attendeeRepo;
     private final EventRepository eventRepo;
 
-    public JpaStorage(PurchaseRepository purchaseRepo, TicketRepository ticketRepo,
+    public JpaStorage(PurchaseRepository purchaseRepo, TicketEntryRepository ticketEntryRepo,
             AttendeeRepository attendeeRepo, EventRepository eventRepo) {
         this.purchaseRepo = purchaseRepo;
-        this.ticketRepo = ticketRepo;
+        this.ticketEntryRepo = ticketEntryRepo;
         this.attendeeRepo = attendeeRepo;
         this.eventRepo = eventRepo;
     }
@@ -43,7 +44,7 @@ public class JpaStorage implements ForStorage {
                 throw new ConcurrentPurchaseException("Cannot purchase tickets concurrently");
             }
             attendeeRepo.saveAndFlush(ticket.getAttendee());
-            ticketRepo.save(ticket);
+            ticketEntryRepo.save(ticket);
         }
         return purchase;
     }
