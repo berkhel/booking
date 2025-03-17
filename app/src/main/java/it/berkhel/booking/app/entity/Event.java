@@ -13,6 +13,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Version;
 
 /**
@@ -41,6 +42,8 @@ public class Event {
     private List<Ticket> ticketSeats;
 
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Account account;
 
     private Event(){} //for JPA
 
@@ -49,6 +52,7 @@ public class Event {
         this.id = id;
         this.maxSeats = maxSeats;
         this.ticketSeats = createTickets(maxSeats);
+        this.account = new Account(id);
     }
 
     public String getId() {

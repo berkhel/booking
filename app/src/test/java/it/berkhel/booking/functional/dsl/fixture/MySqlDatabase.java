@@ -79,7 +79,7 @@ public class MySqlDatabase {
 
 
     public void deleteAllRecords() {
-        List<String> tables = List.of("ticket_entry","ticket","attendee","purchase","event");
+        List<String> tables = List.of("ticket_entry","ticket","attendee","purchase","event","account");
 
         tables.forEach(table -> {
             try {
