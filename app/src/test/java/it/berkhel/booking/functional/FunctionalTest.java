@@ -262,6 +262,7 @@ public class FunctionalTest {
         assertThat("0", equalTo(mySqlDatabase.select("count(*)")
                 .from("ticket")
                 .where("event", "=", "0001")
+                .where("account", "=", "0001")
                 .query()));
 
     }
@@ -401,6 +402,7 @@ public class FunctionalTest {
         assertThat(mySqlDatabase.select("count(*)")
                 .from("ticket")
                 .where("event","=","0001")
+                .where("account", "=", "0001")
                 .query(), equalTo("0"));
     }
 
@@ -465,6 +467,7 @@ public class FunctionalTest {
         assertThat("1", equalTo(mySqlDatabase.select("count(*)")
                 .from("event")
                 .where("id", "=", "0001")
+                .where("account_id", "=", "0001")
                 .query()));
     }
 
@@ -540,6 +543,7 @@ public class FunctionalTest {
             Integer remainingTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
                     .from("ticket")
                     .where("event", "=", "0001")
+                    .where("account", "=", "0001")
                     .query());
             Integer soldTickets = Integer.parseInt(mySqlDatabase.select("count(*)")
                     .from("ticket_entry")

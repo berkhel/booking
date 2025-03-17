@@ -116,8 +116,15 @@ public class MySqlDatabase {
 
 
     public void createEvent(String eventId, Integer maxSeats) throws SQLException {
+        Integer insertedAccount = update(InsertQueryBuilder.create("account")
+                .with("id", eventId)
+                .build());
+
+        assert insertedAccount == 1: "Account not created!";
+
         Integer insertedRows = update(InsertQueryBuilder.create("event")
                 .with("id", eventId)
+                .with("account_id", eventId)
                 .with("max_seats", maxSeats + "")
                 .build());
         
@@ -125,11 +132,6 @@ public class MySqlDatabase {
 
         assert insertedRows == 1 : "Event not created!";
 
-        Integer insertedAccount = update(InsertQueryBuilder.create("account")
-                .with("id", eventId)
-                .build());
-
-        assert insertedAccount == 1: "Account not created!";
 
         Integer insertedTickets = 0;
         for(var i = 0; i < maxSeats; i++){

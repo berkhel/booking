@@ -11,6 +11,7 @@ import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
 import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
+import it.berkhel.booking.repository.AccountRepository;
 import it.berkhel.booking.repository.AttendeeRepository;
 import it.berkhel.booking.repository.EventRepository;
 import it.berkhel.booking.repository.PurchaseRepository;
@@ -25,13 +26,17 @@ public class JpaStorage implements ForStorage {
     private final TicketEntryRepository ticketEntryRepo;
     private final AttendeeRepository attendeeRepo;
     private final EventRepository eventRepo;
+    private final AccountRepository accountRepo;
+    private final TicketRepository ticketRepo;
 
     public JpaStorage(PurchaseRepository purchaseRepo, TicketEntryRepository ticketEntryRepo,
-            AttendeeRepository attendeeRepo, EventRepository eventRepo) {
+            AttendeeRepository attendeeRepo, EventRepository eventRepo, AccountRepository accountRepo, TicketRepository ticketRepo) {
         this.purchaseRepo = purchaseRepo;
         this.ticketEntryRepo = ticketEntryRepo;
         this.attendeeRepo = attendeeRepo;
         this.eventRepo = eventRepo;
+        this.accountRepo = accountRepo;
+        this.ticketRepo = ticketRepo;
     }
 
     @Override

@@ -2,6 +2,7 @@ package it.berkhel.booking.app.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -28,6 +29,11 @@ public class Account {
 
     public void addTickets(List<Ticket> tickets){
         this.tickets.addAll(tickets);
+    }
+
+
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
     

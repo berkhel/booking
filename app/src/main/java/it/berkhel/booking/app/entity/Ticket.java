@@ -22,8 +22,12 @@ public class Ticket {
     private Event event;
 
     @ManyToOne
-    @JoinColumn(name = "account", nullable = false)
+    @JoinColumn(name = "account")
     private Account account;
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     private Ticket(){} //for JPA
 

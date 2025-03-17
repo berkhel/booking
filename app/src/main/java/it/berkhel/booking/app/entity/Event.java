@@ -1,5 +1,6 @@
 package it.berkhel.booking.app.entity;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +43,11 @@ public class Event {
     private List<Ticket> ticketSeats;
 
 
+    public List<Ticket> getTicketSeats() {
+        return ticketSeats;
+    }
+
+
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
 
@@ -61,14 +67,15 @@ public class Event {
     }
 
     public Integer getRemainingSeats() {
-        return ticketSeats.size();
+        return account.getTickets().size();
     }
 
     private void decrementAvailableSeats() throws SoldoutException{
-        if(ticketSeats.size() == 0){
+        if(account.getTickets().size() == 0){
             throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
         }
-        ticketSeats.removeFirst();
+        Ticket removedTicket = account.getTickets().removeFirst();
+        removedTicket.setAccount(null);
     }
 
 
@@ -133,7 +140,7 @@ public class Event {
 
         }
 
-        return tickets;
+        return Collections.unmodifiableList(tickets);
 
     }
 
