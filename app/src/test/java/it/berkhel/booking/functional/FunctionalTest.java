@@ -394,14 +394,14 @@ public class FunctionalTest {
         then().
             statusCode(200);
         
-        assertThat("2", equalTo(mySqlDatabase.select("count(*)")
+        assertThat(mySqlDatabase.select("count(*)")
                 .from("attendee")
-                .query()));
+                .query(), equalTo("2"));
 
-        assertThat("0", equalTo(mySqlDatabase.select("count(*)")
+        assertThat(mySqlDatabase.select("count(*)")
                 .from("ticket")
                 .where("event","=","0001")
-                .query()));
+                .query(), equalTo("0"));
     }
 
     @Test

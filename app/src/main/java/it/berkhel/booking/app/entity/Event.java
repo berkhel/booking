@@ -51,8 +51,9 @@ public class Event {
     public Event(String id, Integer maxSeats){
         this.id = id;
         this.maxSeats = maxSeats;
-        this.ticketSeats = createTickets(maxSeats);
         this.account = new Account(id);
+        this.ticketSeats = createTickets(maxSeats);
+        this.account.addTickets(ticketSeats);
     }
 
     public String getId() {
@@ -134,6 +135,11 @@ public class Event {
 
         return tickets;
 
+    }
+
+
+    public Account getAccount() {
+        return account;
     }
    
     

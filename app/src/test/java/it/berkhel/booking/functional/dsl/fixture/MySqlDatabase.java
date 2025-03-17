@@ -125,12 +125,18 @@ public class MySqlDatabase {
 
         assert insertedRows == 1 : "Event not created!";
 
+        Integer insertedAccount = update(InsertQueryBuilder.create("account")
+                .with("id", eventId)
+                .build());
+
+        assert insertedAccount == 1: "Account not created!";
 
         Integer insertedTickets = 0;
         for(var i = 0; i < maxSeats; i++){
            insertedTickets += update(InsertQueryBuilder.create("ticket")
             .with("id",UUID.randomUUID().toString())
             .with("event",eventId)
+            .with("account",eventId)
             .build());
         }
 

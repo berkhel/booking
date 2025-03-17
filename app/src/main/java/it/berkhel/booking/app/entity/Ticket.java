@@ -21,6 +21,10 @@ public class Ticket {
     @JoinColumn(name = "event", nullable = false)
     private Event event;
 
+    @ManyToOne
+    @JoinColumn(name = "account", nullable = false)
+    private Account account;
+
     private Ticket(){} //for JPA
 
     /**
@@ -29,5 +33,6 @@ public class Ticket {
     public Ticket(Event event, String seat){
         this.seat = seat;
         this.event = event;
+        this.account = event.getAccount();
     }
 }
