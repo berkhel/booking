@@ -114,11 +114,11 @@ public class MySqlDatabase {
 
 
 
-    public void createEvent(String eventId, Integer maxSeats, Integer remainingSeats) throws SQLException {
+    public void createEvent(String eventId, Integer maxSeats) throws SQLException {
         Integer insertedRows = update(InsertQueryBuilder.create("event")
                 .with("id", eventId)
                 .with("max_seats", maxSeats + "")
-                .with("remaining_seats", remainingSeats + "")
+                .with("remaining_seats", maxSeats + "")
                 .build());
 
         assert insertedRows == 1 : "Event not created!";

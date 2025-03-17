@@ -16,7 +16,7 @@ import jakarta.persistence.Version;
  * Event is an account of seats created by the event organizer 
  */
 @Entity
-public class Event implements SeatsAccount {
+public class Event {
 
     @Id
     private String id;
@@ -37,10 +37,10 @@ public class Event implements SeatsAccount {
 
     private Event(){} //for JPA
 
-    public Event(String id, Integer maxSeats, Integer remainingSeats){
+    public Event(String id, Integer maxSeats){
         this.id = id;
         this.maxSeats = maxSeats;
-        this.remainingSeats = remainingSeats;
+        this.remainingSeats = maxSeats;
     }
 
     public String getId() {

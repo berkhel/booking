@@ -11,7 +11,7 @@ import it.berkhel.booking.app.exception.EventNotFoundException;
 public class Fake {
 
     public static Event event(){
-        return new Event("EVFAKE"+new Random().nextInt(),10, 10);
+        return new Event("EVFAKE"+new Random().nextInt(), 10);
     }
 
     public static Attendee attendee(){

@@ -193,7 +193,7 @@ public class FunctionalTest {
     @Test
     void a_successful_ticket_purchase_should_return_a_resume() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 10);
+        mySqlDatabase.createEvent("0001", 10);
 
 
         String singlePurchase = 
@@ -230,7 +230,7 @@ public class FunctionalTest {
     @Test
     void a_successful_ticket_purchase_should_insert_records_into_purchase_and_ticket_tables() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 10);
+        mySqlDatabase.createEvent("0001", 10);
 
         given().
             body(Fake.singlePurchaseForEvent("0001")).
@@ -250,7 +250,7 @@ public class FunctionalTest {
     @Test
     void a_successful_ticket_purchase_should_decrement_event_available_seats() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 1);
+        mySqlDatabase.createEvent("0001", 1);
 
         given().
             body(Fake.singlePurchaseForEvent("0001")).
@@ -269,7 +269,7 @@ public class FunctionalTest {
     @Test
     void a_ticket_request_for_a_soldout_event_should_return_bad_request() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 0);
+        mySqlDatabase.createEvent("0001", 0);
 
         given().
             body(Fake.singlePurchaseForEvent("0001")).
@@ -285,7 +285,7 @@ public class FunctionalTest {
         )
             throws SQLException, IOException, TimeoutException {
 
-        mySqlDatabase.createEvent("0001", 10, 10);
+        mySqlDatabase.createEvent("0001", 10);
 
         given()
             .body(Fake.singlePurchaseForEvent("0001")).
@@ -320,8 +320,8 @@ public class FunctionalTest {
     @Test
     void two_ticket_for_two_different_events_should_be_stored_in_database() throws SQLException {
 
-        mySqlDatabase.createEvent("FIRSTEVENT", 10, 10);
-        mySqlDatabase.createEvent("SECONDEVENT", 10, 10);
+        mySqlDatabase.createEvent("FIRSTEVENT", 10);
+        mySqlDatabase.createEvent("SECONDEVENT", 10);
 
 
         String twoTicketPurchase = Fake.Purchase.json()
@@ -348,8 +348,8 @@ public class FunctionalTest {
     @Test
     void same_attendee_different_events() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 1);
-        mySqlDatabase.createEvent("0002", 10, 1);
+        mySqlDatabase.createEvent("0001", 1);
+        mySqlDatabase.createEvent("0002", 1);
 
         var oneAttendeeTwoEvents = Fake.Purchase.json()
                 .withTicket(Fake.Ticket.json()
@@ -376,7 +376,7 @@ public class FunctionalTest {
     @Test
     void same_event_different_attendees() throws SQLException {
 
-        mySqlDatabase.createEvent("0001", 10, 2);
+        mySqlDatabase.createEvent("0001", 2);
 
         var oneEventTwoAttendees = Fake.Purchase.json()
                 .withTicket(Fake.Ticket.json()
@@ -407,9 +407,9 @@ public class FunctionalTest {
     @Test
     void a_ticket_for_the_same_attendee_and_event_cannot_be_purchased_twice() throws SQLException {
 
-        mySqlDatabase.createEvent("SAMEEVENT", 10, 10);
-        mySqlDatabase.createEvent("OTHEREVENT1", 10, 10);
-        mySqlDatabase.createEvent("OTHEREVENT2", 10, 10);
+        mySqlDatabase.createEvent("SAMEEVENT", 10);
+        mySqlDatabase.createEvent("OTHEREVENT1", 10);
+        mySqlDatabase.createEvent("OTHEREVENT2", 10);
 
         String sameEventId = "SAMEEVENT";
         String sameAttendeeId = "SAMEATTENDEE";
@@ -469,11 +469,11 @@ public class FunctionalTest {
     }
 
    @Test
-    void cannot_created_an_event_twice() throws SQLException {
+    void cannot_create_an_event_twice() throws SQLException {
 
-        //mySqlDatabase.createEvent("0001", 10, 10);
+        //mySqlDatabase.createEvent("0001", 10);
 
-        String newEvent = "{\"id\":\"0001\",\"maxSeats\":10,\"remainingSeats\":10}";
+        String newEvent = "{\"id\":\"0001\",\"maxSeats\":10}";
 
         given().
             body(newEvent).
@@ -500,9 +500,9 @@ public class FunctionalTest {
     }
 
    @Test
-    void cannot_created_an_event_with_negative_remaining_seats() throws SQLException {
+    void cannot_created_an_event_with_negative_seats() throws SQLException {
 
-        String newEvent = "{\"id\":\"0045\",\"maxSeats\":10,\"remainingSeats\":-1}";
+        String newEvent = "{\"id\":\"0045\",\"maxSeats\":-1 }";
 
         given().
             body(newEvent).
@@ -517,7 +517,7 @@ public class FunctionalTest {
     void concurrent_test() throws Exception {
 
         final Integer STARTING_TICKETS = 10;
-        mySqlDatabase.createEvent("0001", STARTING_TICKETS, STARTING_TICKETS);
+        mySqlDatabase.createEvent("0001", STARTING_TICKETS);
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
 

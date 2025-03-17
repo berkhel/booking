@@ -10,12 +10,10 @@ public class EventDto {
     @NotBlank
     String id;
     
+    @PositiveOrZero
     @NotNull
     Integer maxSeats;
 
-    @PositiveOrZero
-    @NotNull
-    Integer remainingSeats;
 
 
     public void setId(String id) {
@@ -29,10 +27,6 @@ public class EventDto {
     }
 
 
-
-    public void setRemainingSeats(Integer remainingSeats) {
-        this.remainingSeats = remainingSeats;
-    }
 
 
 }

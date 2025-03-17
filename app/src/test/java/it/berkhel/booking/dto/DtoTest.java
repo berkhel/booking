@@ -25,7 +25,7 @@ public class DtoTest {
     @Test 
     void ticket_dto_to_object(@Mock EventRepository fakeEventRepo) throws EventNotFoundException{
         when(fakeEventRepo.findById(anyString()))
-            .thenAnswer(method ->  Optional.of(new Event(method.getArgument(0), 0, 0)));
+            .thenAnswer(method ->  Optional.of(new Event(method.getArgument(0), 0)));
         DtoMapper dto2Object = new DtoMapper(fakeEventRepo);
         TicketDto ticketDto = new TicketDto(new AttendeeDto(), "0001");
 

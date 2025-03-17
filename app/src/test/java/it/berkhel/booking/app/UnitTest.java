@@ -114,7 +114,7 @@ class UnitTest {
 
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Event soldoutEvent = new Event("EVSLDOUT1", 100, 0);
+        Event soldoutEvent = new Event("EVSLDOUT1", 0);
         TicketEntry arrivedLate = new TicketEntry(soldoutEvent, Fake.attendee());
 
         ForBooking app = App.init(aStorage, aMessageBroker);
@@ -126,7 +126,7 @@ class UnitTest {
 
     @Test
     void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Event event = new Event("EV0001", 100, 10);
+        Event event = new Event("EV0001", 10);
         TicketEntry newTicket = new TicketEntry(event, Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
@@ -159,8 +159,8 @@ class UnitTest {
 
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        TicketEntry ticketA = new TicketEntry(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
-        TicketEntry ticketB = new TicketEntry(new Event("0001", 10, 10),new Attendee("AB01", "/", "/", "/", "/"));
+        TicketEntry ticketA = new TicketEntry(new Event("0001", 10),new Attendee("AB01", "/", "/", "/", "/"));
+        TicketEntry ticketB = new TicketEntry(new Event("0001", 10),new Attendee("AB01", "/", "/", "/", "/"));
 
         App app = App.init(aStorage, aMessageBroker);
 
