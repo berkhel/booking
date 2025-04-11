@@ -111,5 +111,9 @@ public class TicketEntry {
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
     }
+
+    public String getState() {
+        return state;
+    }
     
 }
