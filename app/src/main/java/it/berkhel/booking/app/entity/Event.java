@@ -34,7 +34,6 @@ public class Event {
     private Set<TicketEntry> ticketEntries = new HashSet<>();
 
 
-
     @Column(name = "max_seats")
     private Integer maxSeats;
 
@@ -70,12 +69,14 @@ public class Event {
         return account.getTickets().size();
     }
 
-    private void decrementAvailableSeats(Account otherAccount) throws SoldoutException{
+    private void decrementAvailableSeats(TicketEntry ticketEntry) throws SoldoutException{
+        Account otherAccount = ticketEntry.getPurchase().getAccount();
         if(account.getTickets().size() == 0){
             throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
         }
         Ticket removedTicket = account.getTickets().removeFirst();
         removedTicket.setAccount(otherAccount);
+        ticketEntry.setTicket(removedTicket);
     }
 
 
@@ -84,8 +85,7 @@ public class Event {
             throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
                     + ticketEntry.getAttendee().getId() + " and event " + id);
         }
-        ticketEntries.add(ticketEntry);
-        decrementAvailableSeats(ticketEntry.getPurchase().getAccount());
+        decrementAvailableSeats(ticketEntry);
     }
 
     @Override

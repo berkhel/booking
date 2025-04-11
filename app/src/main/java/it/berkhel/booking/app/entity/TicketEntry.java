@@ -33,6 +33,9 @@ public class TicketEntry {
 
     private String state;
 
+    @OneToOne
+    private Ticket ticket;
+
     private TicketEntry(){} // for JPA
 
     public TicketEntry(Event event, Attendee attendee) throws EventNotFoundException {
@@ -103,6 +106,10 @@ public class TicketEntry {
         } else if (!event.equals(other.event))
             return false;
         return true;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
     
 }
