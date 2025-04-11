@@ -1,5 +1,8 @@
 package it.berkhel.booking.app.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,6 +26,24 @@ public class Attendee {
 
 
     private Attendee(){} // for JPA
+
+    public static Map<String,Attendee> registry = new HashMap<>();
+
+    public static Attendee createAttendee(String id, String email, String firstName, String lastName,
+            String birthDate) {
+        Attendee attendee = null;
+        if(registry.containsKey(id)){
+           attendee = registry.get(id);
+           attendee.email = email;
+           attendee.firstName = firstName;
+           attendee.lastName = lastName;
+           attendee.birthDate = birthDate;
+        }else{
+          attendee = new Attendee(id, email, firstName, lastName, birthDate);
+        }
+        registry.put(id, attendee);
+        return attendee;
+    }
 
     public Attendee(String id, String email, String firstName, String lastName,
             String birthDate) {
@@ -81,6 +102,13 @@ public class Attendee {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public void merge(Attendee other){
+        this.email = other.email;
+        this.firstName = other.firstName;
+        this.lastName = other.lastName;
+        this.birthDate = other.birthDate;
     }
     
 }

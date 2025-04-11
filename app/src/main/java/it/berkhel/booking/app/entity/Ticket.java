@@ -1,11 +1,13 @@
 package it.berkhel.booking.app.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Ticket {
@@ -21,13 +23,13 @@ public class Ticket {
     @JoinColumn(name = "event", nullable = false)
     private Event event;
 
+
     @ManyToOne
-    @JoinColumn(name = "account")
+    @JoinColumn(name = "account", nullable = false)
     private Account account;
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Attendee attendee;
 
     private Ticket(){} //for JPA
 
@@ -39,4 +41,21 @@ public class Ticket {
         this.event = event;
         this.account = event.getAccount();
     }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public Attendee getAttendee() {
+        return attendee;
+    }
+
+    public void setAttendee(Attendee attendee) {
+        this.attendee = attendee;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
 }

@@ -30,8 +30,8 @@ public class Event {
     @Column(columnDefinition = "integer DEFAULT 0")
     private Long version; // for optimistic locking
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
-    private Set<TicketEntry> ticketEntries = new HashSet<>();
+    // @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    // private Set<TicketEntry> ticketEntries = new HashSet<>();
 
 
     @Column(name = "max_seats")
@@ -75,6 +75,7 @@ public class Event {
             throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
         }
         Ticket removedTicket = account.getTickets().removeFirst();
+        removedTicket.setAttendee(ticketEntry.getAttendee());
         removedTicket.setAccount(otherAccount);
         otherAccount.addTicket(removedTicket);
         ticketEntry.setTicket(removedTicket);
@@ -82,7 +83,8 @@ public class Event {
 
 
     public void registerTicket(TicketEntry ticketEntry) throws SoldoutException, DuplicateTicketException {
-        if (ticketEntries.contains(ticketEntry)) {
+        List<Ticket> tickets = ticketEntry.getPurchase().getAccount().getTickets();
+        if (tickets.stream().filter(ticket -> ticket.getEvent().equals(this)).anyMatch(ticket -> ticketEntry.getAttendee().equals(ticket.getAttendee()))) {
             throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
                     + ticketEntry.getAttendee().getId() + " and event " + id);
         }

@@ -442,7 +442,6 @@ public class FunctionalTest {
             statusCode(200);
         
 
-
         String secondPurchase = Fake.PurchaseRequest.json()
                 .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT2"))
                 .withTicket(sameTicket)

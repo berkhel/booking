@@ -24,15 +24,13 @@ import java.util.Optional;
 public class DtoTest {
 
     @Test 
-    void ticket_dto_to_object(@Mock EventRepository fakeEventRepo, @Mock AccountRepository fakeAccountRepo) throws EventNotFoundException{
-        when(fakeEventRepo.findById(anyString()))
-            .thenAnswer(method ->  Optional.of(new Event(method.getArgument(0), 0)));
-        DtoMapper dto2Object = new DtoMapper(fakeEventRepo, fakeAccountRepo);
+    void ticket_dto_to_object() throws EventNotFoundException{
+        DtoMapper dto2Object = new DtoMapper();
         TicketDto ticketDto = new TicketDto(new AttendeeDto(), "0001");
 
         TicketEntry ticket = dto2Object.toObject(ticketDto);
 
-        assertThat(ticket.getEvent().getId(), equalTo("0001"));
+        assertThat(ticket.getEventId(), equalTo("0001"));
 
     }
     

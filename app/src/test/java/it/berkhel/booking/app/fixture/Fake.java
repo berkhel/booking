@@ -21,7 +21,8 @@ public class Fake {
     public static TicketEntry ticket(){
         TicketEntry ticket = null;
         try {
-            ticket = new TicketEntry(event(), attendee());
+            var eventId = "EVFAKE" + new Random().nextInt();
+            ticket = new TicketEntry(eventId, attendee());
         } catch (EventNotFoundException e) {
             e.printStackTrace();
         }

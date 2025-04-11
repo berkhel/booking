@@ -9,7 +9,7 @@ public class Fake {
     
 
     public static final String singlePurchaseForEvent(String eventId){ 
-       return "{ \"accountId\": \"mario.rossi@example.it\", "+
+       return "{ \"accountId\": \"DEFAULT\", "+
        "\"tickets\": [{ \"eventId\":\""+eventId+ "\","+
        " \"attendee\" :"+
        " {\"id\" : \"ABCD0001\","+
@@ -51,7 +51,7 @@ public class Fake {
     }
     public static class PurchaseRequest {
         private List<Ticket> tickets = new ArrayList<>();
-        private String accountId = UUID.randomUUID().toString();
+        private String accountId = "DEFAULT";
 
         private PurchaseRequest(){}
 

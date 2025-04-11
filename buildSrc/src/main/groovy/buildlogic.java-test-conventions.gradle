@@ -36,8 +36,8 @@ testing{
                     testTask.configure {
                         testLogging { 
                             events = [
-                                "passed",
-                                "failed"//,
+                               //"passed",
+                               "failed"//,
                             //    "skipped"
                             ]
                             exceptionFormat = "full" 

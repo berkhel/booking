@@ -74,6 +74,7 @@ public class RestApiController {
             DuplicateTicketException.class,
             ConcurrentPurchaseException.class })
     public ErrorResponse domainErrorRequest(Exception ex) {
+        log.error("This is a 400 Domain Error " + ex.getMessage(), ex);
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, ex.getMessage()).build();
     }
 
@@ -84,7 +85,7 @@ public class RestApiController {
         ConstraintViolationException.class,
         EntityNotFoundException.class})
     public ErrorResponse badRequest(Exception ex) {
-        log.info("Not valid request " + ex.getMessage(), ex);
+        log.error("Not valid request " + ex.getMessage(), ex);
         return ErrorResponse.builder(ex, HttpStatus.BAD_REQUEST, "Request not valid").build();
      }
 

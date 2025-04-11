@@ -3,6 +3,7 @@ package it.berkhel.booking.app.entity;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,28 +27,27 @@ public class TicketEntry {
     @JoinColumn(name = "purchase_id", nullable = false)
     private Purchase purchase;
 
-
-    @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
+    @Column(name = "event_id", nullable = false)
+    private String eventId;
 
     private String state;
 
-    @OneToOne
+    @ManyToOne
     private Ticket ticket;
+
 
     private TicketEntry(){} // for JPA
 
-    public TicketEntry(Event event, Attendee attendee) throws EventNotFoundException {
-        if(event == null){
+    public TicketEntry(String eventId, Attendee attendee) throws EventNotFoundException {
+        if(eventId == null){
             throw new EventNotFoundException("Event not found");
         }
-        this.event = event;
+        this.eventId = eventId;
         this.attendee = attendee;
         this.state = "Pending";
     }
 
-    public void register() throws SoldoutException, DuplicateTicketException{
+    public void register(Event event) throws SoldoutException, DuplicateTicketException{
         event.registerTicket(this);
         this.state = "Fulfilled";
     }
@@ -64,8 +64,8 @@ public class TicketEntry {
         return purchase;
     }
 
-    public Event getEvent() {
-        return event;
+    public Ticket getTicket() {
+        return ticket;
     }
 
     void setPurchase(Purchase purchase) {
@@ -82,7 +82,7 @@ public class TicketEntry {
         final int prime = 29;
         int result = 1;
         result = prime * result + ((attendee == null) ? 0 : attendee.hashCode());
-        result = prime * result + ((event == null) ? 0 : event.hashCode());
+        result = prime * result + ((eventId == null) ? 0 : eventId.hashCode());
         return result;
     }
 
@@ -100,10 +100,10 @@ public class TicketEntry {
                 return false;
         } else if (!attendee.equals(other.attendee))
             return false;
-        if (event == null) {
-            if (other.event != null)
+        if (eventId == null) {
+            if (other.eventId != null)
                 return false;
-        } else if (!event.equals(other.event))
+        } else if (!eventId.equals(other.eventId))
             return false;
         return true;
     }
@@ -114,6 +114,10 @@ public class TicketEntry {
 
     public String getState() {
         return state;
+    }
+
+    public String getEventId() {
+        return eventId;
     }
     
 }

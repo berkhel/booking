@@ -48,25 +48,31 @@ class UnitTest {
     }
 
     @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
+        when(theStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
+        when(theStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
         ForBooking app = App.init(theStorage, messageBroker);
 
-        app.purchase(new Purchase(new Account("test"), Set.of(Fake.ticket())));
+        app.purchase(new Purchase("test", Set.of(Fake.ticket())));
 
         verify(theStorage).save(Mockito.any(Purchase.class));
     }
 
     @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
+        when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
+        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
         ForBooking app = App.init(aStorage, theMessageBroker);
 
-        app.purchase(new Purchase(new Account("test") ,Set.of(Fake.ticket())));
+        app.purchase(new Purchase("test" ,Set.of(Fake.ticket())));
 
         verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
     }
 
     @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
+        when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
+        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
         ForBooking app = App.init(aStorage, aMessageBroker);
 
-        Purchase thePurchase = app.purchase(new Purchase(new Account("test"), Set.of(Fake.ticket())));
+        Purchase thePurchase = app.purchase(new Purchase("test", Set.of(Fake.ticket())));
 
         assertThat(thePurchase, any(Purchase.class));
     }
@@ -77,17 +83,19 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(new Purchase(new Account("test"),fourTickets));
+            app.purchase(new Purchase("test",fourTickets));
         });
     }
 
     @Test
     void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
+        when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 10)));
+        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
         Set<TicketEntry> threeTickets = Stream.generate(Fake::ticket).limit(3).collect(toSet());
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
-            app.purchase(new Purchase(new Account("test"),threeTickets));
+            app.purchase(new Purchase("test",threeTickets));
         });
 
     }
@@ -98,7 +106,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(new Purchase(new Account("test"),noTickets));
+            app.purchase(new Purchase("test",noTickets));
         });
 
     }
@@ -109,31 +117,36 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
-            app.purchase(new Purchase(new Account("test"),nullTickets));
+            app.purchase(new Purchase("test",nullTickets));
         });
 
     }
 
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Event soldoutEvent = new Event("EVSLDOUT1", 0);
-        TicketEntry arrivedLate = new TicketEntry(soldoutEvent, Fake.attendee());
+        when(aStorage.getEventById("EVSLDOUT1")).thenReturn(Optional.of(new Event("EVSLDOUT1", 0)));
+        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
+        TicketEntry arrivedLate = new TicketEntry("EVSLDOUT1", Fake.attendee());
 
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
-            app.purchase(new Purchase(new Account("test"), Set.of(arrivedLate)));
+            app.purchase(new Purchase("test", Set.of(arrivedLate)));
         });
     }
 
     @Test
     void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Event event = new Event("EV0001", 10);
-        TicketEntry newTicket = new TicketEntry(event, Fake.attendee());
+        final String eventId = "EV0001";
+        Event event = new Event(eventId, 10);
+        when(aStorage.getEventById(eventId)).thenReturn(Optional.of(event));
+        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
+
+        TicketEntry newTicket = new TicketEntry(eventId, Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
 
-        app.purchase(new Purchase(new Account("test"),Set.of(newTicket)));
+        app.purchase(new Purchase("test",Set.of(newTicket)));
 
         assertEquals(9, event.getRemainingSeats());
 
@@ -161,13 +174,15 @@ class UnitTest {
 
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        TicketEntry ticketA = new TicketEntry(new Event("0001", 10),new Attendee("AB01", "/", "/", "/", "/"));
-        TicketEntry ticketB = new TicketEntry(new Event("0001", 10),new Attendee("AB01", "/", "/", "/", "/"));
+        final String eventId = "0001";
+
+        TicketEntry ticketA = new TicketEntry(eventId, new Attendee("AB01", "/", "/", "/", "/"));
+        TicketEntry ticketB = new TicketEntry(eventId, new Attendee("AB01", "/", "/", "/", "/"));
 
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(RuntimeException.class, () -> {
-            app.purchase(new Purchase(new Account("test"),Set.of(ticketA, ticketB)));
+            app.purchase(new Purchase("test",Set.of(ticketA, ticketB)));
         });
 
 

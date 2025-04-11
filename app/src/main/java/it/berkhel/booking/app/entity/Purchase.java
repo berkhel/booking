@@ -1,18 +1,22 @@
 package it.berkhel.booking.app.entity;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
+import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 /**
  * Purchase is the transaction that contains the list of entries that records movements from the event account
@@ -30,20 +34,36 @@ public class Purchase {
     @ManyToOne
     private Account account;
 
+    @Transient
+    private String accountId;
+
     private Purchase(){} // for JPA
     
-    public Purchase(Account account, Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
+    public Purchase(String accountId, Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
         validateSize(ticketEntries);
         for(var entry : ticketEntries){
             entry.setPurchase(this);
         };
         this.ticketEntries = ticketEntries;
-        this.account = account;
+        this.accountId = accountId;
     }
 
-    public void commit() throws SoldoutException, DuplicateTicketException{
+    public void commit(ForStorage storage) throws SoldoutException, DuplicateTicketException, EventNotFoundException{
+         Optional<Account> accountOpt = storage.getAccountById(accountId);
+    
+         // If account doesn't exist, create and save it
+         if (accountOpt.isEmpty()) {
+             Account newAccount = new Account(accountId);
+             this.account = storage.saveAccount(newAccount); // You'll need to add this method to ForStorage
+         } else {
+             this.account = accountOpt.get();
+         }
         for(var entry : ticketEntries){
-            entry.register();
+            Optional<Event> event = storage.getEventById(entry.getEventId());
+            if(event.isEmpty()){
+                throw new EventNotFoundException("Event not found");
+            }
+            entry.register(event.get());
         };
 
     }
@@ -73,6 +93,10 @@ public class Purchase {
 
     public Account getAccount() {
         return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
 
