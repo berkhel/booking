@@ -18,6 +18,7 @@ import it.berkhel.booking.app.App;
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
@@ -49,7 +50,7 @@ class UnitTest {
     @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
         ForBooking app = App.init(theStorage, messageBroker);
 
-        app.purchase(new Purchase(null,Set.of(Fake.ticket())));
+        app.purchase(new Purchase(new Account("test"), Set.of(Fake.ticket())));
 
         verify(theStorage).save(Mockito.any(Purchase.class));
     }
@@ -57,7 +58,7 @@ class UnitTest {
     @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
         ForBooking app = App.init(aStorage, theMessageBroker);
 
-        app.purchase(new Purchase(null,Set.of(Fake.ticket())));
+        app.purchase(new Purchase(new Account("test") ,Set.of(Fake.ticket())));
 
         verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
     }
@@ -65,7 +66,7 @@ class UnitTest {
     @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
-        Purchase thePurchase = app.purchase(new Purchase(null, Set.of(Fake.ticket())));
+        Purchase thePurchase = app.purchase(new Purchase(new Account("test"), Set.of(Fake.ticket())));
 
         assertThat(thePurchase, any(Purchase.class));
     }
@@ -76,7 +77,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(new Purchase(null,fourTickets));
+            app.purchase(new Purchase(new Account("test"),fourTickets));
         });
     }
 
@@ -86,7 +87,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
-            app.purchase(new Purchase(null,threeTickets));
+            app.purchase(new Purchase(new Account("test"),threeTickets));
         });
 
     }
@@ -97,7 +98,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(new Purchase(null,noTickets));
+            app.purchase(new Purchase(new Account("test"),noTickets));
         });
 
     }
@@ -108,7 +109,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
-            app.purchase(new Purchase(null,nullTickets));
+            app.purchase(new Purchase(new Account("test"),nullTickets));
         });
 
     }
@@ -121,7 +122,7 @@ class UnitTest {
         ForBooking app = App.init(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
-            app.purchase(new Purchase(null, Set.of(arrivedLate)));
+            app.purchase(new Purchase(new Account("test"), Set.of(arrivedLate)));
         });
     }
 
@@ -132,7 +133,7 @@ class UnitTest {
 
         App app = App.init(aStorage, aMessageBroker);
 
-        app.purchase(new Purchase(null,Set.of(newTicket)));
+        app.purchase(new Purchase(new Account("test"),Set.of(newTicket)));
 
         assertEquals(9, event.getRemainingSeats());
 
@@ -166,7 +167,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(RuntimeException.class, () -> {
-            app.purchase(new Purchase(null,Set.of(ticketA, ticketB)));
+            app.purchase(new Purchase(new Account("test"),Set.of(ticketA, ticketB)));
         });
 
 

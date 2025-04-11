@@ -16,7 +16,12 @@ public class Account {
     @Id
     private String id;
 
-    @OneToMany(mappedBy = "account")
+    public String getId() {
+        return id;
+    }
+
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 
     private Account(){}
@@ -29,6 +34,10 @@ public class Account {
 
     public void addTickets(List<Ticket> tickets){
         this.tickets.addAll(tickets);
+    }
+
+    public void addTicket(Ticket ticket){
+        this.tickets.add(ticket);
     }
 
 

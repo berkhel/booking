@@ -76,6 +76,7 @@ public class Event {
         }
         Ticket removedTicket = account.getTickets().removeFirst();
         removedTicket.setAccount(otherAccount);
+        otherAccount.addTicket(removedTicket);
         ticketEntry.setTicket(removedTicket);
     }
 

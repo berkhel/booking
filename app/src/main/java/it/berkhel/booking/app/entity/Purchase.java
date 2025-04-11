@@ -36,10 +36,16 @@ public class Purchase {
         validateSize(ticketEntries);
         for(var entry : ticketEntries){
             entry.setPurchase(this);
-            entry.register();
         };
         this.ticketEntries = ticketEntries;
         this.account = account;
+    }
+
+    public void commit() throws SoldoutException, DuplicateTicketException{
+        for(var entry : ticketEntries){
+            entry.register();
+        };
+
     }
 
     private void validateSize(Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException {

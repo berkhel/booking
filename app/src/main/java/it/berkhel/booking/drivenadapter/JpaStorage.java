@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
 import it.berkhel.booking.app.entity.TicketEntry;
@@ -41,7 +42,8 @@ public class JpaStorage implements ForStorage {
 
     @Override
     public Purchase save(Purchase purchase) throws ConcurrentPurchaseException {
-        accountRepo.saveAndFlush(purchase.getAccount());
+        Account account = purchase.getAccount();
+        accountRepo.saveAndFlush(account);
         purchaseRepo.save(purchase);
         for (var ticket : purchase.getTicketEntries()) {
             try {

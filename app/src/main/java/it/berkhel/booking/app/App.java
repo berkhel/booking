@@ -39,6 +39,8 @@ public class App implements ForBooking, ForEvents {
     @Override
     public Purchase purchase(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
 
+        purchase.commit();
+
         storage.save(purchase);
 
         purchase.getTicketEntries().forEach(entry ->
