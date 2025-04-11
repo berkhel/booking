@@ -13,6 +13,7 @@ import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.dto.AttendeeDto;
 import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.TicketDto;
+import it.berkhel.booking.repository.AccountRepository;
 import it.berkhel.booking.repository.EventRepository;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -23,10 +24,10 @@ import java.util.Optional;
 public class DtoTest {
 
     @Test 
-    void ticket_dto_to_object(@Mock EventRepository fakeEventRepo) throws EventNotFoundException{
+    void ticket_dto_to_object(@Mock EventRepository fakeEventRepo, @Mock AccountRepository fakeAccountRepo) throws EventNotFoundException{
         when(fakeEventRepo.findById(anyString()))
             .thenAnswer(method ->  Optional.of(new Event(method.getArgument(0), 0)));
-        DtoMapper dto2Object = new DtoMapper(fakeEventRepo);
+        DtoMapper dto2Object = new DtoMapper(fakeEventRepo, fakeAccountRepo);
         TicketDto ticketDto = new TicketDto(new AttendeeDto(), "0001");
 
         TicketEntry ticket = dto2Object.toObject(ticketDto);
