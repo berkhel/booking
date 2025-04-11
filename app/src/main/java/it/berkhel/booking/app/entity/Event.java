@@ -31,7 +31,7 @@ public class Event {
     private Long version; // for optimistic locking
 
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
-    private Set<TicketEntry> tickets = new HashSet<>();
+    private Set<TicketEntry> ticketEntries = new HashSet<>();
 
 
 
@@ -40,11 +40,11 @@ public class Event {
 
 
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> ticketSeats;
+    private List<Ticket> tickets;
 
 
-    public List<Ticket> getTicketSeats() {
-        return ticketSeats;
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
 
@@ -58,8 +58,8 @@ public class Event {
         this.id = id;
         this.maxSeats = maxSeats;
         this.account = new Account(id);
-        this.ticketSeats = createTickets(maxSeats);
-        this.account.addTickets(ticketSeats);
+        this.tickets = createTickets(maxSeats);
+        this.account.addTickets(tickets);
     }
 
     public String getId() {
@@ -70,22 +70,22 @@ public class Event {
         return account.getTickets().size();
     }
 
-    private void decrementAvailableSeats() throws SoldoutException{
+    private void decrementAvailableSeats(Account otherAccount) throws SoldoutException{
         if(account.getTickets().size() == 0){
             throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
         }
         Ticket removedTicket = account.getTickets().removeFirst();
-        removedTicket.setAccount(null);
+        removedTicket.setAccount(otherAccount);
     }
 
 
-    public void registerTicket(TicketEntry ticket) throws SoldoutException, DuplicateTicketException {
-        if (tickets.contains(ticket)) {
+    public void registerTicket(TicketEntry ticketEntry) throws SoldoutException, DuplicateTicketException {
+        if (ticketEntries.contains(ticketEntry)) {
             throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
-                    + ticket.getAttendee().getId() + " and event " + id);
+                    + ticketEntry.getAttendee().getId() + " and event " + id);
         }
-        tickets.add(ticket);
-        decrementAvailableSeats();
+        ticketEntries.add(ticketEntry);
+        decrementAvailableSeats(ticketEntry.getPurchase().getAccount());
     }
 
     @Override

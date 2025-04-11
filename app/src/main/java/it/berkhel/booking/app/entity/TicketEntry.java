@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class TicketEntry {
@@ -25,9 +26,12 @@ public class TicketEntry {
     @JoinColumn(name = "purchase_id", nullable = false)
     private Purchase purchase;
 
+
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
+
+    private String state;
 
     private TicketEntry(){} // for JPA
 
@@ -37,10 +41,12 @@ public class TicketEntry {
         }
         this.event = event;
         this.attendee = attendee;
+        this.state = "Pending";
     }
 
     public void register() throws SoldoutException, DuplicateTicketException{
         event.registerTicket(this);
+        this.state = "Fulfilled";
     }
 
     public String getId() {
@@ -49,6 +55,10 @@ public class TicketEntry {
 
     public Attendee getAttendee() {
         return attendee;
+    }
+
+    public Purchase getPurchase() {
+        return purchase;
     }
 
     public Event getEvent() {

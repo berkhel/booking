@@ -112,7 +112,7 @@ public class FunctionalTest {
     void with_an_array_with_empty_object_should_return_bad_request() {
 
         given().
-            body("[{}]").
+            body("{[{}]}").
         when().
             post("/booking").
         then().
@@ -124,7 +124,7 @@ public class FunctionalTest {
     void malformed_body_should_return_bad_request() {
 
         given().
-            body("[{").
+            body("{[{").
         when().
             post("/booking").
         then().
@@ -135,7 +135,9 @@ public class FunctionalTest {
     @Test
     void without_eventId_should_return_bad_request() {
         String missingEventId = 
-                "[" +
+            "{" +
+                "\"accountId\":\"mrrss\"," +
+                "\"tickets\":[" +
                     "{" +
                         "\"eventId\":\"\"," +
                         "\"attendee\": {" +
@@ -145,7 +147,8 @@ public class FunctionalTest {
                             "\"birthDate\":\"1990-01-01\"" +
                         "}" +
                     "}" +
-                "]";
+                "]" +
+            "}";
 
         given().
             body(missingEventId).
@@ -159,7 +162,9 @@ public class FunctionalTest {
     @Test
     void without_attendeeId_should_return_bad_request() {
         String missingEventId = 
-                "[" +
+            "{" +
+                "\"accountId\":\"mrrss\"," +
+                "\"tickets\":[" +
                     "{" +
                         "\"eventId\":\"0001\"," +
                         "\"attendee\": {" +
@@ -169,7 +174,8 @@ public class FunctionalTest {
                             "\"birthDate\":\"1990-01-01\"" +
                         "}" +
                     "}" +
-                "]";
+                "]" + 
+            "}";
 
         given().
             body(missingEventId).
@@ -195,9 +201,10 @@ public class FunctionalTest {
 
         mySqlDatabase.createEvent("0001", 10);
 
-
         String singlePurchase = 
-                "[" +
+            "{" +
+                "\"accountId\":\"mrrss\"," +
+                "\"tickets\":[" +
                     "{" +
                         "\"eventId\":\"0001\"," +
                         "\"attendee\": {" +
@@ -208,7 +215,8 @@ public class FunctionalTest {
                             "\"birthDate\":\"1990-01-01\"" +
                         "}" +
                     "}" +
-                "]";
+                "]" + 
+            "}";
 
         given().
             body(singlePurchase).
@@ -325,7 +333,7 @@ public class FunctionalTest {
         mySqlDatabase.createEvent("SECONDEVENT", 10);
 
 
-        String twoTicketPurchase = Fake.Purchase.json()
+        String twoTicketPurchase = Fake.PurchaseRequest.json()
                 .withTicket(Fake.Ticket.json().random().withEvent("FIRSTEVENT"))
                 .withTicket(Fake.Ticket.json().random().withEvent("SECONDEVENT"))
                 .build();
@@ -352,7 +360,7 @@ public class FunctionalTest {
         mySqlDatabase.createEvent("0001", 1);
         mySqlDatabase.createEvent("0002", 1);
 
-        var oneAttendeeTwoEvents = Fake.Purchase.json()
+        var oneAttendeeTwoEvents = Fake.PurchaseRequest.json()
                 .withTicket(Fake.Ticket.json()
                         .withAttendee(Fake.Attendee.json().withId("SAME"))
                         .withEvent("0001"))
@@ -379,7 +387,7 @@ public class FunctionalTest {
 
         mySqlDatabase.createEvent("0001", 2);
 
-        var oneEventTwoAttendees = Fake.Purchase.json()
+        var oneEventTwoAttendees = Fake.PurchaseRequest.json()
                 .withTicket(Fake.Ticket.json()
                         .withAttendee(Fake.Attendee.json().withId("A001"))
                         .withEvent("0001"))
@@ -421,7 +429,7 @@ public class FunctionalTest {
                     .withAttendee(Fake.Attendee.json().withId(sameAttendeeId));
 
 
-        String firstPurchase = Fake.Purchase.json()
+        String firstPurchase = Fake.PurchaseRequest.json()
                 .withTicket(sameTicket)
                 .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT1"))
                 .build();
@@ -435,7 +443,7 @@ public class FunctionalTest {
         
 
 
-        String secondPurchase = Fake.Purchase.json()
+        String secondPurchase = Fake.PurchaseRequest.json()
                 .withTicket(Fake.Ticket.json().random().withEvent("OTHEREVENT2"))
                 .withTicket(sameTicket)
                 .build();
@@ -528,7 +536,7 @@ public class FunctionalTest {
         for (var i = 0; i < STARTING_TICKETS + 1; i++) {
             threadPool.execute(() -> {
                 try {
-                    given().body(Fake.Purchase.json()
+                    given().body(Fake.PurchaseRequest.json()
                             .withTicket(Fake.Ticket.json().random().withEvent("0001")).build()).when().post("/booking")
                             .then().extract();
                 } catch (Exception e) {

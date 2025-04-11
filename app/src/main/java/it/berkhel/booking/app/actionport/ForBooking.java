@@ -7,6 +7,6 @@ import it.berkhel.booking.app.entity.TicketEntry;
 
 public interface ForBooking {
     
-    public Purchase purchase(Set<TicketEntry> tickets) throws Exception;
+    public Purchase purchase(Purchase purchase) throws Exception;
 
 }

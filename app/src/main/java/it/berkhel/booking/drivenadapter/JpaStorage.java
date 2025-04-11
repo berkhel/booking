@@ -41,8 +41,9 @@ public class JpaStorage implements ForStorage {
 
     @Override
     public Purchase save(Purchase purchase) throws ConcurrentPurchaseException {
+        accountRepo.saveAndFlush(purchase.getAccount());
         purchaseRepo.save(purchase);
-        for (var ticket : purchase.getTickets()) {
+        for (var ticket : purchase.getTicketEntries()) {
             try {
                 eventRepo.saveAndFlush(ticket.getEvent());
             } catch (ObjectOptimisticLockingFailureException ex) {

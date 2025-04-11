@@ -9,13 +9,14 @@ public class Fake {
     
 
     public static final String singlePurchaseForEvent(String eventId){ 
-       return "[{ \"eventId\":\""+eventId+ "\","+
+       return "{ \"accountId\": \"mario.rossi@example.it\", "+
+       "\"tickets\": [{ \"eventId\":\""+eventId+ "\","+
        " \"attendee\" :"+
        " {\"id\" : \"ABCD0001\","+
        " \"email\":\"mario.rossi@example.it\","+
        " \"firstName\":\"Mario\","+
        " \"lastName\": \"Rossi\","+
-       " \"birthDate\":\"1990-01-01\"}}]" ;}
+       " \"birthDate\":\"1990-01-01\"}}]}" ;}
     
     
 
@@ -43,6 +44,30 @@ public class Fake {
             return "[" + tickets.stream()
                     .map(Ticket::build)
                     .collect(Collectors.joining(",")) + "]";
+
+        }
+
+        
+    }
+    public static class PurchaseRequest {
+        private List<Ticket> tickets = new ArrayList<>();
+        private String accountId = UUID.randomUUID().toString();
+
+        private PurchaseRequest(){}
+
+        public static PurchaseRequest json(){
+            return new PurchaseRequest();
+        }
+
+        public PurchaseRequest withTicket(Ticket ticket){
+            this.tickets.add(ticket);
+            return this;
+        }
+
+        public String build(){
+            return "{ \"accountId\":\""+accountId+"\" ,\"tickets\": [" + tickets.stream()
+                    .map(Ticket::build)
+                    .collect(Collectors.joining(",")) + "]}";
 
         }
 

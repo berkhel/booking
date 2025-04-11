@@ -37,14 +37,12 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase purchase(Set<TicketEntry> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
-
-        Purchase purchase = new Purchase(tickets);
+    public Purchase purchase(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
 
         storage.save(purchase);
 
-        tickets.forEach(ticket ->
-            messageSender.sendMessage(ticket.getAttendee(), "Here's your ticket: " + ticket.getId())
+        purchase.getTicketEntries().forEach(entry ->
+            messageSender.sendMessage(entry.getAttendee(), "Here's your ticket: " + entry.getId())
         );
         
         return purchase;

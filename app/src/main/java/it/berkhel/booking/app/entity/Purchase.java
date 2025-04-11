@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 /**
@@ -24,24 +25,28 @@ public class Purchase {
     private String id;
 
     @OneToMany(mappedBy = "purchase")
-    private Set<TicketEntry> tickets;
+    private Set<TicketEntry> ticketEntries;
+
+    @ManyToOne
+    private Account account;
 
     private Purchase(){} // for JPA
     
-    public Purchase(Set<TicketEntry> tickets) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
-        validateSize(tickets);
-        for(var ticket : tickets){
-            ticket.register();
-            ticket.setPurchase(this);
+    public Purchase(Account account, Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
+        validateSize(ticketEntries);
+        for(var entry : ticketEntries){
+            entry.setPurchase(this);
+            entry.register();
         };
-        this.tickets = tickets;
+        this.ticketEntries = ticketEntries;
+        this.account = account;
     }
 
-    private void validateSize(Set<TicketEntry> tickets) throws BadPurchaseRequestException {
-        if(tickets.size() < 1){
+    private void validateSize(Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException {
+        if(ticketEntries.size() < 1){
             throw new BadPurchaseRequestException("At least one ticket must be included in the request");
         }
-        if(tickets.size() > 3){
+        if(ticketEntries.size() > 3){
             throw new BadPurchaseRequestException("Cannot purchase more than 3 tickets");
         }
     }
@@ -50,14 +55,18 @@ public class Purchase {
         return id;
     }
 
-    public Set<TicketEntry> getTickets(){
-        return tickets;
+    public Set<TicketEntry> getTicketEntries(){
+        return ticketEntries;
     }
 
 
     @Override
     public String toString() {
         return "Purchase [id=" + id + "]";
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
 

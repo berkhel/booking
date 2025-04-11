@@ -20,6 +20,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
+import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
 import it.berkhel.booking.app.entity.TicketEntry;
@@ -32,6 +33,7 @@ import it.berkhel.booking.app.exception.SoldoutException;
 import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.EventDto;
 import it.berkhel.booking.dto.PurchaseDto;
+import it.berkhel.booking.dto.PurchaseRequest;
 import it.berkhel.booking.dto.TicketDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -53,17 +55,9 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public PurchaseDto book(@Valid @RequestBody(required = true) List<TicketDto> dtoTickets) throws Exception {
-        Set<TicketEntry> tickets = new HashSet<>();
-        for(var dtoTicket : dtoTickets){
-            try{
-                var ticket = dtoMapper.toObject(dtoTicket);
-                tickets.add(ticket);
-            }catch(IllegalArgumentException duplicateEx){
-                throw new DuplicateTicketException("Duplicate ticket for attendee " + dtoTicket.getAttendee().id + " and event " + dtoTicket.getEventId());
-            }
-        }
-        Purchase purchase = bookingManager.purchase(tickets);
+    public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws Exception {
+        Purchase purchase = dtoMapper.toObject(purchaseRequest);
+        bookingManager.purchase(purchase);
         return dtoMapper.toDto(purchase);
     }
 
