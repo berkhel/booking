@@ -48,25 +48,7 @@ public class Purchase {
         this.accountId = accountId;
     }
 
-    public void commit(ForStorage storage) throws SoldoutException, DuplicateTicketException, EventNotFoundException{
-         Optional<Account> accountOpt = storage.getAccountById(accountId);
-    
-         // If account doesn't exist, create and save it
-         if (accountOpt.isEmpty()) {
-             Account newAccount = new Account(accountId);
-             this.account = storage.saveAccount(newAccount); // You'll need to add this method to ForStorage
-         } else {
-             this.account = accountOpt.get();
-         }
-        for(var entry : ticketEntries){
-            Optional<Event> event = storage.getEventById(entry.getEventId());
-            if(event.isEmpty()){
-                throw new EventNotFoundException("Event not found");
-            }
-            entry.register(event.get());
-        };
 
-    }
 
     private void validateSize(Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException {
         if(ticketEntries.size() < 1){

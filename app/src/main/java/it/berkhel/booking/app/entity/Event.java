@@ -69,28 +69,6 @@ public class Event {
         return account.getTickets().size();
     }
 
-    private void decrementAvailableSeats(TicketEntry ticketEntry) throws SoldoutException{
-        Account otherAccount = ticketEntry.getPurchase().getAccount();
-        if(account.getTickets().size() == 0){
-            throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
-        }
-        Ticket removedTicket = account.getTickets().removeFirst();
-        removedTicket.setAttendee(ticketEntry.getAttendee());
-        removedTicket.setAccount(otherAccount);
-        otherAccount.addTicket(removedTicket);
-        ticketEntry.setTicket(removedTicket);
-    }
-
-
-    public void registerTicket(TicketEntry ticketEntry) throws SoldoutException, DuplicateTicketException {
-        List<Ticket> tickets = ticketEntry.getPurchase().getAccount().getTickets();
-        if (tickets.stream().filter(ticket -> ticket.getEvent().equals(this)).anyMatch(ticket -> ticketEntry.getAttendee().equals(ticket.getAttendee()))) {
-            throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
-                    + ticketEntry.getAttendee().getId() + " and event " + id);
-        }
-        decrementAvailableSeats(ticketEntry);
-    }
-
     @Override
     public int hashCode() {
         final int prime = 17;

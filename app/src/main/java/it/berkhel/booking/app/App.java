@@ -1,11 +1,13 @@
 package it.berkhel.booking.app;
 
+import java.util.Optional;
 import java.util.Set;
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
 import it.berkhel.booking.app.entity.TicketEntry;
@@ -37,9 +39,17 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase purchase(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
+    public Purchase purchase(Purchase purchase, String accountId) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
 
-        purchase.commit(storage);
+        Account account = storage.getAccountById(accountId).orElseGet(() -> {
+            Account newAccount = new Account(accountId);
+            storage.saveAccount(newAccount);
+            return newAccount;
+        });
+
+        purchase.setAccount(account);
+
+        account.process(purchase, storage);
 
         storage.save(purchase);
 

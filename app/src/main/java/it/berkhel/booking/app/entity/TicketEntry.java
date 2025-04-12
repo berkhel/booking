@@ -30,7 +30,7 @@ public class TicketEntry {
     @Column(name = "event_id", nullable = false)
     private String eventId;
 
-    private String state;
+    public String state;
 
     @ManyToOne
     private Ticket ticket;
@@ -47,10 +47,6 @@ public class TicketEntry {
         this.state = "Pending";
     }
 
-    public void register(Event event) throws SoldoutException, DuplicateTicketException{
-        event.registerTicket(this);
-        this.state = "Fulfilled";
-    }
 
     public String getId() {
         return id;
@@ -110,6 +106,7 @@ public class TicketEntry {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+        this.state = "Fulfilled";
     }
 
     public String getState() {

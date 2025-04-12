@@ -57,7 +57,7 @@ public class RestApiController {
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws Exception {
         Purchase purchase = dtoMapper.toObject(purchaseRequest);
-        bookingManager.purchase(purchase);
+        bookingManager.purchase(purchase, purchaseRequest.accountId);
         return dtoMapper.toDto(purchase);
     }
 
