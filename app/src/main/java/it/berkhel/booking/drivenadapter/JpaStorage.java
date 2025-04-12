@@ -20,7 +20,6 @@ import it.berkhel.booking.repository.TicketRepository;
 import it.berkhel.booking.repository.TicketEntryRepository;
 
 @Repository
-@Transactional
 public class JpaStorage implements ForStorage {
 
     private final PurchaseRepository purchaseRepo;

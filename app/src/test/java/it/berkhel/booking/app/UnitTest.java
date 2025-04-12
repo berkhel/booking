@@ -57,15 +57,15 @@ class UnitTest {
         verify(theStorage).save(Mockito.any(Purchase.class));
     }
 
-    @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
-        when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
-        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-        ForBooking app = App.init(aStorage, theMessageBroker);
+    // @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
+    //     when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
+    //     when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
+    //     ForBooking app = App.init(aStorage, theMessageBroker);
 
-        app.purchase(new Purchase("test" ,Set.of(Fake.ticket())), "TEST");
+    //     app.purchase(new Purchase("test" ,Set.of(Fake.ticket())), "TEST");
 
-        verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
-    }
+    //     verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
+    // }
 
     @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
         when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));

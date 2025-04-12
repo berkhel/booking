@@ -47,18 +47,23 @@ public class App implements ForBooking, ForEvents {
             return newAccount;
         });
 
-        purchase.setAccount(account);
 
         account.process(purchase, storage);
 
         storage.save(purchase);
-
-        purchase.getTicketEntries().stream().filter(entry -> entry.getState().equals("Fulfilled")).forEach(entry ->
-            messageSender.sendMessage(entry.getAttendee(), "Here's your ticket: " + entry.getId())
-        );
         
         return purchase;
     }
+
+    public void sendMessageAbout(Purchase purchase) {
+        purchase.getTicketEntries().stream().filter(entry -> entry.getState().equals("Fulfilled")).forEach(entry ->
+            messageSender.sendMessage(entry.getAttendee(), "Here's your ticket: " + entry.getId())
+        );
+    }
+
+    
+
+
 
 
 

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -57,9 +58,16 @@ public class RestApiController {
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws Exception {
         Purchase purchase = dtoMapper.toObject(purchaseRequest);
-        bookingManager.purchase(purchase, purchaseRequest.accountId);
+        performBooking(purchase, purchaseRequest.accountId);
+        bookingManager.sendMessageAbout(purchase);
         return dtoMapper.toDto(purchase);
     }
+
+    @Transactional
+    public void performBooking(Purchase purchase, String accountId) throws Exception{
+        bookingManager.purchase(purchase, accountId);
+    }
+
 
     @PostMapping(value = "/event", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Event book(@Valid @RequestBody(required = true) EventDto eventDto) throws EventAlreadyExistsException {

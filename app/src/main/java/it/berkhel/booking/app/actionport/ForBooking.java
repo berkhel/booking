@@ -9,4 +9,6 @@ public interface ForBooking {
     
     public Purchase purchase(Purchase purchase, String accountId) throws Exception;
 
+    public void sendMessageAbout(Purchase purchase);
+
 }
