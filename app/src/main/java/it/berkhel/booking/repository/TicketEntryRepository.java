@@ -9,5 +9,4 @@ import it.berkhel.booking.app.entity.TicketEntry;
 
 public interface TicketEntryRepository extends JpaRepository<TicketEntry, String> {
 
-    Optional<TicketEntry> findByEventIdAndAttendeeId(String eventId, String attendeeId);
 }

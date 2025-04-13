@@ -58,14 +58,14 @@ public class RestApiController {
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws Exception {
         Purchase purchase = dtoMapper.toObject(purchaseRequest);
-        performBooking(purchase, purchaseRequest.accountId);
+        performBooking(purchase);
         bookingManager.sendMessageAbout(purchase);
         return dtoMapper.toDto(purchase);
     }
 
     @Transactional
-    public void performBooking(Purchase purchase, String accountId) throws Exception{
-        bookingManager.purchase(purchase, accountId);
+    public void performBooking(Purchase purchase) throws Exception{
+        bookingManager.callPurchase(purchase);
     }
 
 

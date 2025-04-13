@@ -34,6 +34,7 @@ import it.berkhel.booking.dto.PurchaseRequest;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import static java.util.stream.Collectors.toSet;
 import java.util.stream.Stream;
@@ -45,14 +46,14 @@ class UnitTest {
     @BeforeEach
     void restoreApp(){
         App.instance = null;
+        Attendee.registry.clear();
     }
 
-    @Test void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
-        when(theStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
-        when(theStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-        ForBooking app = App.init(theStorage, messageBroker);
+    @Test 
+    void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
+        App app = App.init(theStorage, messageBroker);
 
-        app.purchase(new Purchase("test", Set.of(Fake.ticket())), "TEST");
+        app.purchase(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
 
         verify(theStorage).save(Mockito.any(Purchase.class));
     }
@@ -67,35 +68,32 @@ class UnitTest {
     //     verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
     // }
 
-    @Test void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
-        when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
-        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-        ForBooking app = App.init(aStorage, aMessageBroker);
+    @Test 
+    void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
+        App app = App.init(aStorage, aMessageBroker);
 
-        Purchase thePurchase = app.purchase(new Purchase("test", Set.of(Fake.ticket())), "TEST");
+        Purchase thePurchase = app.purchase(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
 
         assertThat(thePurchase, any(Purchase.class));
     }
 
     @Test
     void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        Set<TicketEntry> fourTickets = Stream.generate(Fake::ticket).limit(4).collect(toSet());
-        ForBooking app = App.init(aStorage, aMessageBroker);
+        Set<TicketEntry> fourTickets = Stream.generate(() -> Fake.ticket(Fake.event(), Fake.attendee())).limit(4).collect(toSet());
+        App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(new Purchase("test",fourTickets), "TEST");
+            app.purchase(Fake.purchase(Fake.account(), fourTickets));
         });
     }
 
     @Test
     void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
-        when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 10)));
-        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-        Set<TicketEntry> threeTickets = Stream.generate(Fake::ticket).limit(3).collect(toSet());
-        ForBooking app = App.init(aStorage, aMessageBroker);
+        Set<TicketEntry> threeTickets = Stream.generate(() -> Fake.ticket(Fake.event(), Fake.attendee())).limit(3).collect(toSet());
+        App app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
-            app.purchase(new Purchase("test",threeTickets), "TEST");
+            app.purchase(Fake.purchase(Fake.account(), threeTickets));
         });
 
     }
@@ -103,10 +101,10 @@ class UnitTest {
     @Test
     void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Set<TicketEntry> noTickets = Set.of();
-        ForBooking app = App.init(aStorage, aMessageBroker);
+        App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(new Purchase("test",noTickets), "TEST");
+            app.purchase(Fake.purchase(Fake.account(), noTickets));
         });
 
     }
@@ -114,24 +112,22 @@ class UnitTest {
     @Test
     void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Set<TicketEntry> nullTickets = null;
-        ForBooking app = App.init(aStorage, aMessageBroker);
+        App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
-            app.purchase(new Purchase("test",nullTickets), "TEST");
+            app.purchase(Fake.purchase(Fake.account(), nullTickets));
         });
 
     }
 
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        when(aStorage.getEventById("EVSLDOUT1")).thenReturn(Optional.of(new Event("EVSLDOUT1", 0)));
-        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-        TicketEntry arrivedLate = new TicketEntry("EVSLDOUT1", Fake.attendee());
+        TicketEntry arrivedLate = Fake.ticket(new Event("EVSLDOUT1", new Random().nextInt(10)), Fake.attendee());
 
-        ForBooking app = App.init(aStorage, aMessageBroker);
+        App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
-            app.purchase(new Purchase("test", Set.of(arrivedLate)), "TEST");
+            app.purchase(Fake.purchase(Fake.account(), Set.of(arrivedLate)));
         });
     }
 
@@ -139,14 +135,11 @@ class UnitTest {
     void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         final String eventId = "EV0001";
         Event event = new Event(eventId, 10);
-        when(aStorage.getEventById(eventId)).thenReturn(Optional.of(event));
-        when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-
-        TicketEntry newTicket = new TicketEntry(eventId, Fake.attendee());
+        TicketEntry newTicket = Fake.ticket(event, Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
 
-        app.purchase(new Purchase("test",Set.of(newTicket)), "TEST");
+        app.purchase(Fake.purchase(Fake.account(), Set.of(newTicket)));
 
         assertEquals(9, event.getRemainingSeats());
 
@@ -154,8 +147,9 @@ class UnitTest {
 
     @Test
     void event_cannot_be_empty(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+
         assertThrows(EventNotFoundException.class, () -> {
-            new TicketEntry(null, Fake.attendee());
+            TicketEntry nullEventTicket = new TicketEntry(null, Fake.attendee());
         });
     }
 
@@ -174,15 +168,14 @@ class UnitTest {
 
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        final String eventId = "0001";
-
-        TicketEntry ticketA = new TicketEntry(eventId, new Attendee("AB01", "/", "/", "/", "/"));
-        TicketEntry ticketB = new TicketEntry(eventId, new Attendee("AB01", "/", "/", "/", "/"));
+        Event event = new Event("0001", new Random().nextInt(10));
+        TicketEntry ticketA = Fake.ticket(event, Attendee.createAttendee("AB01", "/", "/", "/", "/"));
+        TicketEntry ticketB = Fake.ticket(event, Attendee.createAttendee("AB01", "/", "/", "/", "/"));
 
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(RuntimeException.class, () -> {
-            app.purchase(new Purchase("test",Set.of(ticketA, ticketB)), "TEST");
+            app.purchase(Fake.purchase(Fake.account(), Set.of(ticketA, ticketB)));
         });
 
 

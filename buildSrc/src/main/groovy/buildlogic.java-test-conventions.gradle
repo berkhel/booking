@@ -36,15 +36,15 @@ testing{
                     testTask.configure {
                         testLogging { 
                             events = [
-                               //"passed",
-                               "failed"//,
-                            //    "skipped"
+                               "passed",
+                               "failed",
+                                "skipped"
                             ]
                             exceptionFormat = "full" 
-                            //showCauses = true 
+                            showCauses = true 
                             showExceptions = true 
-                            //showStackTraces = true 
-                            //showStandardStreams = true 
+                            showStackTraces = true 
+                            showStandardStreams = true 
                         }
                     }
                 }

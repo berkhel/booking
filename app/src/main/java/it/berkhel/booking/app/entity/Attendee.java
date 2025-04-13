@@ -45,7 +45,7 @@ public class Attendee {
         return attendee;
     }
 
-    public Attendee(String id, String email, String firstName, String lastName,
+    private Attendee(String id, String email, String firstName, String lastName,
             String birthDate) {
         this.id = id;
         this.email = email;
@@ -105,6 +105,7 @@ public class Attendee {
     }
 
     public void merge(Attendee other){
+        if(this == other)return;
         this.email = other.email;
         this.firstName = other.firstName;
         this.lastName = other.lastName;

@@ -39,20 +39,33 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase purchase(Purchase purchase, String accountId) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
+    public Purchase callPurchase(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
+        linkPersistentEntities(purchase);
+        return purchase(purchase);
+    }
 
-        Account account = storage.getAccountById(accountId).orElseGet(() -> {
-            Account newAccount = new Account(accountId);
+    public Purchase purchase(Purchase purchase) throws SoldoutException, DuplicateTicketException, EventNotFoundException, ConcurrentPurchaseException{
+        purchase.getAccount().process(purchase, storage);
+        storage.save(purchase);
+        return purchase;
+    }
+
+    private void linkPersistentEntities(Purchase purchase) throws EventNotFoundException {
+
+        Account account = storage.getAccountById(purchase.getAccountId()).orElseGet(() -> {
+            Account newAccount = new Account(purchase.getAccountId());
             storage.saveAccount(newAccount);
             return newAccount;
         });
 
+        purchase.setAccount(account);
 
-        account.process(purchase, storage);
+        for (TicketEntry entry : purchase.getTicketEntries()) {
+            Event event = storage.getEventById(entry.getEventId())
+                    .orElseThrow(() -> new EventNotFoundException("Event not found"));
+            entry.setEvent(event);
+        }
 
-        storage.save(purchase);
-        
-        return purchase;
     }
 
     public void sendMessageAbout(Purchase purchase) {

@@ -16,10 +16,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.Transient;
 
 /**
  * Purchase is the transaction that contains the list of entries that records movements from the event account
+ * Invariant: ticketEntries.size() > 0
  */
 @Entity
 public class Purchase {
@@ -36,6 +38,11 @@ public class Purchase {
 
     @Transient
     private String accountId;
+
+    @PostLoad
+    public void initializeAccountId(){
+        this.accountId = this.account.getId();
+    }
 
     private Purchase(){} // for JPA
     
@@ -65,6 +72,13 @@ public class Purchase {
 
     public Set<TicketEntry> getTicketEntries(){
         return ticketEntries;
+    }
+
+    public String getAccountId() {
+        if(accountId == null){
+            this.accountId = account.getId();
+        }
+        return accountId;
     }
 
 

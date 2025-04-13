@@ -19,6 +19,11 @@ import jakarta.persistence.Version;
 
 /**
  * Event is an account of seats created by the event organizer 
+ * it is also a sort of a ruler and posting register for its account
+ * Invariant: account != null
+ *         && tickets.size() > 0
+ *         && account.tickets.size() == tickets.size() + ticketEntries.filter(t->t.state=="Fulfilled").size()
+ *            
  */
 @Entity
 public class Event {

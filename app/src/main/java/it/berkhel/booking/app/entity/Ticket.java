@@ -9,6 +9,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
+/**
+ * Invariant: event != null 
+ *         && account != null
+ *         && seat != null
+ *         && event.getTickets().noneMatch(t -> t.seat == seat)
+ */
 @Entity
 public class Ticket {
     
@@ -27,6 +33,7 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "account", nullable = false)
     private Account account;
+
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Attendee attendee;
@@ -52,6 +59,10 @@ public class Ticket {
 
     public void setAttendee(Attendee attendee) {
         this.attendee = attendee;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
     public void setAccount(Account account) {

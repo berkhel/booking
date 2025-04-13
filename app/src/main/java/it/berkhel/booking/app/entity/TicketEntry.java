@@ -11,6 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.Transient;
+
+
+/**
+ * Invariant: state == "Pending" && ticket == null 
+ *         || state == "Fulfilled" && ticket != null && ticket.getAccount() != ticket.getEvent().getAccount()
+ */
+
 
 @Entity
 public class TicketEntry {
@@ -27,10 +36,21 @@ public class TicketEntry {
     @JoinColumn(name = "purchase_id", nullable = false)
     private Purchase purchase;
 
-    @Column(name = "event_id", nullable = false)
+    @Transient
     private String eventId;
 
-    public String state;
+    @PostLoad
+    public void initializeEventId(){
+        this.eventId = this.event.getId();
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "event", nullable = false)
+    private Event event;
+
+
+    private String state;
 
     @ManyToOne
     private Ticket ticket;
@@ -66,6 +86,17 @@ public class TicketEntry {
 
     void setPurchase(Purchase purchase) {
         this.purchase = purchase;
+    }
+
+    void fulfill(Ticket ticket){
+        if(ticket != null && !ticket.getAccount().equals(ticket.getEvent().getAccount())){
+            this.state = "Fulfilled";
+        }
+        ticket.setAttendee(attendee);
+        this.ticket = ticket;
+
+        assert this.state.equals("Fulfilled") : "Ticket entry not fulfilled!";
+
     }
 
     @Override
@@ -104,10 +135,6 @@ public class TicketEntry {
         return true;
     }
 
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-        this.state = "Fulfilled";
-    }
 
     public String getState() {
         return state;
@@ -115,6 +142,16 @@ public class TicketEntry {
 
     public String getEventId() {
         return eventId;
+    }
+
+    public void setEvent(Event event) {
+        //assert event.getId().equals(eventId) : "EventId "+eventId + " != " + event.getId();
+
+        this.event = event;
+    }
+
+    public Event getEvent() {
+        return event;
     }
     
 }

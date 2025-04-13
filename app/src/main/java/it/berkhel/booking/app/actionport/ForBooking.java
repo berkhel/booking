@@ -7,7 +7,7 @@ import it.berkhel.booking.app.entity.TicketEntry;
 
 public interface ForBooking {
     
-    public Purchase purchase(Purchase purchase, String accountId) throws Exception;
+    public Purchase callPurchase(Purchase purchase) throws Exception;
 
     public void sendMessageAbout(Purchase purchase);
 
