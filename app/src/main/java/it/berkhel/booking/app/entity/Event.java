@@ -35,8 +35,8 @@ public class Event {
     @Column(columnDefinition = "integer DEFAULT 0")
     private Long version; // for optimistic locking
 
-    // @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
-    // private Set<TicketEntry> ticketEntries = new HashSet<>();
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private Set<TicketEntry> ticketEntries = new HashSet<>();
 
 
     @Column(name = "max_seats")
@@ -133,6 +133,10 @@ public class Event {
 
     public Account getAccount() {
         return account;
+    }
+
+    public void addTicketEntry(TicketEntry entry){
+        ticketEntries.add(entry);
     }
    
     

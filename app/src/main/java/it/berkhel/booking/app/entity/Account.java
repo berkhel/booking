@@ -42,11 +42,15 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 
+    @OneToMany(mappedBy = "account")
+    private List<Purchase> purchases;
+
     private Account(){}
 
 
     public Account(String id){
         this.id = id;
+        this.purchases = new ArrayList<Purchase>();
         this.tickets = new ArrayList<Ticket>();
     }
 
@@ -63,12 +67,6 @@ public class Account {
         return tickets;
     }
 
-    public void process(Purchase purchase, ForStorage storage) throws SoldoutException, DuplicateTicketException, EventNotFoundException{
-        purchase.setAccount(this);
-        for(TicketEntry entry : purchase.getTicketEntries()){
-            claim(entry);
-        };
-    }
 
     public void claim(TicketEntry ticketEntry) throws SoldoutException, DuplicateTicketException{
         Event event = ticketEntry.getEvent();
@@ -100,6 +98,11 @@ public class Account {
         otherAccount.addTicket(movingTicket);
         movingTicket.setAccount(otherAccount);
         return movingTicket;
+    }
+
+
+    public void addPurchase(Purchase purchase) {
+        purchases.add(purchase);
     }
 
     

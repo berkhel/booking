@@ -44,7 +44,7 @@ public class App implements ForBooking, ForEvents {
         return purchase(purchase);
     }
 
-    public Purchase purchase(Purchase purchase) throws SoldoutException, DuplicateTicketException, EventNotFoundException, ConcurrentPurchaseException{
+    Purchase purchase(Purchase purchase) throws SoldoutException, DuplicateTicketException, EventNotFoundException, ConcurrentPurchaseException{
         purchase.process();
         storage.save(purchase);
         return purchase;
@@ -59,11 +59,13 @@ public class App implements ForBooking, ForEvents {
         });
 
         purchase.setAccount(account);
+        account.addPurchase(purchase);
 
         for (TicketEntry entry : purchase.getTicketEntries()) {
             Event event = storage.getEventById(entry.getEventId())
                     .orElseThrow(() -> new EventNotFoundException("Event not found"));
             entry.setEvent(event);
+            event.addTicketEntry(entry);
         }
 
     }
