@@ -55,8 +55,8 @@ public class Account {
     }
 
 
-    public List<Ticket> getTickets() {
-        return tickets;
+    public Integer ticketsCount() {
+        return tickets.size();
     }
 
 
@@ -80,6 +80,11 @@ public class Account {
 
     public void addPurchase(Purchase purchase) {
         purchases.add(purchase);
+    }
+
+
+    public boolean contains(Ticket ticket) {
+        return tickets.contains(ticket);
     }
 
     

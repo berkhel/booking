@@ -47,11 +47,6 @@ public class Event {
     private List<Ticket> tickets;
 
 
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
 
@@ -66,13 +61,6 @@ public class Event {
         this.account.addTickets(tickets);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public Integer getRemainingSeats() {
-        return account.getTickets().size();
-    }
 
     public void ensureNoPreviousEntriesForSameAttendee(Attendee attendee) throws DuplicateTicketException {
         if (tickets.stream()
@@ -83,37 +71,26 @@ public class Event {
     }
 
     public void ensureTicketAvailability() throws SoldoutException {
-        if(account.getTickets().size() == 0){
+        if(account.ticketsCount() == 0){
             throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
         }
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 17;
-        return prime + ((id == null) ? 0 : id.hashCode());
+    public Account getAccount() {
+        return account;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Event other = (Event) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+   
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public String toString() {
-        return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + getRemainingSeats() + "]";
+    public Integer getRemainingSeats() {
+        return account.ticketsCount();
+    }
+    
+    public void addTicketEntry(TicketEntry entry){
+        ticketEntries.add(entry);
     }
 
     private List<Ticket> createTickets(Integer ticketQty) {
@@ -144,14 +121,34 @@ public class Event {
 
     }
 
-
-    public Account getAccount() {
-        return account;
+    @Override
+    public int hashCode() {
+        final int prime = 17;
+        return prime + ((id == null) ? 0 : id.hashCode());
     }
 
-    public void addTicketEntry(TicketEntry entry){
-        ticketEntries.add(entry);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Event other = (Event) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
-   
-    
+
+    @Override
+    public String toString() {
+        return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + getRemainingSeats() + "]";
+    }
+
+
+
 }

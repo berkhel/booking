@@ -1,15 +1,11 @@
 package it.berkhel.booking.app.entity;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
-import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -73,12 +69,13 @@ public class Purchase {
         };
     }
 
-    public String getId() {
-        return id;
-    }
 
     public Set<TicketEntry> getTicketEntries(){
         return ticketEntries;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getAccountId() {
@@ -86,12 +83,6 @@ public class Purchase {
             this.accountId = account.getId();
         }
         return accountId;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Purchase [id=" + id + "]";
     }
 
     public Account getAccount() {
@@ -102,6 +93,10 @@ public class Purchase {
         this.account = account;
     }
 
+    @Override
+    public String toString() {
+        return "Purchase [id=" + id + "]";
+    }
 
 
 }

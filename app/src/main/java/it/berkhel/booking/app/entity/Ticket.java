@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 /**
  * Invariant: event != null 
@@ -66,6 +65,7 @@ public class Ticket {
     }
 
     public void setAccount(Account account) {
+        assert account.contains(this);
         this.account = account;
     }
 

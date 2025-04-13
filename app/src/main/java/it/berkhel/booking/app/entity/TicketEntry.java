@@ -18,6 +18,7 @@ import jakarta.persistence.Transient;
 @Entity
 public class TicketEntry {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -44,6 +45,7 @@ public class TicketEntry {
     private Event event;
 
 
+    public static enum State { PENDING, FULFILLED }
     private State state;
 
     @ManyToOne
@@ -80,6 +82,29 @@ public class TicketEntry {
 
     void setPurchase(Purchase purchase) {
         this.purchase = purchase;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEvent(Event event) {
+        assert event.getId().equals(eventId) : "EventId "+eventId + " != " + event.getId();
+        this.event = event;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setTicket(Ticket ticket) {
+        assert state == State.PENDING;
+        this.ticket = ticket;
+        this.state = State.FULFILLED;
     }
 
 
@@ -120,30 +145,6 @@ public class TicketEntry {
     }
 
 
-    public State getState() {
-        return state;
-    }
 
-    public String getEventId() {
-        return eventId;
-    }
-
-    public void setEvent(Event event) {
-        assert event.getId().equals(eventId) : "EventId "+eventId + " != " + event.getId();
-        this.event = event;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setTicket(Ticket ticket) {
-        assert state == State.PENDING;
-        this.ticket = ticket;
-        this.state = State.FULFILLED;
-
-    }
-
-    public static enum State { PENDING, FULFILLED }
     
 }
