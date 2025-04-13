@@ -19,8 +19,6 @@ import jakarta.persistence.Transient;
  * Invariant: state == "Pending" && ticket == null 
  *         || state == "Fulfilled" && ticket != null && ticket.getAccount() != ticket.getEvent().getAccount()
  */
-
-
 @Entity
 public class TicketEntry {
 
@@ -50,7 +48,7 @@ public class TicketEntry {
     private Event event;
 
 
-    private String state;
+    private State state;
 
     @ManyToOne
     private Ticket ticket;
@@ -64,7 +62,7 @@ public class TicketEntry {
         }
         this.eventId = eventId;
         this.attendee = attendee;
-        this.state = "Pending";
+        this.state = State.PENDING;
     }
 
 
@@ -88,16 +86,6 @@ public class TicketEntry {
         this.purchase = purchase;
     }
 
-    void fulfill(Ticket ticket){
-        if(ticket != null && !ticket.getAccount().equals(ticket.getEvent().getAccount())){
-            this.state = "Fulfilled";
-        }
-        ticket.setAttendee(attendee);
-        this.ticket = ticket;
-
-        assert this.state.equals("Fulfilled") : "Ticket entry not fulfilled!";
-
-    }
 
     @Override
     public String toString() {
@@ -136,7 +124,7 @@ public class TicketEntry {
     }
 
 
-    public String getState() {
+    public State getState() {
         return state;
     }
 
@@ -145,13 +133,21 @@ public class TicketEntry {
     }
 
     public void setEvent(Event event) {
-        //assert event.getId().equals(eventId) : "EventId "+eventId + " != " + event.getId();
-
+        assert event.getId().equals(eventId) : "EventId "+eventId + " != " + event.getId();
         this.event = event;
     }
 
     public Event getEvent() {
         return event;
     }
+
+    public void setTicket(Ticket ticket) {
+        assert state == State.PENDING;
+        this.ticket = ticket;
+        this.state = State.FULFILLED;
+
+    }
+
+    public static enum State { PENDING, FULFILLED }
     
 }

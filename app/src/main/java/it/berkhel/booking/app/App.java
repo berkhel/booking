@@ -40,7 +40,7 @@ public class App implements ForBooking, ForEvents {
 
     @Override
     public Purchase callPurchase(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
-        linkPersistentEntities(purchase);
+        linkWithStorageEntities(purchase);
         return purchase(purchase);
     }
 
@@ -50,7 +50,7 @@ public class App implements ForBooking, ForEvents {
         return purchase;
     }
 
-    private void linkPersistentEntities(Purchase purchase) throws EventNotFoundException {
+    private void linkWithStorageEntities(Purchase purchase) throws EventNotFoundException {
 
         Account account = storage.getAccountById(purchase.getAccountId()).orElseGet(() -> {
             Account newAccount = new Account(purchase.getAccountId());

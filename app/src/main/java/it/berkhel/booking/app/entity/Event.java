@@ -19,7 +19,7 @@ import jakarta.persistence.Version;
 
 /**
  * Event is an account of seats created by the event organizer 
- * it is also a sort of a ruler and posting register for its account
+ * it is also a ruler and posting register for its account
  * Invariant: account != null
  *         && tickets.size() > 0
  *         && account.tickets.size() == tickets.size() + ticketEntries.filter(t->t.state=="Fulfilled").size()
@@ -72,6 +72,20 @@ public class Event {
 
     public Integer getRemainingSeats() {
         return account.getTickets().size();
+    }
+
+    public void ensureNoPreviousEntriesForSameAttendee(Attendee attendee) throws DuplicateTicketException {
+        if (tickets.stream()
+        .anyMatch(ticket -> attendee.equals(ticket.getAttendee()))) {
+            throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
+                    + attendee.getId() + " and event " + id);
+        }
+    }
+
+    public void ensureTicketAvailability() throws SoldoutException {
+        if(account.getTickets().size() == 0){
+            throw new SoldoutException("Sorry, no enough seats in event " + id + " for current request");
+        }
     }
 
     @Override

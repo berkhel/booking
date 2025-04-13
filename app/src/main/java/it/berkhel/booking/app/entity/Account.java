@@ -70,33 +70,18 @@ public class Account {
 
     public void claim(TicketEntry ticketEntry) throws SoldoutException, DuplicateTicketException{
         Event event = ticketEntry.getEvent();
-        ensureNoPreviousEntriesForSameAttendeeAndEvent(ticketEntry.getAttendee(), event);
-        ensureTicketAvailability(event);
-        Ticket movedTicket = event.getAccount().moveFirstTicket(this);
-        ticketEntry.fulfill(movedTicket);
+        event.ensureNoPreviousEntriesForSameAttendee(ticketEntry.getAttendee());
+        event.ensureTicketAvailability();
+        event.getAccount().moveFirstTicketTo(this, ticketEntry);
     }
 
 
-    private void ensureNoPreviousEntriesForSameAttendeeAndEvent(Attendee attendee, Event event) throws DuplicateTicketException {
-        if (tickets.stream()
-        .filter(ticket -> ticket.getEvent().equals(event))
-        .anyMatch(ticket -> attendee.equals(ticket.getAttendee()))) {
-            throw new DuplicateTicketException("Ticket was already purchased in a previous session for attendee "
-                    + attendee.getId() + " and event " + event.getId());
-        }
-    }
 
-
-    private void ensureTicketAvailability(Event event) throws SoldoutException {
-        if(event.getAccount().getTickets().size() == 0){
-            throw new SoldoutException("Sorry, no enough seats in event " + event.getId() + " for current request");
-        }
-    }
-
-    public Ticket moveFirstTicket(Account otherAccount) throws SoldoutException{
+    public Ticket moveFirstTicketTo(Account otherAccount, TicketEntry pendingTicketEntry) throws SoldoutException{
         Ticket movingTicket = tickets.removeFirst();
         otherAccount.addTicket(movingTicket);
         movingTicket.setAccount(otherAccount);
+        movingTicket.fulfill(pendingTicketEntry);
         return movingTicket;
     }
 

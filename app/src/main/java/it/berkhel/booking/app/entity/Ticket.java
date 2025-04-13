@@ -69,4 +69,12 @@ public class Ticket {
         this.account = account;
     }
 
+    void fulfill(TicketEntry entry) {
+        if (!account.equals(event.getAccount())) {
+            setAttendee(entry.getAttendee());
+            entry.setTicket(this);
+        }
+        assert entry.getState().equals(TicketEntry.State.FULFILLED) : "Ticket entry not fulfilled!";
+    }
+
 }
