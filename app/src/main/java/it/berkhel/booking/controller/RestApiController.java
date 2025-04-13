@@ -1,9 +1,5 @@
 package it.berkhel.booking.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,10 +17,8 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 
 import it.berkhel.booking.app.actionport.ForBooking;
 import it.berkhel.booking.app.actionport.ForEvents;
-import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
-import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.ConcurrentPurchaseException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -35,7 +29,6 @@ import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.EventDto;
 import it.berkhel.booking.dto.PurchaseDto;
 import it.berkhel.booking.dto.PurchaseRequest;
-import it.berkhel.booking.dto.TicketDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;

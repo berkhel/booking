@@ -1,12 +1,10 @@
 package it.berkhel.booking.dto;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
@@ -15,8 +13,6 @@ import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
-import it.berkhel.booking.repository.AccountRepository;
-import it.berkhel.booking.repository.EventRepository;
 
 @Component
 public class DtoMapper {
@@ -38,7 +34,6 @@ public class DtoMapper {
     }
 
     public TicketEntry toObject(TicketDto ticketDto) throws EventNotFoundException {
-        //Optional<Event> event = eventRepo.findById(ticketDto.getEventId());
         TicketEntry ticket = new TicketEntry(
                 ticketDto.getEventId(),
                 toObject(ticketDto.getAttendee()));

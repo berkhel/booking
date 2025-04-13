@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import it.berkhel.booking.app.drivenport.ForStorage;
 import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Event;

@@ -1,6 +1,5 @@
 package it.berkhel.booking.dto;
 
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

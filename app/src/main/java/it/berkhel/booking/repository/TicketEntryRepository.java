@@ -1,7 +1,5 @@
 package it.berkhel.booking.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import it.berkhel.booking.app.entity.TicketEntry;
