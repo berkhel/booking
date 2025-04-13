@@ -29,6 +29,8 @@ import it.berkhel.booking.dto.DtoMapper;
 import it.berkhel.booking.dto.EventDto;
 import it.berkhel.booking.dto.PurchaseDto;
 import it.berkhel.booking.dto.PurchaseRequest;
+import it.berkhel.booking.service.TransactionalBookingService;
+import it.berkhel.booking.service.TransactionalEventService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
@@ -36,34 +38,30 @@ import jakarta.validation.Valid;
 @RestController
 public class RestApiController {
 
-    private final ForBooking bookingManager;
-    private final ForEvents eventManager;
+    private final TransactionalBookingService bookingService;
+    private final TransactionalEventService eventService;
 
     private final Logger log = LoggerFactory.getLogger(RestApiController.class);
     private final DtoMapper dtoMapper;
 
-    public RestApiController(ForBooking bookingManager, ForEvents eventManager, DtoMapper dtoMapper){
-        this.bookingManager = bookingManager;
-        this.eventManager = eventManager;
+    public RestApiController(TransactionalBookingService bookingService, TransactionalEventService eventService, DtoMapper dtoMapper){
+        this.bookingService = bookingService;
+        this.eventService = eventService;
         this.dtoMapper = dtoMapper;
     }
 
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws Exception {
         Purchase purchase = dtoMapper.toObject(purchaseRequest);
-        process(purchase);
+        bookingService.process(purchase);
         return dtoMapper.toDto(purchase);
     }
 
-    @Transactional
-    public void process(Purchase purchase) throws Exception{
-        bookingManager.process(purchase);
-    }
 
 
     @PostMapping(value = "/event", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Event book(@Valid @RequestBody(required = true) EventDto eventDto) throws EventAlreadyExistsException {
-        return eventManager.createEvent(dtoMapper.toObject(eventDto));
+        return eventService.create(dtoMapper.toObject(eventDto));
     }
 
     @ExceptionHandler({
