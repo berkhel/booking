@@ -42,7 +42,7 @@ public class Purchase {
 
     private Purchase(){} // for JPA
     
-    public Purchase(String accountId, Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException{
+    public Purchase(String accountId, Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException {
         validateSize(ticketEntries);
         for(var entry : ticketEntries){
             entry.setPurchase(this);
@@ -62,7 +62,7 @@ public class Purchase {
         }
     }
 
-    public void process() throws SoldoutException, DuplicateTicketException, EventNotFoundException{
+    public void process() throws SoldoutException, DuplicateTicketException {
         assert account != null;
         for(TicketEntry entry : ticketEntries){
             account.claim(entry);

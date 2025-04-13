@@ -51,7 +51,7 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws Exception {
+    public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
         Purchase purchase = dtoMapper.toObject(purchaseRequest);
         bookingService.process(purchase);
         return dtoMapper.toDto(purchase);
