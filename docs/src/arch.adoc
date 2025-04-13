@@ -1,4 +1,4 @@
-= Traccia 2: Prenotazione biglietti
+= Ticketing Booking System
 :customcss: resources/style/style.css
 :mermaid-format: svg
 :mermaid-theme: dark
