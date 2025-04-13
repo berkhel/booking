@@ -53,26 +53,25 @@ class UnitTest {
     void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
         App app = App.init(theStorage, messageBroker);
 
-        app.purchase(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
+        app.doProcess(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
 
         verify(theStorage).save(Mockito.any(Purchase.class));
     }
 
-    // @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
-    //     when(aStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(new Event("EV0000", 1)));
-    //     when(aStorage.getAccountById(Mockito.anyString())).thenReturn(Optional.of(new Account("TEST")));
-    //     ForBooking app = App.init(aStorage, theMessageBroker);
+    @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
+        App app = App.init(aStorage, theMessageBroker);
 
-    //     app.purchase(new Purchase("test" ,Set.of(Fake.ticket())), "TEST");
+        app.doProcess(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
 
-    //     verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
-    // }
+        verify(theMessageBroker).sendMessage(Mockito.any(), Mockito.any());
+    }
 
     @Test 
     void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
         App app = App.init(aStorage, aMessageBroker);
+        Purchase thePurchase = Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee())));
 
-        Purchase thePurchase = app.purchase(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
+        app.doProcess(thePurchase);
 
         assertThat(thePurchase, any(Purchase.class));
     }
@@ -83,7 +82,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(Fake.purchase(Fake.account(), fourTickets));
+            app.doProcess(Fake.purchase(Fake.account(), fourTickets));
         });
     }
 
@@ -93,7 +92,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
-            app.purchase(Fake.purchase(Fake.account(), threeTickets));
+            app.doProcess(Fake.purchase(Fake.account(), threeTickets));
         });
 
     }
@@ -104,7 +103,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
-            app.purchase(Fake.purchase(Fake.account(), noTickets));
+            app.doProcess(Fake.purchase(Fake.account(), noTickets));
         });
 
     }
@@ -115,7 +114,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
-            app.purchase(Fake.purchase(Fake.account(), nullTickets));
+            app.doProcess(Fake.purchase(Fake.account(), nullTickets));
         });
 
     }
@@ -127,7 +126,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
-            app.purchase(Fake.purchase(Fake.account(), Set.of(arrivedLate)));
+            app.doProcess(Fake.purchase(Fake.account(), Set.of(arrivedLate)));
         });
     }
 
@@ -139,7 +138,7 @@ class UnitTest {
 
         App app = App.init(aStorage, aMessageBroker);
 
-        app.purchase(Fake.purchase(Fake.account(), Set.of(newTicket)));
+        app.doProcess(Fake.purchase(Fake.account(), Set.of(newTicket)));
 
         assertEquals(9, event.getRemainingSeats());
 
@@ -175,7 +174,7 @@ class UnitTest {
         App app = App.init(aStorage, aMessageBroker);
 
         assertThrows(RuntimeException.class, () -> {
-            app.purchase(Fake.purchase(Fake.account(), Set.of(ticketA, ticketB)));
+            app.doProcess(Fake.purchase(Fake.account(), Set.of(ticketA, ticketB)));
         });
 
 

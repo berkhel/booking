@@ -39,19 +39,23 @@ public class App implements ForBooking, ForEvents {
     }
 
     @Override
-    public Purchase callPurchase(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
-        linkWithStorageEntities(purchase);
-        return purchase(purchase);
-    }
-
-    Purchase purchase(Purchase purchase) throws SoldoutException, DuplicateTicketException, EventNotFoundException, ConcurrentPurchaseException{
-        purchase.process();
-        storage.save(purchase);
+    public Purchase process(Purchase purchase) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
+        prepareBeforeProcess(purchase);
+        doProcess(purchase);
         return purchase;
     }
 
-    private void linkWithStorageEntities(Purchase purchase) throws EventNotFoundException {
+    void doProcess(Purchase purchase) throws SoldoutException, DuplicateTicketException, EventNotFoundException, ConcurrentPurchaseException{
+        purchase.process();
+        storage.save(purchase);
+        sendMessageAbout(purchase);
+    }
 
+    private void prepareBeforeProcess(Purchase purchase) throws EventNotFoundException {
+        linkWithEntitiesFromStorage(purchase);
+    }
+
+    private void linkWithEntitiesFromStorage(Purchase purchase) throws EventNotFoundException {
         Account account = storage.getAccountById(purchase.getAccountId()).orElseGet(() -> {
             Account newAccount = new Account(purchase.getAccountId());
             storage.saveAccount(newAccount);
@@ -67,7 +71,6 @@ public class App implements ForBooking, ForEvents {
             entry.setEvent(event);
             event.addTicketEntry(entry);
         }
-
     }
 
     public void sendMessageAbout(Purchase purchase) {
@@ -75,11 +78,6 @@ public class App implements ForBooking, ForEvents {
             messageSender.sendMessage(entry.getAttendee(), "Here's your ticket: " + entry.getId())
         );
     }
-
-    
-
-
-
 
 
     @Override
