@@ -66,6 +66,13 @@ public class Purchase {
         }
     }
 
+    public void process() throws SoldoutException, DuplicateTicketException, EventNotFoundException{
+        assert account != null;
+        for(TicketEntry entry : ticketEntries){
+            account.claim(entry);
+        };
+    }
+
     public String getId() {
         return id;
     }

@@ -45,7 +45,7 @@ public class App implements ForBooking, ForEvents {
     }
 
     public Purchase purchase(Purchase purchase) throws SoldoutException, DuplicateTicketException, EventNotFoundException, ConcurrentPurchaseException{
-        purchase.getAccount().process(purchase, storage);
+        purchase.process();
         storage.save(purchase);
         return purchase;
     }

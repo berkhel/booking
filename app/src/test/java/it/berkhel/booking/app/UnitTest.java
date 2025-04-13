@@ -122,7 +122,7 @@ class UnitTest {
 
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        TicketEntry arrivedLate = Fake.ticket(new Event("EVSLDOUT1", new Random().nextInt(10)), Fake.attendee());
+        TicketEntry arrivedLate = Fake.ticket(new Event("EVSLDOUT1", 0), Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
 
