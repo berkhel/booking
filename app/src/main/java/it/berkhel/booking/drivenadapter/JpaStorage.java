@@ -39,50 +39,15 @@ public class JpaStorage implements ForStorage {
 
     @Override
     public Purchase save(Purchase purchase) throws ConcurrentPurchaseException {
-        // Account account = purchase.getAccount();
-        // accountRepo.saveAndFlush(account);
-        // for (var ticketEntry : purchase.getTicketEntries()) {
-        // var ticket = ticketEntry.getTicket();
-        // attendeeRepo.saveAndFlush(ticket.getAttendee());
-        // try {
-        // eventRepo.saveAndFlush(ticketEntry.getTicket().getEvent());
-        // } catch (ObjectOptimisticLockingFailureException ex) {
-        // throw new ConcurrentPurchaseException("Cannot purchase tickets
-        // concurrently");
-        // }
-        // purchaseRepo.save(purchase);
-        // ticketEntryRepo.saveAndFlush(ticketEntry);
-        // }
-
-        // 1. Save Account first
         Account account = purchase.getAccount();
-        accountRepo.saveAndFlush(account);
-
-        // 2. Save all Attendees
-        for (TicketEntry entry : purchase.getTicketEntries()) {
-            attendeeRepo.saveAndFlush(entry.getAttendee());
-        }
-
-        // 3. Save Purchase (now that Account is saved)
-        purchaseRepo.saveAndFlush(purchase);
-
-        // 4. Process each ticket entry and associated Event/Ticket
+        accountRepo.saveAndFlush(account); //can be new or old
+        purchaseRepo.save(purchase); //always new
         for (TicketEntry ticketEntry : purchase.getTicketEntries()) {
-            // 5. Save/update Event (with optimistic locking)
+            attendeeRepo.saveAndFlush(ticketEntry.getAttendee()); //can be new or old, but unmanaged
             Event event = ticketEntry.getTicket().getEvent();
-            try {
-                eventRepo.saveAndFlush(event);
-            } catch (ObjectOptimisticLockingFailureException ex) {
-                throw new ConcurrentPurchaseException("Cannot purchase tickets concurrently");
-            }
-
-            // 6. Save Ticket if needed (might be handled by cascade)
-            if (ticketRepo != null) {
-                ticketRepo.saveAndFlush(ticketEntry.getTicket());
-            }
-
-            // 7. Finally save TicketEntry
-            ticketEntryRepo.saveAndFlush(ticketEntry);
+            eventRepo.save(event); //always old
+            ticketRepo.save(ticketEntry.getTicket()); //always old
+            ticketEntryRepo.save(ticketEntry); //always new
         }
 
         return purchase;

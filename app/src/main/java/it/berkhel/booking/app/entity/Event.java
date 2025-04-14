@@ -31,9 +31,9 @@ public class Event {
     @Id
     private String id;
 
-    @Version
-    @Column(columnDefinition = "integer DEFAULT 0")
-    private Long version; // for optimistic locking
+    // @Version
+    // @Column(columnDefinition = "integer DEFAULT 0")
+    // private Long version; // for optimistic locking
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<TicketEntry> ticketEntries = new HashSet<>();

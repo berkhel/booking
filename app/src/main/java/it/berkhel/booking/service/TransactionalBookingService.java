@@ -1,6 +1,7 @@
 package it.berkhel.booking.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import it.berkhel.booking.app.actionport.ForBooking;
@@ -11,7 +12,7 @@ import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 
-@Transactional
+@Transactional(isolation = Isolation.REPEATABLE_READ)
 @Service
 public class TransactionalBookingService {
 
