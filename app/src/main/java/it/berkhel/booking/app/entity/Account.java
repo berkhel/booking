@@ -10,14 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 /**
- * accounts don't have memory of transaction, they just contains Tickets
- * they also have an (implicit) owner who is the user or the event organizer
- * in order to move a ticket in there, the ticket should exist first and
- * should be also go together with a pending ticket entry
- * 
- * ticket of another account + pending ticket entry => ticket + fulfilled ticket entry
- * this mean that only an Account can fulfill a ticket entry, and then a ticket entry need
- * to fulfill need to point to a ticket that has an account different from the event account
+ * Responsibility: Keep the tickets balance, Keeps the transaction history
+ * Invariant: tickets != null ; history != null 
  */
 @Entity
 public class Account {
@@ -35,15 +29,19 @@ public class Account {
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "account")
-    private List<Purchase> purchases;
+    private List<Purchase> history;
 
     private Account(){}
 
 
     public Account(String id){
         this.id = id;
-        this.purchases = new ArrayList<Purchase>();
+        this.history = new ArrayList<Purchase>();
         this.tickets = new ArrayList<Ticket>();
+    }
+
+    public void addPurchase(Purchase purchase) {
+        history.add(purchase);
     }
 
     public void addTickets(List<Ticket> tickets){
@@ -78,9 +76,6 @@ public class Account {
     }
 
 
-    public void addPurchase(Purchase purchase) {
-        purchases.add(purchase);
-    }
 
 
     public boolean contains(Ticket ticket) {

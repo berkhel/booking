@@ -7,6 +7,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+/*
+ * Anemic entity
+ */
 @Entity
 public class Attendee {
 

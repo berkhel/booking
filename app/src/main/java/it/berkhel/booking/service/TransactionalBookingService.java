@@ -12,7 +12,7 @@ import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 
-@Transactional(isolation = Isolation.REPEATABLE_READ)
+@Transactional(isolation = Isolation.REPEATABLE_READ) //tickets only change account, never being created or deleted
 @Service
 public class TransactionalBookingService {
 

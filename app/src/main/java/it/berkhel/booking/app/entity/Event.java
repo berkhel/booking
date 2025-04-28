@@ -18,8 +18,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Version;
 
 /**
- * Event is an account of seats created by the event organizer 
- * it is also a ruler and posting register for its account
+ * Responsibility: create the tickets  
  * Invariant: account != null
  *         && tickets.size() > 0
  *         && account.tickets.size() == tickets.size() + ticketEntries.filter(t->t.state=="Fulfilled").size()
@@ -35,8 +34,6 @@ public class Event {
     // @Column(columnDefinition = "integer DEFAULT 0")
     // private Long version; // for optimistic locking
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    private Set<TicketEntry> ticketEntries = new HashSet<>();
 
 
     @Column(name = "max_seats")
@@ -89,9 +86,6 @@ public class Event {
         return account.ticketsCount();
     }
     
-    public void addTicketEntry(TicketEntry entry){
-        ticketEntries.add(entry);
-    }
 
     private List<Ticket> createTickets(Integer ticketQty) {
 

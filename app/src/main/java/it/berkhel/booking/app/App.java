@@ -69,7 +69,6 @@ public class App implements ForBooking, ForEvents {
             Event event = storage.getEventById(entry.getEventId())
                     .orElseThrow(() -> new EventNotFoundException("Event not found"));
             entry.setEvent(event);
-            event.addTicketEntry(entry);
         }
     }
 
