@@ -1,10 +1,8 @@
 package it.berkhel.booking.app.entity;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -17,14 +15,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
 
-/**
- * Responsibility: create the tickets  
- * Invariant: account != null
- *         && tickets.size() > 0
- *            
- */
+
 @Entity
 public class Event {
 
@@ -70,7 +62,7 @@ public class Event {
         this.account = new Account(id);
         this.seatGenerator = seatGenerator;
         this.tickets = new LinkedList<>();
-        createTickets(maxSeats);
+        generateTickets(maxSeats);
         this.account.addTickets(tickets);
     }
 
@@ -98,48 +90,17 @@ public class Event {
         return id;
     }
 
+
     public Integer getRemainingSeats() {
         return account.ticketsCount();
     }
-    
 
 
-    @Override
-    public int hashCode() {
-        final int prime = 17;
-        return prime + ((id == null) ? 0 : id.hashCode());
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Event other = (Event) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + getRemainingSeats() + "]";
-    }
-
-
-    private void createTickets(Integer ticketQty) {
-
-
+    private void generateTickets(Integer ticketQty) {
         while(ticketQty-- > 0){
             tickets.add(new Ticket(this));
         }
-
     }
 
 
@@ -152,6 +113,10 @@ public class Event {
 
 
 
+    @Override
+    public String toString() {
+        return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + getRemainingSeats() + "]";
+    }
 
 
 

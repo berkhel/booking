@@ -11,10 +11,6 @@ import jakarta.persistence.PostLoad;
 import jakarta.persistence.Transient;
 
 
-/**
- * Invariant: state == "Pending" && ticket == null 
- *         || state == "Fulfilled" && ticket != null && ticket.getAccount() != ticket.getEvent().getAccount()
- */
 @Entity
 public class TicketEntry {
 
@@ -113,14 +109,6 @@ public class TicketEntry {
         return "Ticket [id=" + id + "]";
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 29;
-        int result = 1;
-        result = prime * result + ((attendee == null) ? 0 : attendee.hashCode());
-        result = prime * result + ((eventId == null) ? 0 : eventId.hashCode());
-        return result;
-    }
 
     @Override
     public boolean equals(Object obj) {

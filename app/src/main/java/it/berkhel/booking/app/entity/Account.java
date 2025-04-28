@@ -9,10 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-/**
- * Responsibility: Keep the tickets balance, Keeps the transaction history
- * Invariant: tickets != null ; history != null 
- */
 @Entity
 public class Account {
     

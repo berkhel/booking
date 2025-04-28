@@ -7,9 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-/*
- * Anemic entity
- */
 @Entity
 public class Attendee {
 
@@ -58,11 +55,6 @@ public class Attendee {
     }
 
 
-    @Override
-    public String toString() {
-        return "Attendee [id=" + id + ", firstName=" + firstName + ", email=" + email +", lastName=" + lastName + ", birthDate=" + birthDate
-                + "]";
-    }
 
     public String getId() {
         return id;
@@ -85,9 +77,9 @@ public class Attendee {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        return prime + ((id == null) ? 0 : id.hashCode());
+    public String toString() {
+        return "Attendee [id=" + id + ", firstName=" + firstName + ", email=" + email +", lastName=" + lastName + ", birthDate=" + birthDate
+                + "]";
     }
 
     @Override

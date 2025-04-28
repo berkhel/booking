@@ -5,7 +5,6 @@ import java.util.Set;
 
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
-import it.berkhel.booking.app.exception.EventNotFoundException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,11 +15,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.Transient;
 
-/**
- * Purchase is the transaction that contains the list of entries that records movements from the event account
- * Responsibility: Contain entries, ensure transaction rules
- * Invariant: ticketEntries.size() > 0
- */
 @Entity
 public class Purchase {
 
@@ -54,8 +48,6 @@ public class Purchase {
         this.ticketEntries = ticketEntries;
         this.accountId = accountId;
     }
-
-
 
 
     public void process() throws SoldoutException, DuplicateTicketException {

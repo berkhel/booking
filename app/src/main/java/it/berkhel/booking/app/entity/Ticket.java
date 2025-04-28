@@ -8,12 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-/**
- * Invariant: event != null 
- *         && account != null
- *         && seat != null
- *         && event.getTickets().noneMatch(t -> t.seat == seat)
- */
 @Entity
 public class Ticket {
     
