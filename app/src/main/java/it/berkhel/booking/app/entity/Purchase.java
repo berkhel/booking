@@ -57,14 +57,6 @@ public class Purchase {
 
 
 
-    private void validateSize(Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException {
-        if(ticketEntries.size() < 1){
-            throw new BadPurchaseRequestException("At least one ticket must be included in the request");
-        }
-        if(ticketEntries.size() > 3){
-            throw new BadPurchaseRequestException("Cannot purchase more than 3 tickets");
-        }
-    }
 
     public void process() throws SoldoutException, DuplicateTicketException {
         assert account != null;
