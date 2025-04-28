@@ -25,28 +25,35 @@ public class Account {
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "account")
-    private List<Purchase> history;
+    private List<Purchase> commitments;
 
     private Account(){}
 
 
+    public Account(String id, List<Ticket> tickets){
+        this(id);
+        this.addTickets(tickets);
+    }
+
     public Account(String id){
         this.id = id;
-        this.history = new ArrayList<Purchase>();
+        this.commitments = new ArrayList<Purchase>();
         this.tickets = new ArrayList<Ticket>();
     }
 
     public void addPurchase(Purchase purchase) {
-        history.add(purchase);
+        commitments.add(purchase);
     }
 
-    public void addTickets(List<Ticket> tickets){
-        this.tickets.addAll(tickets);
+    private void addTickets(List<Ticket> tickets){
+        tickets.stream().forEach(this::addTicket);
     }
 
-    public void addTicket(Ticket ticket){
+    private void addTicket(Ticket ticket){
         this.tickets.add(ticket);
+        ticket.setAccount(this);
     }
+
 
 
     public Integer ticketsCount() {
@@ -63,11 +70,14 @@ public class Account {
 
 
 
+    /**
+     * a ticket entry is required to move a ticket from the event (pool) account
+     */
     public Ticket moveFirstTicketTo(Account otherAccount, TicketEntry pendingTicketEntry) throws SoldoutException{
+        assert pendingTicketEntry != null : "ticket entry is required on moveFirstTicketTo";
         Ticket movingTicket = tickets.removeFirst();
         otherAccount.addTicket(movingTicket);
-        movingTicket.setAccount(otherAccount);
-        movingTicket.fulfill(pendingTicketEntry);
+        movingTicket.assign(pendingTicketEntry);
         return movingTicket;
     }
 

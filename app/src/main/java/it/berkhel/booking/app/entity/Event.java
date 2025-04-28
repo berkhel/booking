@@ -59,11 +59,10 @@ public class Event {
     public Event(String id, Integer maxSeats, Supplier<String> seatGenerator){
         this.id = id;
         this.maxSeats = maxSeats;
-        this.account = new Account(id);
         this.seatGenerator = seatGenerator;
         this.tickets = new LinkedList<>();
         generateTickets(maxSeats);
-        this.account.addTickets(tickets);
+        this.account = new Account(id, this.tickets);
     }
 
 

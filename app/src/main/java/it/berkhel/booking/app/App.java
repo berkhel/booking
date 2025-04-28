@@ -73,7 +73,7 @@ public class App implements ForBooking, ForEvents {
     }
 
     public void sendMessageAbout(Purchase purchase) {
-        purchase.getTicketEntries().stream().filter(entry -> entry.getState().equals(TicketEntry.State.FULFILLED)).forEach(entry ->
+        purchase.getTicketEntries().stream().filter(entry -> entry.getState().equals(TicketEntry.State.ASSIGNED)).forEach(entry ->
             messageSender.sendMessage(entry.getAttendee(), "Here's your ticket: " + entry.getId())
         );
     }

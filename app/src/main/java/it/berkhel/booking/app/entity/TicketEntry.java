@@ -41,7 +41,7 @@ public class TicketEntry {
     private Event event;
 
 
-    public static enum State { PENDING, FULFILLED }
+    public static enum State { PENDING, ASSIGNED, PAYED }
     private State state;
 
     @ManyToOne
@@ -100,7 +100,7 @@ public class TicketEntry {
     public void setTicket(Ticket ticket) {
         assert state == State.PENDING;
         this.ticket = ticket;
-        this.state = State.FULFILLED;
+        this.state = State.ASSIGNED;
     }
 
 
