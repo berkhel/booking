@@ -53,7 +53,7 @@ public class Purchase {
     public void process() throws SoldoutException, DuplicateTicketException {
         assert account != null;
         for(TicketEntry entry : ticketEntries){
-            account.claim(entry);
+            entry.processFor(account);
         };
     }
 

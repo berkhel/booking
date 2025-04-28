@@ -2,7 +2,6 @@ package it.berkhel.booking.app.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -61,20 +60,9 @@ public class Account {
     }
 
 
-    public void claim(TicketEntry ticketEntry) throws SoldoutException, DuplicateTicketException{
-        Event event = ticketEntry.getEvent();
-        event.ensureNoPreviousEntriesForSameAttendee(ticketEntry.getAttendee());
-        event.ensureTicketAvailability();
-        event.getAccount().moveFirstTicketTo(this, ticketEntry);
-    }
 
-
-
-    /**
-     * a ticket entry is required to move a ticket from the event (pool) account
-     */
     public Ticket moveFirstTicketTo(Account otherAccount, TicketEntry pendingTicketEntry) throws SoldoutException{
-        assert pendingTicketEntry != null : "ticket entry is required on moveFirstTicketTo";
+        assert pendingTicketEntry != null : "ticket entry is required for moving ticket from account";
         Ticket movingTicket = tickets.removeFirst();
         otherAccount.addTicket(movingTicket);
         movingTicket.assign(pendingTicketEntry);

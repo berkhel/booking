@@ -1,6 +1,8 @@
 package it.berkhel.booking.app.entity;
 
+import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.EventNotFoundException;
+import it.berkhel.booking.app.exception.SoldoutException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -131,6 +133,11 @@ public class TicketEntry {
             return false;
         return true;
     }
+
+    public void processFor(Account account) throws SoldoutException, DuplicateTicketException {
+        event.accept(this, account);
+    }
+
 
 
 

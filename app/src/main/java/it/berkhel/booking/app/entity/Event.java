@@ -94,7 +94,15 @@ public class Event {
         return account.ticketsCount();
     }
 
+    public void accept(TicketEntry ticketEntry, Account requestingAccount) throws SoldoutException, DuplicateTicketException {
+        validate(ticketEntry);
+        account.moveFirstTicketTo(requestingAccount, ticketEntry);
+    }
 
+    public void validate(TicketEntry ticketEntry) throws DuplicateTicketException, SoldoutException{
+        ensureNoPreviousEntriesForSameAttendee(ticketEntry.getAttendee());
+        ensureTicketAvailability();
+    }
 
     private void generateTickets(Integer ticketQty) {
         while(ticketQty-- > 0){
