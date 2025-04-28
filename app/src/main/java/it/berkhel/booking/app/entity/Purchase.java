@@ -1,5 +1,6 @@
 package it.berkhel.booking.app.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
@@ -17,6 +18,7 @@ import jakarta.persistence.Transient;
 
 /**
  * Purchase is the transaction that contains the list of entries that records movements from the event account
+ * Responsibility: Contain entries, ensure transaction rules
  * Invariant: ticketEntries.size() > 0
  */
 @Entity
@@ -42,8 +44,10 @@ public class Purchase {
 
     private Purchase(){} // for JPA
     
-    public Purchase(String accountId, Set<TicketEntry> ticketEntries) throws BadPurchaseRequestException {
-        validateSize(ticketEntries);
+    public Purchase(String accountId, Set<TicketEntry> ticketEntries, List<PurchaseRule> rules) throws BadPurchaseRequestException {
+        for(var rule : rules){
+            rule.validate(ticketEntries);
+        }
         for(var entry : ticketEntries){
             entry.setPurchase(this);
         };

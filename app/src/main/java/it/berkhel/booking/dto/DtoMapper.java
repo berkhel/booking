@@ -1,6 +1,7 @@
 package it.berkhel.booking.dto;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.SizePurchaseRule;
 import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -29,7 +31,7 @@ public class DtoMapper {
                 throw new DuplicateTicketException("Duplicate ticket for attendee " + dtoTicket.getAttendee().id + " and event " + dtoTicket.getEventId());
             }
         }
-        return new Purchase(purchaseRequest.accountId, tickets);
+        return new Purchase(purchaseRequest.accountId, tickets, List.of(new SizePurchaseRule()));
 
     }
 

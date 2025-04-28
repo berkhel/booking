@@ -21,7 +21,6 @@ import jakarta.persistence.Version;
  * Responsibility: create the tickets  
  * Invariant: account != null
  *         && tickets.size() > 0
- *         && account.tickets.size() == tickets.size() + ticketEntries.filter(t->t.state=="Fulfilled").size()
  *            
  */
 @Entity

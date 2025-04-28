@@ -1,6 +1,7 @@
 package it.berkhel.booking.app.fixture;
 
 
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import it.berkhel.booking.app.entity.Account;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
+import it.berkhel.booking.app.entity.SizePurchaseRule;
 import it.berkhel.booking.app.entity.TicketEntry;
 import it.berkhel.booking.app.exception.BadPurchaseRequestException;
 import it.berkhel.booking.app.exception.DuplicateTicketException;
@@ -29,7 +31,7 @@ public class Fake {
     }
 
     public static Purchase purchase(Account account, Set<TicketEntry> entries) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException {
-        Purchase purchase = new Purchase(account.getId(), entries);
+        Purchase purchase = new Purchase(account.getId(), entries, List.of(new SizePurchaseRule()));
         purchase.setAccount(account);
         return purchase;
     }
