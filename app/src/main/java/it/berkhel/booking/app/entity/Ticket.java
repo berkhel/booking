@@ -39,11 +39,9 @@ public class Ticket {
 
     private Ticket(){} //for JPA
 
-    /**
-     * tickets can be created only when an event is created
-     */
-    public Ticket(Event event, String seat){
-        this.seat = seat;
+
+    public Ticket(Event event){
+        this.seat = event.nextSeat(); 
         this.event = event;
         this.account = event.getAccount();
     }

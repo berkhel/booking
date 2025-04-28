@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import it.berkhel.booking.app.drivenport.ForSendingMessage;
 import it.berkhel.booking.app.drivenport.ForStorage;
+import it.berkhel.booking.app.entity.AlphaNumSeatGenerator;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
@@ -115,7 +116,7 @@ class UnitTest {
 
     @Test
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        TicketEntry arrivedLate = Fake.ticket(new Event("EVSLDOUT1", 0), Fake.attendee());
+        TicketEntry arrivedLate = Fake.ticket(new Event("EVSLDOUT1", 0, new AlphaNumSeatGenerator()), Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
 
@@ -127,7 +128,7 @@ class UnitTest {
     @Test
     void new_ticket_should_decrease_available_seats_by_one(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         final String eventId = "EV0001";
-        Event event = new Event(eventId, 10);
+        Event event = new Event(eventId, 10, new AlphaNumSeatGenerator());
         TicketEntry newTicket = Fake.ticket(event, Fake.attendee());
 
         App app = App.init(aStorage, aMessageBroker);
@@ -161,7 +162,7 @@ class UnitTest {
 
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        Event event = new Event("0001", new Random().nextInt(10));
+        Event event = new Event("0001", new Random().nextInt(10), new AlphaNumSeatGenerator());
         TicketEntry ticketA = Fake.ticket(event, Attendee.createAttendee("AB01", "/", "/", "/", "/"));
         TicketEntry ticketB = Fake.ticket(event, Attendee.createAttendee("AB01", "/", "/", "/", "/"));
 

@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 import it.berkhel.booking.app.entity.Account;
+import it.berkhel.booking.app.entity.AlphaNumSeatGenerator;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
@@ -19,7 +20,7 @@ import it.berkhel.booking.app.exception.SoldoutException;
 public class Fake {
 
     public static Event event(){
-        return new Event("EVFAKE"+new Random().nextInt(), 10);
+        return new Event("EVFAKE"+new Random().nextInt(), 10, new AlphaNumSeatGenerator());
     }
 
     public static Attendee attendee(){

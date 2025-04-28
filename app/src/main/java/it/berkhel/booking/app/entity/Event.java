@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import it.berkhel.booking.app.exception.DuplicateTicketException;
 import it.berkhel.booking.app.exception.SoldoutException;
@@ -15,6 +16,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 
 /**
@@ -39,21 +41,36 @@ public class Event {
     private Integer maxSeats;
 
 
+    public Integer getMaxSeats() {
+        return maxSeats;
+    }
+
+
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
+
+
+    public List<Ticket> getTickets() {
+        return Collections.unmodifiableList(tickets);
+    }
 
 
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
 
+    @Transient
+    Supplier<String> seatGenerator;
+
     private Event(){} //for JPA
 
 
-    public Event(String id, Integer maxSeats){
+    public Event(String id, Integer maxSeats, Supplier<String> seatGenerator){
         this.id = id;
         this.maxSeats = maxSeats;
         this.account = new Account(id);
-        this.tickets = createTickets(maxSeats);
+        this.seatGenerator = seatGenerator;
+        this.tickets = new LinkedList<>();
+        createTickets(maxSeats);
         this.account.addTickets(tickets);
     }
 
@@ -86,33 +103,6 @@ public class Event {
     }
     
 
-    private List<Ticket> createTickets(Integer ticketQty) {
-
-        Character lastTicketLetter = 'A';
-        Integer lastTicketNumber = 0;
-
-        List<Ticket> tickets = new LinkedList<>();
-
-        while(ticketQty-- > 0){
-            if ((lastTicketLetter + lastTicketNumber) % 2 == 0) {
-                lastTicketNumber++;
-                if (lastTicketLetter > 'A') {
-                    lastTicketLetter = lastTicketLetter--;
-                }
-            } else {
-                lastTicketLetter++; 
-                if (lastTicketNumber > 0) {
-                    lastTicketNumber--;
-                }
-            }
-
-            tickets.add(new Ticket(this,lastTicketLetter + "" + lastTicketNumber));
-
-        }
-
-        return Collections.unmodifiableList(tickets);
-
-    }
 
     @Override
     public int hashCode() {
@@ -141,6 +131,28 @@ public class Event {
     public String toString() {
         return "Event [id=" + id + ", maxSeats=" + maxSeats + ", remainingSeats=" + getRemainingSeats() + "]";
     }
+
+
+    private void createTickets(Integer ticketQty) {
+
+
+        while(ticketQty-- > 0){
+            tickets.add(new Ticket(this));
+        }
+
+    }
+
+
+
+    public String nextSeat() {
+        assert maxSeats - tickets.size() > 0 : "Maximum number of tickets exceeded!";
+
+        return seatGenerator.get();
+    }
+
+
+
+
 
 
 

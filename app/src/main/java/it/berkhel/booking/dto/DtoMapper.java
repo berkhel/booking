@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import it.berkhel.booking.app.entity.AlphaNumSeatGenerator;
 import it.berkhel.booking.app.entity.Attendee;
 import it.berkhel.booking.app.entity.Event;
 import it.berkhel.booking.app.entity.Purchase;
@@ -43,7 +44,7 @@ public class DtoMapper {
     }
 
     public Event toObject(EventDto eventDto){
-        return new Event(eventDto.id, eventDto.maxSeats);
+        return new Event(eventDto.id, eventDto.maxSeats, new AlphaNumSeatGenerator());
     }
 
     public Attendee toObject(AttendeeDto attendeeDto){
