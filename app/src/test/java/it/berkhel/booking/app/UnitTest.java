@@ -38,10 +38,6 @@ import java.util.stream.Stream;
 @ExtendWith(MockitoExtension.class)
 class UnitTest {
 
-    @BeforeEach
-    void restoreApp(){
-        Attendee.registry.clear();
-    }
 
     @Test 
     void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
