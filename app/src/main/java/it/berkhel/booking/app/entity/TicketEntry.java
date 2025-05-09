@@ -105,6 +105,9 @@ public class TicketEntry {
         this.state = State.ASSIGNED;
     }
 
+    public void processFor(Account account) throws SoldoutException, DuplicateTicketException {
+        event.accept(this, account);
+    }
 
     @Override
     public String toString() {
@@ -134,9 +137,6 @@ public class TicketEntry {
         return true;
     }
 
-    public void processFor(Account account) throws SoldoutException, DuplicateTicketException {
-        event.accept(this, account);
-    }
 
 
 

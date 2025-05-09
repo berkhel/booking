@@ -28,27 +28,17 @@ public class Event {
     // private Long version; // for optimistic locking
 
 
-
     @Column(name = "max_seats")
     private Integer maxSeats;
-
-
-    public Integer getMaxSeats() {
-        return maxSeats;
-    }
 
 
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
 
 
-    public List<Ticket> getTickets() {
-        return Collections.unmodifiableList(tickets);
-    }
-
-
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
+
 
     @Transient
     Supplier<String> seatGenerator;
@@ -84,11 +74,17 @@ public class Event {
         return account;
     }
 
+    public Integer getMaxSeats() {
+        return maxSeats;
+    }
    
     public String getId() {
         return id;
     }
 
+    public List<Ticket> getTickets() {
+        return Collections.unmodifiableList(tickets);
+    }
 
     public Integer getRemainingSeats() {
         return account.ticketsCount();

@@ -15,18 +15,13 @@ public class Account {
     @Id
     private String id;
 
-    public String getId() {
-        return id;
-    }
-
-
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "account")
     private List<Purchase> commitments;
 
-    private Account(){}
+    private Account(){} //For JPA
 
 
     public Account(String id, List<Ticket> tickets){
@@ -70,12 +65,14 @@ public class Account {
     }
 
 
-
-
     public boolean contains(Ticket ticket) {
         return tickets.contains(ticket);
     }
 
     
+    public String getId() {
+        return id;
+    }
+
 
 }
