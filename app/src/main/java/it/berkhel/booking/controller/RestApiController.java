@@ -51,7 +51,7 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/booking", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public PurchaseDto book(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
+    public PurchaseDto booking(@Valid @RequestBody(required = true) PurchaseRequest purchaseRequest) throws BadPurchaseRequestException, EventNotFoundException, DuplicateTicketException, SoldoutException, ConcurrentPurchaseException {
         Purchase purchase = dtoMapper.toObject(purchaseRequest);
         bookingService.process(purchase);
         return dtoMapper.toDto(purchase);
@@ -60,7 +60,7 @@ public class RestApiController {
 
 
     @PostMapping(value = "/event", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Event book(@Valid @RequestBody(required = true) EventDto eventDto) throws EventAlreadyExistsException {
+    public Event event(@Valid @RequestBody(required = true) EventDto eventDto) throws EventAlreadyExistsException {
         return eventService.create(dtoMapper.toObject(eventDto));
     }
 

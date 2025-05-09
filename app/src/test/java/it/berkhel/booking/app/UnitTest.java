@@ -40,13 +40,12 @@ class UnitTest {
 
     @BeforeEach
     void restoreApp(){
-        App.instance = null;
         Attendee.registry.clear();
     }
 
     @Test 
     void booking_targets_the_storage(@Mock ForStorage theStorage, @Mock ForSendingMessage messageBroker) throws Exception {
-        App app = App.init(theStorage, messageBroker);
+        PurchaseApp app = new PurchaseApp(theStorage, messageBroker);
 
         app.doProcess(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
 
@@ -54,7 +53,7 @@ class UnitTest {
     }
 
     @Test void booking_targets_the_message_broker(@Mock ForStorage aStorage, @Mock ForSendingMessage theMessageBroker) throws Exception {
-        App app = App.init(aStorage, theMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, theMessageBroker);
 
         app.doProcess(Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee()))));
 
@@ -63,7 +62,7 @@ class UnitTest {
 
     @Test 
     void booking_normally_return_a_response(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception {
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
         Purchase thePurchase = Fake.purchase(Fake.account(), Set.of(Fake.ticket(Fake.event(), Fake.attendee())));
 
         app.doProcess(thePurchase);
@@ -74,7 +73,7 @@ class UnitTest {
     @Test
     void not_more_than_three_tickets_for_purchase(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Set<TicketEntry> fourTickets = Stream.generate(() -> Fake.ticket(Fake.event(), Fake.attendee())).limit(4).collect(toSet());
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
             app.doProcess(Fake.purchase(Fake.account(), fourTickets));
@@ -84,7 +83,7 @@ class UnitTest {
     @Test
     void three_tickets_for_purchase_are_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Set<TicketEntry> threeTickets = Stream.generate(() -> Fake.ticket(Fake.event(), Fake.attendee())).limit(3).collect(toSet());
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         assertDoesNotThrow(() -> {
             app.doProcess(Fake.purchase(Fake.account(), threeTickets));
@@ -95,7 +94,7 @@ class UnitTest {
     @Test
     void zero_tickets_for_purchase_are_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Set<TicketEntry> noTickets = Set.of();
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         assertThrows(BadPurchaseRequestException.class, () -> {
             app.doProcess(Fake.purchase(Fake.account(), noTickets));
@@ -106,7 +105,7 @@ class UnitTest {
     @Test
     void a_null_list_of_tickets_for_purchase_is_not_allowed(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker){
         Set<TicketEntry> nullTickets = null;
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         assertThrows(Exception.class, () -> {
             app.doProcess(Fake.purchase(Fake.account(), nullTickets));
@@ -118,7 +117,7 @@ class UnitTest {
     void cannot_purchase_after_soldout(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         TicketEntry arrivedLate = Fake.ticket(new Event("EVSLDOUT1", 0, new AlphaNumSeatGenerator()), Fake.attendee());
 
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         assertThrows(SoldoutException.class, () -> {
             app.doProcess(Fake.purchase(Fake.account(), Set.of(arrivedLate)));
@@ -130,8 +129,7 @@ class UnitTest {
         final String eventId = "EV0001";
         Event event = new Event(eventId, 10, new AlphaNumSeatGenerator());
         TicketEntry newTicket = Fake.ticket(event, Fake.attendee());
-
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         app.doProcess(Fake.purchase(Fake.account(), Set.of(newTicket)));
 
@@ -147,26 +145,13 @@ class UnitTest {
         });
     }
 
-
-    @Test
-    void can_detect_duplicate_events(@Mock ForStorage theStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
-        when(theStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(Fake.event()));
-
-        App app = App.init(theStorage, aMessageBroker);
-
-        assertThrows(EventAlreadyExistsException.class, () -> {
-            app.createEvent(Fake.event());
-        });
-
-    }
-
     @Test
     void a_purchase_cannot_contains_the_same_ticket_twice(@Mock ForStorage aStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
         Event event = new Event("0001", new Random().nextInt(10), new AlphaNumSeatGenerator());
         TicketEntry ticketA = Fake.ticket(event, Attendee.createAttendee("AB01", "/", "/", "/", "/"));
         TicketEntry ticketB = Fake.ticket(event, Attendee.createAttendee("AB01", "/", "/", "/", "/"));
 
-        App app = App.init(aStorage, aMessageBroker);
+        PurchaseApp app = new PurchaseApp(aStorage, aMessageBroker);
 
         assertThrows(RuntimeException.class, () -> {
             app.doProcess(Fake.purchase(Fake.account(), Set.of(ticketA, ticketB)));
@@ -175,5 +160,18 @@ class UnitTest {
 
 
     }
+
+    @Test
+    void can_detect_duplicate_events(@Mock ForStorage theStorage, @Mock ForSendingMessage aMessageBroker) throws Exception{
+        when(theStorage.getEventById(Mockito.anyString())).thenReturn(Optional.of(Fake.event()));
+
+        EventApp app = new EventApp(theStorage);
+
+        assertThrows(EventAlreadyExistsException.class, () -> {
+            app.createEvent(Fake.event());
+        });
+
+    }
+
 
 }
