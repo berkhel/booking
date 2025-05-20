@@ -13,7 +13,7 @@ public class AlphaNumSeatGenerator implements Supplier<String> {
         if ((lastTicketLetter + lastTicketNumber) % 2 == 0) {
             lastTicketNumber++;
             if (lastTicketLetter > 'A') {
-                lastTicketLetter = lastTicketLetter--;
+                lastTicketLetter--;
             }
         } else {
             lastTicketLetter++;
