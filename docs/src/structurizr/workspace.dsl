@@ -23,7 +23,7 @@ workspace "Name" "Description"
                         technology "Spring Data JPA"
                         tag "Repository"
                     }
-                ampq = component "Publisher" {
+                ampq = component "RabbitMQ Publisher" {
                         description "Push messages into the queue of the message broker"
                         technology "Spring AMPQ"
                         tag "AMPQ"
