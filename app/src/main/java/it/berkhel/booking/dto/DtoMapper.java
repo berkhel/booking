@@ -44,7 +44,7 @@ public class DtoMapper {
     }
 
     public Event toObject(EventDto eventDto){
-        return new Event(eventDto.id, eventDto.maxSeats, new AlphaNumSeatGenerator());
+        return new Event(eventDto.id, eventDto.maxSeats);
     }
 
     public Attendee toObject(AttendeeDto attendeeDto){

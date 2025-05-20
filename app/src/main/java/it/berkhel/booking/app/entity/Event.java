@@ -46,6 +46,11 @@ public class Event {
     private Event(){} //for JPA
 
 
+    public Event(String id, Integer maxSeats){
+        this(id, maxSeats, new AlphaNumSeatGenerator());
+    }
+
+
     public Event(String id, Integer maxSeats, Supplier<String> seatGenerator){
         this.id = id;
         this.maxSeats = maxSeats;
